@@ -339,6 +339,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Launcher.cs" t="Include" />
+          <e p="PlayerNameInputField.cs" t="Include" />
         </e>
       </e>
       <e p="Library" t="ExcludeRecursive" />

@@ -13,28 +13,50 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/Launcher.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="396">
+              <caret line="19" column="63" lean-forward="true" selection-start-line="19" selection-start-column="63" selection-end-line="19" selection-end-column="63" />
               <folding>
-                <marker date="1545481555163" expanded="true" signature="6:119" ph="..." />
-                <marker date="1545481555163" expanded="true" signature="243:3214" ph="{...}" />
-                <marker date="1545481555163" expanded="true" signature="250:423" ph="/* Notice that we are deriving our class from MonoBehaviour which essentially turns ... */" />
-                <marker date="1545481555163" expanded="true" signature="477:3209" ph="{...}" />
-                <marker date="1545481555163" expanded="false" signature="492:629" ph="/* This client's version number. ... */" />
-                <marker date="1545481555163" expanded="false" signature="800:1048" ph="{...}" />
-                <marker date="1545481555163" expanded="true" signature="826:981" ph="/* this makes sure we can use PhotonNetwork.LoadLevel() ... */" />
-                <marker date="1545481555163" expanded="false" signature="1127:1170" ph="{...}" />
-                <marker date="1545481555163" expanded="false" signature="1188:1381" ph="/* Start the connection process. ... */" />
-                <marker date="1545481555163" expanded="false" signature="1411:2087" ph="{...}" />
-                <marker date="1545481555163" expanded="true" signature="1434:1554" ph="/* we check if we are connected or not, we join if we are, ... */" />
-                <marker date="1545481555163" expanded="true" signature="1597:1843" ph="{...}" />
-                <marker date="1545481555163" expanded="true" signature="1628:1781" ph="/* we need at this point to attempt joining a Random Room. ... */" />
-                <marker date="1545481555163" expanded="true" signature="1860:2077" ph="{...}" />
-                <marker date="1545481555163" expanded="false" signature="2139:2455" ph="{...}" />
-                <marker date="1545481555163" expanded="true" signature="2253:2401" ph="/* The first we try to do is to join a potential existing room. ... */" />
-                <marker date="1545481555163" expanded="false" signature="2523:2665" ph="{...}" />
-                <marker date="1545481555163" expanded="false" signature="2748:3027" ph="{...}" />
-                <marker date="1545481555163" expanded="false" signature="3072:3203" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="6:87" ph="..." />
+                <marker date="1545486958407" expanded="true" signature="211:3331" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="218:391" ph="/* Notice that we are deriving our class from MonoBehaviour which essentially turns ... */" />
+                <marker date="1545486958407" expanded="true" signature="445:3326" ph="{...}" />
+                <marker date="1545486958407" expanded="false" signature="460:597" ph="/* This client's version number. ... */" />
+                <marker date="1545486958407" expanded="true" signature="649:811" ph="[...]" />
+                <marker date="1545486958407" expanded="false" signature="1008:1256" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="1034:1189" ph="/* this makes sure we can use PhotonNetwork.LoadLevel() ... */" />
+                <marker date="1545486958407" expanded="false" signature="1274:1467" ph="/* Start the connection process. ... */" />
+                <marker date="1545486958407" expanded="false" signature="1497:2173" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="1520:1640" ph="/* we check if we are connected or not, we join if we are, ... */" />
+                <marker date="1545486958407" expanded="true" signature="1683:1929" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="1714:1867" ph="/* we need at this point to attempt joining a Random Room. ... */" />
+                <marker date="1545486958407" expanded="true" signature="1946:2163" ph="{...}" />
+                <marker date="1545486958407" expanded="false" signature="2225:2541" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="2339:2487" ph="/* The first we try to do is to join a potential existing room. ... */" />
+                <marker date="1545486958407" expanded="false" signature="2609:2751" ph="{...}" />
+                <marker date="1545486958407" expanded="true" signature="2834:3144" ph="{...}" />
+                <marker date="1545486958407" expanded="false" signature="3189:3320" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/PlayerNameInputField.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="504">
+              <caret line="50" column="65" selection-start-line="50" selection-start-column="65" selection-end-line="50" selection-end-column="65" />
+              <folding>
+                <marker date="1545487989645" expanded="true" signature="6:109" ph="..." />
+                <marker date="1545487989645" expanded="true" signature="233:3428" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="240:410" ph="/* Player name input field. ... */" />
+                <marker date="1545487989645" expanded="true" signature="507:3426" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="748:3029" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="771:1618" ph="/* PlayerPrefs.HasKey(), PlayerPrefs.GetString() and PlayerPrefs.SetString(): ... */" />
+                <marker date="1545487989645" expanded="true" signature="1785:3019" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="1858:2022" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="2056:2950" ph="/* PhotonNetwork.NickName: ... */" />
+                <marker date="1545487989645" expanded="false" signature="3078:3411" ph="{...}" />
+                <marker date="1545487989645" expanded="true" signature="3181:3297" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -47,11 +69,13 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Launcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlayerNameInputField.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/Launcher.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerNameInputField.cs" />
       </list>
     </option>
   </component>
@@ -60,7 +84,7 @@
       <facet id="riderModule/invalid/Default Android Facet" />
     </ignored-facets>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="37" />
     <option name="y" value="-11" />
     <option name="width" value="1936" />
@@ -129,12 +153,12 @@
       <updated>1545474940765</updated>
       <workItem from="1545474943117" duration="98000" />
       <workItem from="1545476029509" duration="15000" />
-      <workItem from="1545477308772" duration="4176000" />
+      <workItem from="1545477308772" duration="6983000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4289000" />
+    <option name="totallyTimeSpent" value="7096000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -146,7 +170,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
@@ -199,30 +223,50 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/PlayerNameInputField.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="50" column="65" selection-start-line="50" selection-start-column="65" selection-end-line="50" selection-end-column="65" />
+          <folding>
+            <marker date="1545487989645" expanded="true" signature="6:109" ph="..." />
+            <marker date="1545487989645" expanded="true" signature="233:3428" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="240:410" ph="/* Player name input field. ... */" />
+            <marker date="1545487989645" expanded="true" signature="507:3426" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="748:3029" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="771:1618" ph="/* PlayerPrefs.HasKey(), PlayerPrefs.GetString() and PlayerPrefs.SetString(): ... */" />
+            <marker date="1545487989645" expanded="true" signature="1785:3019" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="1858:2022" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="2056:2950" ph="/* PhotonNetwork.NickName: ... */" />
+            <marker date="1545487989645" expanded="false" signature="3078:3411" ph="{...}" />
+            <marker date="1545487989645" expanded="true" signature="3181:3297" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Launcher.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="396">
+          <caret line="19" column="63" lean-forward="true" selection-start-line="19" selection-start-column="63" selection-end-line="19" selection-end-column="63" />
           <folding>
-            <marker date="1545481555163" expanded="true" signature="6:119" ph="..." />
-            <marker date="1545481555163" expanded="true" signature="243:3214" ph="{...}" />
-            <marker date="1545481555163" expanded="true" signature="250:423" ph="/* Notice that we are deriving our class from MonoBehaviour which essentially turns ... */" />
-            <marker date="1545481555163" expanded="true" signature="477:3209" ph="{...}" />
-            <marker date="1545481555163" expanded="false" signature="492:629" ph="/* This client's version number. ... */" />
-            <marker date="1545481555163" expanded="false" signature="800:1048" ph="{...}" />
-            <marker date="1545481555163" expanded="true" signature="826:981" ph="/* this makes sure we can use PhotonNetwork.LoadLevel() ... */" />
-            <marker date="1545481555163" expanded="false" signature="1127:1170" ph="{...}" />
-            <marker date="1545481555163" expanded="false" signature="1188:1381" ph="/* Start the connection process. ... */" />
-            <marker date="1545481555163" expanded="false" signature="1411:2087" ph="{...}" />
-            <marker date="1545481555163" expanded="true" signature="1434:1554" ph="/* we check if we are connected or not, we join if we are, ... */" />
-            <marker date="1545481555163" expanded="true" signature="1597:1843" ph="{...}" />
-            <marker date="1545481555163" expanded="true" signature="1628:1781" ph="/* we need at this point to attempt joining a Random Room. ... */" />
-            <marker date="1545481555163" expanded="true" signature="1860:2077" ph="{...}" />
-            <marker date="1545481555163" expanded="false" signature="2139:2455" ph="{...}" />
-            <marker date="1545481555163" expanded="true" signature="2253:2401" ph="/* The first we try to do is to join a potential existing room. ... */" />
-            <marker date="1545481555163" expanded="false" signature="2523:2665" ph="{...}" />
-            <marker date="1545481555163" expanded="false" signature="2748:3027" ph="{...}" />
-            <marker date="1545481555163" expanded="false" signature="3072:3203" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="6:87" ph="..." />
+            <marker date="1545486958407" expanded="true" signature="211:3331" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="218:391" ph="/* Notice that we are deriving our class from MonoBehaviour which essentially turns ... */" />
+            <marker date="1545486958407" expanded="true" signature="445:3326" ph="{...}" />
+            <marker date="1545486958407" expanded="false" signature="460:597" ph="/* This client's version number. ... */" />
+            <marker date="1545486958407" expanded="true" signature="649:811" ph="[...]" />
+            <marker date="1545486958407" expanded="false" signature="1008:1256" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="1034:1189" ph="/* this makes sure we can use PhotonNetwork.LoadLevel() ... */" />
+            <marker date="1545486958407" expanded="false" signature="1274:1467" ph="/* Start the connection process. ... */" />
+            <marker date="1545486958407" expanded="false" signature="1497:2173" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="1520:1640" ph="/* we check if we are connected or not, we join if we are, ... */" />
+            <marker date="1545486958407" expanded="true" signature="1683:1929" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="1714:1867" ph="/* we need at this point to attempt joining a Random Room. ... */" />
+            <marker date="1545486958407" expanded="true" signature="1946:2163" ph="{...}" />
+            <marker date="1545486958407" expanded="false" signature="2225:2541" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="2339:2487" ph="/* The first we try to do is to join a potential existing room. ... */" />
+            <marker date="1545486958407" expanded="false" signature="2609:2751" ph="{...}" />
+            <marker date="1545486958407" expanded="true" signature="2834:3144" ph="{...}" />
+            <marker date="1545486958407" expanded="false" signature="3189:3320" ph="{...}" />
           </folding>
         </state>
       </provider>

@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 using Photon.Pun;
 using Photon.Realtime;
+
+using System.Collections;
+using System.Text;
 
 //giving a proper namespace to your script prevents clashes with other assets and developers.
 namespace Com.ESGI.RoyalStar
@@ -14,6 +16,18 @@ namespace Com.ESGI.RoyalStar
         //This client's version number.
         //Users are separated from each other by gameversion (which allows you to make breaking changes).
         private string gameVersion = "1";
+
+        [Tooltip("The maximum number of players per room. When a room is full, " +
+                 "it can't be joined by new players, and so new room will be created")]
+        [SerializeField]
+        private byte maxPlayerPerRoom = 4;
+        
+        [Tooltip("The Ui Panel to let the user enter name, connect and play")]
+        [SerializeField]
+        private GameObject controlPanel;
+        [Tooltip("The UI Label to inform the user that the connection is in progress")]
+        [SerializeField]
+        private GameObject progressLabel;
         
         // MonoBehaviour method called on GameObject by Unity during initialization phase.
         private void Awake()
@@ -23,17 +37,19 @@ namespace Com.ESGI.RoyalStar
             PhotonNetwork.AutomaticallySyncScene = true;
         }
 
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
-            Connect();
+            progressLabel.SetActive(false);
+            controlPanel.SetActive(true);
         }
-        
+
         // Start the connection process.
         // - If already connected, we attempt joining a random room
         // - if not yet connected, Connect this application instance to Photon Cloud Network
         public void Connect()
         {
+            progressLabel.SetActive(true);
+            controlPanel.SetActive(false);
             // we check if we are connected or not, we join if we are,
             // else we initiate the connection to the server.
             if (PhotonNetwork.IsConnected)
@@ -61,13 +77,15 @@ namespace Com.ESGI.RoyalStar
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.LogWarningFormat("PUN Royal Star/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
+            progressLabel.SetActive(false);
+            controlPanel.SetActive(true);
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
             Debug.Log("PUN Royal Star/Launcher:OnJoinRandomFailed() was called by PUN. " +
                       "No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
-            PhotonNetwork.CreateRoom(null, new RoomOptions());
+            PhotonNetwork.CreateRoom(null, new RoomOptions{ MaxPlayers = maxPlayerPerRoom });
         }
 
         public override void OnJoinedRoom()
