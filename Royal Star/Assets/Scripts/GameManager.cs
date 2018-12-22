@@ -21,7 +21,7 @@ namespace Com.ESGI.RoyalStar
             //we don't use Unity directly, because we want to rely on Photon
             //to load this level on all connected clients in the room, since we've enabled
             //PhotonNetwork.AutomaticallySyncScene for this Game.
-            PhotonNetwork.LoadLevel("Game");
+            //PhotonNetwork.LoadLevel("Game");
         }
         public override void OnPlayerEnteredRoom(Player other)
         {
