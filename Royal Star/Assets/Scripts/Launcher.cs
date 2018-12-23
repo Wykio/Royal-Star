@@ -29,11 +29,12 @@ namespace Com.ESGI.RoyalStar
         [SerializeField]
         private GameObject progressLabel;
 
-        private bool isConnecting;
+        private bool isConnecting = false;
         
         // MonoBehaviour method called on GameObject by Unity during initialization phase.
         private void Awake()
         {   
+            Debug.Log("PUN Royal Star/Launcher: Awake() was called");
             // this makes sure we can use PhotonNetwork.LoadLevel()
             // on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
@@ -41,6 +42,7 @@ namespace Com.ESGI.RoyalStar
 
         private void Start()
         {
+            Debug.Log("PUN Royal Star/Launcher: Start() was called");
             progressLabel.SetActive(false);
             controlPanel.SetActive(true);
         }
@@ -50,6 +52,7 @@ namespace Com.ESGI.RoyalStar
         // - if not yet connected, Connect this application instance to Photon Cloud Network
         public void Connect()
         {
+            Debug.Log("PUN Royal Star/Launcher: Connect() was called");
             isConnecting = true;
             progressLabel.SetActive(true);
             controlPanel.SetActive(false);
@@ -57,18 +60,23 @@ namespace Com.ESGI.RoyalStar
             // else we initiate the connection to the server.
             if (PhotonNetwork.IsConnected)
             {
+                Debug.Log("PUN Royal Star/Launcher: Connect() 'IsConnected' was triggered");
                 //we need at this point to attempt joining a Random Room.
                 //If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
                 PhotonNetwork.JoinRandomRoom();
             }
             else
             {
+                Debug.Log("PUN Royal Star/Launcher: Connect() 'NotConnected' was triggered");
                 //we must first and foremost connect to Photon Online Server.
                 PhotonNetwork.GameVersion = gameVersion;
+                //Connection au serveur, active normalement "OnConnectedToMaster()"
                 PhotonNetwork.ConnectUsingSettings();
             }
         }
-
+        
+        
+        //Permet de savoir si on est connecté au clood ou non.
         public override void OnConnectedToMaster()
         {
             Debug.Log("PUN Royal Star/Launcher: OnConnectedToMaster() was called by PUN");
@@ -76,10 +84,12 @@ namespace Com.ESGI.RoyalStar
             //If there is, good, else, we'll be called back with OnJoinRandomFailed()
             
             // we don't want to do anything if we are not attempting to join a room.
-            // this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called, in that case
+            // this case where isConnecting is false is typically when you lost or quit the game, when
+            // this level is loaded, OnConnectedToMaster will be called, in that case
             // we don't want to do anything.
             if (isConnecting)
             {
+                Debug.Log("PUN Royal Star/Launcher: Try to join a room");
                 PhotonNetwork.JoinRandomRoom();
             }
         }
@@ -95,6 +105,7 @@ namespace Com.ESGI.RoyalStar
         {
             Debug.Log("PUN Royal Star/Launcher:OnJoinRandomFailed() was called by PUN. " +
                       "No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+            //We create a room a join it.
             PhotonNetwork.CreateRoom(null, new RoomOptions{ MaxPlayers = maxPlayerPerRoom });
         }
         
@@ -103,12 +114,18 @@ namespace Com.ESGI.RoyalStar
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN Royal Star/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            // We load the game only if we are the master client
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
                 Debug.Log("We load the Game");
                 // Load the Room Level.
                 PhotonNetwork.LoadLevel("Game");
             }
+        }
+
+        public override void OnLeftRoom()
+        {
+            Debug.Log("PUN Royal Star/Launcher: OnLeftRoom() called by PUN. Now this client quit the room.");
         }
     }   
 }
