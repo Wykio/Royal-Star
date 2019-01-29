@@ -27,7 +27,6 @@ public class shipMotor : MonoBehaviour
     private bool Aerien = true;
 
     //paramètres avancés
-    [SerializeField] private float ratioDeStrafe = 1f;
     [SerializeField] private float compensation = 1.5f;
 
 
@@ -51,9 +50,12 @@ public class shipMotor : MonoBehaviour
     {
         DetectionDuSol();
 
-        if (!Aerien) Hover();
+        Debug.Log("Aerien = " + Aerien);
 
-        shipRigidbody.AddForce(0, 0, powerInput * propulsionAvantAppliquee);
+        if (!Aerien)
+        {
+            Hover();
+        }
 
         //si le vaisseau est en l'air, les touches latérales le font rouler
         if(Aerien)
@@ -66,17 +68,27 @@ public class shipMotor : MonoBehaviour
             {
                 shipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
             }
+            if (Input.GetKey(KeyCode.Z))
+            {
+                shipTransform.Rotate(speedRotate * Time.deltaTime, 0, 0);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                shipTransform.Rotate(-speedRotate * Time.deltaTime, 0, 0);
+            }
         }
         else
         {
+            shipRigidbody.AddForce(shipTransform.forward * powerInput * propulsionAvantAppliquee, ForceMode.Force);
+
             //sinon elles le font strafer
             if (Input.GetKey(KeyCode.Q))
             {
-                shipRigidbody.AddForce(-(speed / 1.5f) * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
+                shipRigidbody.AddForce(-(speed) * Time.deltaTime, 0, 0, ForceMode.Impulse);
             }
             if (Input.GetKey(KeyCode.D))
             {
-                shipRigidbody.AddForce((speed / 1.5f) * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
+                shipRigidbody.AddForce((speed) * Time.deltaTime, 0, 0, ForceMode.Impulse);
             }
         }
     }
@@ -88,16 +100,19 @@ public class shipMotor : MonoBehaviour
 
         foreach(Transform point in hoverPoints)
         {
-            Ray scan = new Ray(point.position, -Vector3.up);
+            Ray scan = new Ray(point.position, -point.up);
+            
             RaycastHit hit;
 
-            if(Physics.Raycast(scan, out hit, hoverHeight))
+            if(Physics.Raycast(scan, out hit, hoverHeight + 0.5f))
             {
+                Debug.Log("collision trouvée : " + hit.collider.name);
                 Aerien = false;
             }
         }
     }
 
+    //fonction de lévitation
     void Hover()
     {
         Ray scan = new Ray(centreGravite.position, -centreGravite.up);
@@ -123,14 +138,17 @@ public class shipMotor : MonoBehaviour
                 upvector = Vector3.up;
             }
 
+            //plus on est proche du sol, plus la force de léviation est grande
             if(distance < hoverHeight)
             {
-                shipRigidbody.AddForce(upvector * forceLevitationAppliquee * (1f - distance / hoverHeight));
+                shipRigidbody.AddForce(upvector * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
                 shipRigidbody.rotation = Quaternion.Slerp(shipRigidbody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(hoverPoints,hoverHeight + 1f)) * shipRigidbody.rotation, Time.fixedDeltaTime * 3.75f);
             }
+     
         }
     }
 
+    //methode pour récupérer la moyenne des normales détectées par les capteurs
     Vector3 recupNormaleMoyenne(Transform[] points, float distance)
     {
         List<Vector3> listeNormales = new List<Vector3>();

@@ -929,7 +929,6 @@ MonoBehaviour:
   - {fileID: 1584404066}
   - {fileID: 749876339}
   centreGravite: {fileID: 749876339}
-  ratioDeStrafe: 1
   compensation: 1.5
 --- !u!65 &807861782
 BoxCollider:
@@ -996,8 +995,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807861780}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.38, y: 13.77, z: 33.78}
+  m_LocalRotation: {x: 0.015317532, y: -0, z: -0, w: 0.99988276}
+  m_LocalPosition: {x: 7.38, y: 40.7, z: 12.2}
   m_LocalScale: {x: 2, y: 1, z: 4}
   m_Children:
   - {fileID: 1258158513}
@@ -1008,7 +1007,7 @@ Transform:
   - {fileID: 981489003}
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 1.7550001, y: 0, z: 0}
 --- !u!54 &807861786
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1018,7 +1017,7 @@ Rigidbody:
   m_GameObject: {fileID: 807861780}
   serializedVersion: 2
   m_Mass: 10
-  m_Drag: 1
+  m_Drag: 0
   m_AngularDrag: 4
   m_UseGravity: 1
   m_IsKinematic: 0
