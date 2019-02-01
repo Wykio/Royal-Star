@@ -919,9 +919,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 500
   turnSpeed: 90
-  hoverForce: 1000
+  hoverForce: 2000
   hoverHeight: 3.5
   speedRotate: 100
+  damping: 0.85
+  dampingHeight: 4
   hoverPoints:
   - {fileID: 1258158513}
   - {fileID: 1588636963}
@@ -996,7 +998,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807861780}
   m_LocalRotation: {x: 0.015317532, y: -0, z: -0, w: 0.99988276}
-  m_LocalPosition: {x: 7.71, y: 4.1, z: 11.1}
+  m_LocalPosition: {x: 7.71, y: 45.8, z: 12.4}
   m_LocalScale: {x: 2, y: 1, z: 4}
   m_Children:
   - {fileID: 1258158513}
