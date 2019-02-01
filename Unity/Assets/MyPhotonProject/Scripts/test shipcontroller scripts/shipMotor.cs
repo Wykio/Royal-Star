@@ -11,6 +11,8 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float hoverForce = 65f;
     [SerializeField] private float hoverHeight = 3.5f;
     [SerializeField] private float speedRotate = 100;
+    [SerializeField] private float damping = 0.95f;
+    [SerializeField] private float dampingHeight = 4f;
 
     //composants du vaisseau
     [SerializeField] private Transform[] hoverPoints;
@@ -55,6 +57,7 @@ public class shipMotor : MonoBehaviour
         if (!Aerien)
         {
             Hover();
+            
         }
 
         //si le vaisseau est en l'air, les touches latérales le font rouler
@@ -91,6 +94,7 @@ public class shipMotor : MonoBehaviour
                 shipRigidbody.AddForce((speed) * Time.deltaTime, 0, 0, ForceMode.Impulse);
             }
         }
+        
     }
 
     //On vérifie si le vaisseau est en chute libre ou en lévitation
@@ -116,7 +120,9 @@ public class shipMotor : MonoBehaviour
     void Hover()
     {
         Ray scan = new Ray(centreGravite.position, -centreGravite.up);
+        Ray scanDamping = new Ray(centreGravite.position, -centreGravite.up);
         RaycastHit hit;
+        RaycastHit hitDamping;
         Vector3 upvector;
 
         if(Physics.Raycast(scan, out hit, hoverHeight))
@@ -139,12 +145,25 @@ public class shipMotor : MonoBehaviour
             }
 
             //plus on est proche du sol, plus la force de léviation est grande
-            if(distance < hoverHeight)
+            if (distance < hoverHeight)
             {
                 shipRigidbody.AddForce(upvector * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
-                shipRigidbody.rotation = Quaternion.Slerp(shipRigidbody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(hoverPoints,hoverHeight + 1f)) * shipRigidbody.rotation, Time.fixedDeltaTime * 3.75f);
+                shipRigidbody.rotation = Quaternion.Slerp(shipRigidbody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(hoverPoints, hoverHeight + 1f)) * shipRigidbody.rotation, Time.fixedDeltaTime * 3.75f);
             }
-     
+        }
+
+        // effet de damping pour limiter le rebond du vaisseau
+        if(Physics.Raycast(scanDamping, out hitDamping, dampingHeight))
+        {
+            float distance = Vector3.Distance(centreGravite.position, hitDamping.point);
+
+            // si le vaisseau dépasse la hauteur de lévitation, on active le damping
+            if(distance > hoverHeight)
+            {
+                shipRigidbody.velocity = new Vector3(shipRigidbody.velocity.x,
+                shipRigidbody.velocity.y * damping,
+                shipRigidbody.velocity.z);
+            }
         }
     }
 
