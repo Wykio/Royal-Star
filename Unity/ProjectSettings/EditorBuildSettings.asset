@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MyPhotonProject/Scenes/MainScene.unity
-    guid: 049e6ae35edc6f342983a896b8495a7c
+    path: Assets/Royal Star/Scenes/Launcher.unity
+    guid: 716d35c24c816a2469a1da16fdb34438
+  - enabled: 1
+    path: Assets/Royal Star/Scenes/Game.unity
+    guid: 938516e8ef3c56244be1f4698cc8e38a
   m_configObjects: {}
