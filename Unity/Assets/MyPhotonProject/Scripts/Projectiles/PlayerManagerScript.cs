@@ -5,6 +5,15 @@ using UnityEngine;
 public class PlayerManagerScript : MonoBehaviour
 {
     [SerializeField]
+    private BulletManagerScript bulletManager;
+
+    [SerializeField]
+    private Transform bulletPopPositionTransform;
+
+    [SerializeField]
+    private float popInterval;
+    
+    [SerializeField]
     private Rigidbody playerRigidbody;
 
     [SerializeField]
@@ -16,6 +25,8 @@ public class PlayerManagerScript : MonoBehaviour
     [SerializeField]
     private bool activePlayer;
 
+
+    private float nextPopTime = float.MinValue;
     private float speed = 10.0f;
     private bool alive = true;
     private int hp = 150;
@@ -38,9 +49,10 @@ public class PlayerManagerScript : MonoBehaviour
     {
         if (!alive || !activePlayer)
             return ;
-        if (Input.GetKey(KeyCode.D))
-            playerTransform.Rotate(new Vector3(0, 1, 0) * Time.deltaTime * speed);
-        if (Input.GetKey(KeyCode.A))
-            playerTransform.Rotate(new Vector3(0, -1, 0) * Time.deltaTime * speed);
+        if (Input.GetMouseButtonDown(0) && Time.time > nextPopTime)
+        {
+            bulletManager.Shoot(bulletPopPositionTransform);
+            nextPopTime = Time.time + popInterval;
+        }
     }
 }
