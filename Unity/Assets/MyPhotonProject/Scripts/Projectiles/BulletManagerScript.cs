@@ -11,18 +11,22 @@ public class BulletManagerScript : MonoBehaviour
     private BulletPoolManagerScript bulletPoolManager;
 
     [SerializeField]
-    private float popInterval = 1f;
+    private float popInterval;
 
     private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(100);
 
     private float nextPopTime = float.MinValue;
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > nextPopTime)
         {
-            BulletExposerScript bullet = bulletPoolManager.GetBall();
-            bullet.targetTransform.position = bulletPopPositionTransform.position;
+            BulletExposerScript bullet = bulletPoolManager.GetBullet();
+            bullet.SetParentReference(
+                bulletPopPositionTransform.position,
+                bulletPopPositionTransform.forward * 58,
+                bulletPopPositionTransform.rotation
+            );
             poppedBullets.Add(bullet);
             nextPopTime = Time.time + popInterval;
         }
@@ -30,11 +34,11 @@ public class BulletManagerScript : MonoBehaviour
         for (int i = 0; i < poppedBullets.Count; i++)
         {
             BulletExposerScript bullet = poppedBullets[i];
-            if (bullet.targetTransform.position.x > 50)
+			if (bullet.GetDestroy())
             {
                 poppedBullets.RemoveAt(i);
                 i--;
-                bulletPoolManager.ReleaseBall(bullet);
+                bulletPoolManager.ReleaseBullet(bullet);
             }
         }
     }

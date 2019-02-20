@@ -5,34 +5,37 @@ using UnityEngine;
 public class BulletPoolManagerScript : MonoBehaviour
 {
     [SerializeField]
-    private BulletExposerScript[] alreadyInstanciatedBullets;
+    private GameObject bulletPrefab;
 
+    private BulletExposerScript[] alreadyInstanciatedBullets;
     private readonly Queue<BulletExposerScript> availableBullets = new Queue<BulletExposerScript>(100);
 
     public void Awake()
     {
+        GameObject instanciatedBullet;
+
+        alreadyInstanciatedBullets = new BulletExposerScript[100];
+        for (int i = 0; i < 100; i++)
+        {
+            instanciatedBullet = (GameObject)Instantiate(bulletPrefab);
+            alreadyInstanciatedBullets[i] = instanciatedBullet.GetComponent<BulletExposerScript>();
+        }
         foreach (BulletExposerScript bullet in alreadyInstanciatedBullets)
         {
             availableBullets.Enqueue(bullet);
         }
     }
 
-    public BulletExposerScript GetBall()
+    public BulletExposerScript GetBullet()
     {
         BulletExposerScript bullet = availableBullets.Dequeue();
-        bullet.targetRigidBody.velocity = new Vector3(10, 0, 0);
-        bullet.targetRigidBody.angularVelocity = Vector3.zero;
-        bullet.targetCollider.enabled = true;
-        bullet.targetRigidBody.isKinematic = false;
-        bullet.targetMeshRenderer.enabled = true;
+        bullet.Enable();
         return bullet;
     }
 
-    public void ReleaseBall(BulletExposerScript bullet)
+    public void ReleaseBullet(BulletExposerScript bullet)
     {
         availableBullets.Enqueue(bullet);
-        bullet.targetCollider.enabled = false;
-        bullet.targetRigidBody.isKinematic = true;
-        bullet.targetMeshRenderer.enabled = false;
+        bullet.Disable();
     }
 }
