@@ -17,8 +17,11 @@ public class HitboxManagerScript : MonoBehaviour
 
     void MyOnTriggerEnter(Collider other)
     {
-        Debug.Log($"{player.GetName()} has lost 30hp");
-        player.TakeDamage(30);
+        if (Equals(other.gameObject.tag, "Bullet"))
+        {
+            Debug.Log($"{player.GetName()} has lost 30hp");
+            player.TakeDamage(other.gameObject.GetComponent<BulletExposerScript>().GetDamage());
+        }
     }
 
     void OnDestroy()

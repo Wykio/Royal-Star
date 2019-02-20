@@ -62,7 +62,7 @@ public class BulletExposerScript : MonoBehaviour
 	public void SetParentReference(Vector3 position, Vector3 velocity, Quaternion rotation)
 	{
 		targetTransform.position = position;
-		targetRigidBody.velocity = velocity;
+		targetRigidBody.velocity = velocity * 250;
 		targetTransform.rotation = rotation;
 		targetTransform.Rotate(new Vector3(-90, -90, -90));
 	}
@@ -80,6 +80,11 @@ public class BulletExposerScript : MonoBehaviour
 	{
 		targetTransform.rotation = rotation;
 		targetTransform.Rotate(new Vector3(-90, -90, -90));
+	}
+
+	public int GetDamage()
+	{
+		return 30;
 	}
 
 	void Update()
