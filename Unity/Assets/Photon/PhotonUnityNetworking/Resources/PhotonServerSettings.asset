@@ -42,4 +42,20 @@ MonoBehaviour:
   - ActivateAvatarRPC
   - DeactivateAvatarRPC
   - ForceEndGame
+  - ActivationVaisseauRPC
+  - DesactivationVaisseauRPC
+  - AirBoostActivateRPC
+  - AirPitchDownRPC
+  - AirPitchUpRPC
+  - AirRollLeftRPC
+  - AirRollRightRPC
+  - BoostBackwardRPC
+  - BoostForwardRPC
+  - BoostPitchRPC
+  - BoostTurnRPC
+  - WantToGoBackwardRPC
+  - WantToGoForwardRPC
+  - WantToStrafeLeftRPC
+  - WantToStrafeRightRPC
+  - WantToTurnRPC
   DisableAutoOpenWizard: 1

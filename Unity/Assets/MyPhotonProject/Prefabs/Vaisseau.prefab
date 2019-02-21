@@ -163,7 +163,10 @@ GameObject:
   - component: {fileID: 3361519573493428620}
   - component: {fileID: 3361519573493428621}
   - component: {fileID: 3361519573493428609}
-  - component: {fileID: 3361519573493428622}
+  - component: {fileID: 728606294187390144}
+  - component: {fileID: 2002595383450205168}
+  - component: {fileID: 7056412912699809353}
+  - component: {fileID: 5117224502530415047}
   m_Layer: 0
   m_Name: Vaisseau
   m_TagString: Untagged
@@ -265,7 +268,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3361519573493428622
+--- !u!114 &728606294187390144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,24 +277,74 @@ MonoBehaviour:
   m_GameObject: {fileID: 3361519573493428623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97cb150612388d4458a6b22ad08b6f1f, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 500
-  hoverForce: 3000
-  hoverHeight: 3.5
-  speedRotate: 100
-  dampingHover: 0.85
-  dampingSpeed: 0.99
-  dampingHeight: 4.5
-  hoverPoints:
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 2002595383450205168}
+  - {fileID: 7056412912699809353}
+  viewIdField: 0
+  InstantiationId: 2
+  isRuntimeInstantiated: 0
+--- !u!114 &2002595383450205168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3361519573493428623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 1
+  m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &7056412912699809353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3361519573493428623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+--- !u!114 &5117224502530415047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3361519573493428623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 806e502eb6f1bec43b50efcfb2df82ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShipRigidBody: {fileID: 3361519573493428609}
+  ShipRigidbodyView: {fileID: 2002595383450205168}
+  ShipTransform: {fileID: 3361519573493428610}
+  ShipRootGameObject: {fileID: 3361519573493428623}
+  ShipHoverPoints:
   - {fileID: 3361519571709343274}
   - {fileID: 3361519572041556664}
   - {fileID: 3361519573384139677}
   - {fileID: 3361519572054170105}
   - {fileID: 3361519573417196520}
-  centreGravite: {fileID: 3361519573417196520}
-  compensation: 1.5
+  ShipCentreGravite: {fileID: 3361519573417196520}
 --- !u!1 &3361519573588220659
 GameObject:
   m_ObjectHideFlags: 0
