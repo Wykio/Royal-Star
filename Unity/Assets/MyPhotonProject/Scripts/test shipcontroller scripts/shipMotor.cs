@@ -57,12 +57,16 @@ public class shipMotor : MonoBehaviour
             return;
         }
 
-        if (!GameStarted) return;
+        if (!GameStarted)
+        {
+            return;
+        }
 
         var activatedAvatarsCount = 0;
 
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
         {
+            Debug.Log($"{i} indice de joueur");
             
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
@@ -165,6 +169,22 @@ public class shipMotor : MonoBehaviour
 
     }
 
+    private void ResetGame()
+    {
+        for (var i = 0; i < vaisseaux.Length; i++)
+        {
+            var vaisseau = vaisseaux[i];
+            vaisseau.ShipRigidBody.velocity = Vector3.zero;
+            vaisseau.ShipRigidBody.angularVelocity = Vector3.zero;
+            vaisseau.ShipTransform.position = positionsDepart[i].position;
+            vaisseau.ShipTransform.rotation = positionsDepart[i].rotation;
+            vaisseau.ShipRigidbodyView.enabled = activatedIntentReceivers == onlineIntentReceivers;
+        }
+
+        ActiverIntentReceivers();
+        GameStarted = true;
+    }
+
     void DetectionDuSolOnLine(ShipExposer vaisseau)
     {
         Aerien = true;
@@ -193,9 +213,9 @@ public class shipMotor : MonoBehaviour
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
             float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
-
+            
             //vérification si la surface détectée est horizontale ou non, si c'est le cas, on ajoute une compensation au mouvement du vaisseau
-            if(Vector3.Magnitude(Quaternion.FromToRotation(Vector3.up, hit.normal).eulerAngles) > 0)
+            if (Vector3.Magnitude(Quaternion.FromToRotation(Vector3.up, hit.normal).eulerAngles) > 0)
             {
                 propulsionAvantAppliquee = speed * compensation;
                 forceLevitationAppliquee = hoverForce * (compensation / 2);
@@ -212,7 +232,7 @@ public class shipMotor : MonoBehaviour
             //plus on est proche du sol, plus la force de léviation est grande
             if (distance < hoverHeight)
             {
-                vaisseau.ShipRigidBody.AddForce(upvector * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
+                vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
                 vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight + 1f)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
             }
         }
@@ -296,6 +316,7 @@ public class shipMotor : MonoBehaviour
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
         activatedIntentReceivers = onlineIntentReceivers;
+        GameStarted = true;
     }
 
     //Desactiver l'ensemble des IntentReceivers de chaque vaisseau de la room
@@ -352,5 +373,6 @@ public class shipMotor : MonoBehaviour
         }
 
         DesactiverIntentReceivers();
+        ResetGame();
     }
 }
