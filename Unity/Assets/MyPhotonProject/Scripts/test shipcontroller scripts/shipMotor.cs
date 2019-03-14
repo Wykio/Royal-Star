@@ -16,7 +16,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float dampingHeight = 4f;
 
     //composants Photon pour mise en réseau
-    [Header("Composant Photon")]
+    [Header("Composants Photon")]
     [SerializeField] private PhotonView photonView;
     [SerializeField] private Transform[] positionsDepart;
     [SerializeField] private AIntentReceiver[] onlineIntentReceivers;
@@ -51,7 +51,7 @@ public class shipMotor : MonoBehaviour
             return;
         }
 
-        //si le client n'est pas le masterClient on ne fait rien
+        //si le client n'est pas le masterClient, on ne fait rien
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
         {
             return;
@@ -316,7 +316,7 @@ public class shipMotor : MonoBehaviour
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
         activatedIntentReceivers = onlineIntentReceivers;
-        GameStarted = true;
+        ResetGame();
     }
 
     //Desactiver l'ensemble des IntentReceivers de chaque vaisseau de la room
@@ -372,7 +372,12 @@ public class shipMotor : MonoBehaviour
             vaisseaux[i].ShipRootGameObject.SetActive(false);
         }
 
+        gameController.AfficherMenu();
         DesactiverIntentReceivers();
-        ResetGame();
+
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
     }
 }

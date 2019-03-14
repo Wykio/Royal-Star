@@ -55,7 +55,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     }
 
     //affichage des boutons du menu et des textes
-    private void AfficherMenu()
+    public void AfficherMenu()
     {
         boutonCreerRoom.gameObject.SetActive(false);
         boutonRejoindre.gameObject.SetActive(false);
@@ -89,6 +89,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             PlayerTtl = 10000
         });
 
+        //désactivation des textes
         message.gameObject.SetActive(false);
         erreur.gameObject.SetActive(false);
     }
@@ -106,6 +107,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //connexion à la room
         PhotonNetwork.JoinRandomRoom();
 
+        //désactivation des textes
         message.gameObject.SetActive(false);
         erreur.gameObject.SetActive(false);
     }
@@ -180,6 +182,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
         yield return new WaitForSeconds(0.1f);
+
         var i = 0;
         for (; i < PlayerNumbering.SortedPlayers.Length; i++)
         {
