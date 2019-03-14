@@ -11,4 +11,5 @@ public class ShipExposer : MonoBehaviour
     public GameObject ShipRootGameObject;
     public Transform[] ShipHoverPoints;
     public Transform ShipCentreGravite;
+    public Camera shipCamera;
 }

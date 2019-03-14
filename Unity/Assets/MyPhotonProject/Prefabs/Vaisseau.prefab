@@ -345,6 +345,7 @@ MonoBehaviour:
   - {fileID: 3361519572054170105}
   - {fileID: 3361519573417196520}
   ShipCentreGravite: {fileID: 3361519573417196520}
+  shipCamera: {fileID: 3361519573588220657}
 --- !u!1 &3361519573588220659
 GameObject:
   m_ObjectHideFlags: 0

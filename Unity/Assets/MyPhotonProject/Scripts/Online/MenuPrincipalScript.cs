@@ -138,7 +138,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //methode du MasterClient pour gérer l'arrivée d'un nouveau joueur
     private IEnumerator InformPlayerJoinedEndOfFrame(int actorNumber)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(2f);
         var i = 0;
         for (; i < PlayerNumbering.SortedPlayers.Length; i++)
         {
@@ -181,7 +181,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(2f);
 
         var i = 0;
         for (; i < PlayerNumbering.SortedPlayers.Length; i++)

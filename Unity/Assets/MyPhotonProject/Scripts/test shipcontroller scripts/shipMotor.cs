@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 
 public class shipMotor : MonoBehaviour
 {
@@ -293,6 +294,8 @@ public class shipMotor : MonoBehaviour
     private void ActivationVaisseauRPC(int idVaisseau)
     {
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
+        vaisseaux[idVaisseau].shipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
+
     }
 
     private void DesactivationVaisseau(int id)
