@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 
 public class shipMotor : MonoBehaviour
 {
@@ -14,18 +16,16 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float dampingSpeed = 0.95f;
     [SerializeField] private float dampingHeight = 4f;
 
-    //composants du vaisseau
-    [Header ("Composants du vaisseau")]
-    [SerializeField] private Transform[] hoverPoints;
-    [SerializeField] private Transform centreGravite;
-    private Transform shipTransform;
-    private Rigidbody shipRigidbody;
-
-    //variables pour les inputs
-    private float powerInput;
-    private float sourisHorizontale;
-    private float sourisVerticale;
-    private bool Aerien = true;
+    //composants Photon pour mise en réseau
+    [Header("Composants Photon")]
+    [SerializeField] private PhotonView photonView;
+    [SerializeField] private Transform[] positionsDepart;
+    [SerializeField] private AIntentReceiver[] onlineIntentReceivers;
+    [SerializeField] private ShipExposer[] vaisseaux;
+    [SerializeField] private MenuPrincipalScript gameController;
+    private AIntentReceiver[] activatedIntentReceivers;
+    private bool GameStarted { get; set; }
+    private bool Aerien;
 
     //paramètres avancés
     [SerializeField] private float compensation = 1.5f;
@@ -36,105 +36,166 @@ public class shipMotor : MonoBehaviour
 
     void Awake()
     {
-        shipRigidbody = GetComponent<Rigidbody>();
-        shipTransform = GetComponent<Transform>();
-    }
-
-    void Update()
-    {
-        powerInput = Input.GetAxis("Vertical");
-        sourisVerticale = -Input.GetAxis("Mouse Y");
-        sourisHorizontale = Input.GetAxis("Mouse X");  
+        gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
+        gameController.JoueurARejoint += ActivationVaisseau;
+        gameController.JoueurAQuitte += DesactivationVaisseau;
+        gameController.Deconnecte += FinPartie;
+        gameController.MasterclientSwitch += FinPartie;
     }
 
     void FixedUpdate()
     {
-        DetectionDuSol();
-
-        //si le vaisseau est prêt du sol, la lévitation est enclenchée
-        if (!Aerien) Hover();
-
-        //si le vaisseau est en l'air, les touches latérales le font rouler
-        if(Aerien)
+        //touche ECHAP pour quitter le jeu
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //si le joueur maintient CRTL enfoncé, le boost antigrav est activé
-            if(Input.GetKey(KeyCode.LeftShift))
-            {
-                Debug.Log("antigrav activé");
-                shipRigidbody.AddForce(shipTransform.forward * (speed * 2f) * powerInput, ForceMode.Force);
+            FinPartie();
+            return;
+        }
 
-                //rotation horizontale et verticale avec la souris
-                if(sourisHorizontale != 0f)
+        //si le client n'est pas le masterClient, on ne fait rien
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        if (!GameStarted)
+        {
+            return;
+        }
+
+        var activatedAvatarsCount = 0;
+
+        for (var i = 0; i < activatedIntentReceivers.Length; i++)
+        {
+            Debug.Log($"{i} indice de joueur");
+            
+            var intentReceiver = activatedIntentReceivers[i];
+            var vaisseau = vaisseaux[i];
+
+            //Nombre de joueurs encore en vie
+            activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
+
+            //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
+            DetectionDuSolOnLine(vaisseau);
+
+            //s'il est en contact avec le sol, on applique la fonction de lévitation
+            if(!Aerien) Hover(vaisseau);
+
+            activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
+
+            //si le vaisseau est en l'air on gère les intents suivants 
+            if(Aerien)
+            {
+                //si le vaisseau active le boost on gère ces intents
+                if(intentReceiver.AirBoostActivate)
                 {
-                    shipRigidbody.AddRelativeTorque(0, sourisHorizontale * (speed / 2f), 0);
+                    if(intentReceiver.BoostForward)
+                    {
+                        vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 2f), ForceMode.Force);
+                    }
+                    if(intentReceiver.BoostBackward)
+                    {
+                        vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * 2f), ForceMode.Force);
+                    }
+                    if(intentReceiver.AirRollLeft)
+                    {
+                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
+                    }
+                    if(intentReceiver.AirRollRight)
+                    {
+                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
+                    }
+                    if(intentReceiver.BoostPicht != 0f)
+                    {
+                        vaisseau.ShipRigidBody.AddRelativeTorque(0, 0, intentReceiver.BoostTurn * (speed / 2f));
+                    }
+                    if(intentReceiver.BoostTurn != 0f)
+                    {
+                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * (speed / 2f), 0);
+                    }
                 }
-                if(sourisVerticale != 0f)
+                else
                 {
-                    shipRigidbody.AddRelativeTorque(-sourisVerticale * (speed / 2f), 0, 0);
+                    //sinon on gère ces intents
+                    if(intentReceiver.AirPicthUp)
+                    {
+                        vaisseau.ShipTransform.Rotate(-speedRotate * Time.deltaTime, 0, 0);
+                    }
+                    if(intentReceiver.AirPitchDown)
+                    {
+                        vaisseau.ShipTransform.Rotate(speedRotate * Time.deltaTime, 0, 0);
+                    }
+                    if(intentReceiver.AirRollLeft)
+                    {
+                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
+                    }
+                    if(intentReceiver.AirRollRight)
+                    {
+                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
+                    }
                 }
             }
             else
             {
-                if (Input.GetKey(KeyCode.Q))
+                //sinon on gère ces intents 
+                var moveIntent = Vector3.zero;
+
+                if (intentReceiver.WantToGoForward)
                 {
-                    shipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
+                    moveIntent += vaisseau.ShipTransform.forward;
+                }
+                if (intentReceiver.WantToGoBackward)
+                {
+                    moveIntent += -vaisseau.ShipTransform.forward;
+                }
+                if (intentReceiver.WantToStrafeRight)
+                {
+                    moveIntent += vaisseau.ShipTransform.right;
+                }
+                if (intentReceiver.WantToStrafeLeft)
+                {
+                    moveIntent += -vaisseau.ShipTransform.right;
+                }
+                if(intentReceiver.WantToTurn != 0f)
+                {
+                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * (speed / 2f), 0);
                 }
 
-                if (Input.GetKey(KeyCode.D))
-                {
-                    shipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
-                }
-                if (Input.GetKey(KeyCode.Z))
-                {
-                    shipTransform.Rotate(speedRotate * Time.deltaTime, 0, 0);
-                }
-                if (Input.GetKey(KeyCode.S))
-                {
-                    shipTransform.Rotate(-speedRotate * Time.deltaTime, 0, 0);
-                }
+                moveIntent = moveIntent.normalized;
+
+                vaisseau.ShipRigidBody.AddForce(moveIntent * speed * propulsionAvantAppliquee, ForceMode.Force);
             }
-
-        }
-        else
-        {
-            // propulsion avant Z
-            shipRigidbody.AddForce(shipTransform.forward * powerInput * propulsionAvantAppliquee, ForceMode.Force);
-
-            //rotation horizontale avec la souris
-            shipRigidbody.AddRelativeTorque(0, sourisHorizontale * (speed / 2f), 0);
-
-            //si le vaisseau est au sol, les touches latérales le font strafer
-            if (Input.GetKey(KeyCode.D))
-            {
-                shipRigidbody.AddRelativeForce((speed) * Time.deltaTime, 0, 0, ForceMode.Impulse);  
-            }
-            else
-            {
-                if (Input.GetKey(KeyCode.Q))
-                {
-                    shipRigidbody.AddRelativeForce(-(speed) * Time.deltaTime, 0, 0, ForceMode.Impulse);
-                }
-            }  
+   
         }
 
-        //effet damping sur les vitesses de déplacement
-        shipRigidbody.velocity = new Vector3(shipRigidbody.velocity.x * dampingSpeed,
-        shipRigidbody.velocity.y,
-        shipRigidbody.velocity.z * dampingSpeed);
     }
 
-    //On vérifie si le vaisseau est en chute libre ou en lévitation
-    void DetectionDuSol()
+    private void ResetGame()
+    {
+        for (var i = 0; i < vaisseaux.Length; i++)
+        {
+            var vaisseau = vaisseaux[i];
+            vaisseau.ShipRigidBody.velocity = Vector3.zero;
+            vaisseau.ShipRigidBody.angularVelocity = Vector3.zero;
+            vaisseau.ShipTransform.position = positionsDepart[i].position;
+            vaisseau.ShipTransform.rotation = positionsDepart[i].rotation;
+            vaisseau.ShipRigidbodyView.enabled = activatedIntentReceivers == onlineIntentReceivers;
+        }
+
+        ActiverIntentReceivers();
+        GameStarted = true;
+    }
+
+    void DetectionDuSolOnLine(ShipExposer vaisseau)
     {
         Aerien = true;
 
-        foreach(Transform point in hoverPoints)
+        foreach(Transform point in vaisseau.ShipHoverPoints)
         {
             Ray scan = new Ray(point.position, -point.up);
-            
             RaycastHit hit;
 
-            if(Physics.Raycast(scan, out hit, hoverHeight + 0.5f))
+            if(Physics.Raycast(scan, out hit, hoverHeight + 1f))
             {
                 Aerien = false;
             }
@@ -142,20 +203,20 @@ public class shipMotor : MonoBehaviour
     }
 
     //fonction de lévitation
-    void Hover()
+    void Hover(ShipExposer vaisseau)
     {
-        Ray scan = new Ray(centreGravite.position, -centreGravite.up);
-        Ray scanDamping = new Ray(centreGravite.position, -centreGravite.up);
+        Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
+        Ray scanDamping = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
         RaycastHit hitDamping;
         Vector3 upvector;
 
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
-            float distance = Vector3.Distance(centreGravite.position, hit.point);
-
+            float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
+            
             //vérification si la surface détectée est horizontale ou non, si c'est le cas, on ajoute une compensation au mouvement du vaisseau
-            if(Vector3.Magnitude(Quaternion.FromToRotation(Vector3.up, hit.normal).eulerAngles) > 0)
+            if (Vector3.Magnitude(Quaternion.FromToRotation(Vector3.up, hit.normal).eulerAngles) > 0)
             {
                 propulsionAvantAppliquee = speed * compensation;
                 forceLevitationAppliquee = hoverForce * (compensation / 2);
@@ -172,26 +233,24 @@ public class shipMotor : MonoBehaviour
             //plus on est proche du sol, plus la force de léviation est grande
             if (distance < hoverHeight)
             {
-                shipRigidbody.AddForce(upvector * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
-                shipRigidbody.rotation = Quaternion.Slerp(shipRigidbody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(hoverPoints, hoverHeight + 1f)) * shipRigidbody.rotation, Time.fixedDeltaTime * 3.75f);
+                vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
+                vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight + 1f)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
             }
         }
 
         // effet de damping pour limiter le rebond du vaisseau
         if(Physics.Raycast(scanDamping, out hitDamping, dampingHeight))
         {
-            float distance = Vector3.Distance(centreGravite.position, hitDamping.point);
+            float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hitDamping.point);
 
             // si le vaisseau dépasse la hauteur de lévitation, on active le damping
             if(distance > hoverHeight)
             {
-                shipRigidbody.velocity = new Vector3(shipRigidbody.velocity.x,
-                shipRigidbody.velocity.y * dampingHover,
-                shipRigidbody.velocity.z);
+                vaisseau.ShipRigidBody.velocity = new Vector3(vaisseau.ShipRigidBody.velocity.x,
+                vaisseau.ShipRigidBody.velocity.y * dampingHover,
+                vaisseau.ShipRigidBody.velocity.z);
             }
         }
-        
-
     }
 
     //methode pour récupérer la moyenne des normales détectées par les capteurs
@@ -219,5 +278,109 @@ public class shipMotor : MonoBehaviour
         return normaleMoyenne / listeNormales.Count;
     }
 
+    private void ActivationVaisseau(int id)
+    {
+        if(PhotonNetwork.IsConnected)
+        {
+            photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id);
+        }
+        else
+        {
+            ActivationVaisseauRPC(id);
+        }
+    }
+
+    [PunRPC]
+    private void ActivationVaisseauRPC(int idVaisseau)
+    {
+        vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
+        vaisseaux[idVaisseau].shipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
+
+    }
+
+    private void DesactivationVaisseau(int id)
+    {
+        if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id);
+            }
+            else
+            {
+                DesactivationVaisseauRPC(id);
+            }
+    }
+
+    [PunRPC]
+    private void DesactivationVaisseauRPC(int idVaisseau)
+    {
+        vaisseaux[idVaisseau].ShipRootGameObject.SetActive(false);
+    }
+
+    private void ChooseAndSubscribeToOnlineIntentReceivers()
+    {
+        activatedIntentReceivers = onlineIntentReceivers;
+        ResetGame();
+    }
+
+    //Desactiver l'ensemble des IntentReceivers de chaque vaisseau de la room
+    private void DesactiverIntentReceivers()
+    {
+        if (activatedIntentReceivers == null)
+        {
+            return;
+        }
+
+        for (var i = 0; i < activatedIntentReceivers.Length; i++)
+        {
+            activatedIntentReceivers[i].enabled = false;
+        }
+    }
     
+    //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
+    private void ActiverIntentReceivers()
+    {
+        if (activatedIntentReceivers == null)
+        {
+            return;
+        }
+
+        for (var i = 0; i < activatedIntentReceivers.Length; i++)
+        {
+            activatedIntentReceivers[i].enabled = true;
+            activatedIntentReceivers[i].AirBoostActivate = false;
+            activatedIntentReceivers[i].AirPicthUp = false;
+            activatedIntentReceivers[i].AirPitchDown = false;
+            activatedIntentReceivers[i].AirRollRight = false;
+            activatedIntentReceivers[i].AirRollLeft = false;
+            activatedIntentReceivers[i].BoostBackward = false;
+            activatedIntentReceivers[i].BoostForward = false;
+            activatedIntentReceivers[i].BoostPicht = 0f;
+            activatedIntentReceivers[i].BoostTurn = 0f;
+            activatedIntentReceivers[i].WantToGoBackward = false;
+            activatedIntentReceivers[i].WantToGoForward = false;
+            activatedIntentReceivers[i].WantToStrafeLeft = false;
+            activatedIntentReceivers[i].WantToStrafeRight = false;
+            activatedIntentReceivers[i].WantToTurn = 0f;
+        }
+    }
+
+    //désactiver les vaisseaux et les intents
+    private void FinPartie()
+    {
+        GameStarted = false;
+        activatedIntentReceivers = null;
+
+        for (var i = 0; i < vaisseaux.Length; i++)
+        {
+            vaisseaux[i].ShipRootGameObject.SetActive(false);
+        }
+
+        gameController.AfficherMenu();
+        DesactiverIntentReceivers();
+
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
 }

@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/MyPhotonProject/Scenes/MainScene.unity
     guid: 049e6ae35edc6f342983a896b8495a7c
+  - enabled: 1
+    path: Assets/MyPhotonProject/Scenes/Test shipcontroller.unity
+    guid: 19060a6d8ee5bce47b936ea56964a771
   m_configObjects: {}
