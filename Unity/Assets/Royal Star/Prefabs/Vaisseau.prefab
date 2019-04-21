@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 5117224502530415047}
   m_Layer: 0
   m_Name: Vaisseau
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -323,7 +323,7 @@ MonoBehaviour:
   - {fileID: 2002595383450205168}
   - {fileID: 7056412912699809353}
   viewIdField: 0
-  InstantiationId: 2
+  InstantiationId: 1
   isRuntimeInstantiated: 0
 --- !u!114 &2002595383450205168
 MonoBehaviour:
@@ -580,6 +580,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c61cdc6bbf84ee9a8674c26dbadd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletManager: {fileID: 0}
+  bulletPopPositionTransform: {fileID: 0}
+  popInterval: 0
   playerRigidbody: {fileID: 3361519573493428609}
   playerTransform: {fileID: 3361519573493428610}
   playerName: DEBUG
@@ -718,9 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a47d8930a2f846da82e855d444652da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPopPositionTransform: {fileID: 3302824497955544181}
   bulletPoolManager: {fileID: 2380105399905091863}
-  popInterval: 0.5
 --- !u!114 &2380105399905091863
 MonoBehaviour:
   m_ObjectHideFlags: 0

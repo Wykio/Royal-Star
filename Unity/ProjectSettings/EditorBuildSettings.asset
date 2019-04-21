@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/MyPhotonProject/Scenes/MainScene.unity
     guid: 049e6ae35edc6f342983a896b8495a7c
   - enabled: 1
-    path: Assets/MyPhotonProject/Scenes/Test shipcontroller.unity
+    path: Assets/Royal Star/Scenes/Royal Star.unity
     guid: 19060a6d8ee5bce47b936ea56964a771
   m_configObjects: {}

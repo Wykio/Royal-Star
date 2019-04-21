@@ -162,6 +162,7 @@ namespace MyPhotonProject.Scripts
             {
                 StartCoroutine(InformPlayerJoinedEndOfFrame(newPlayer.ActorNumber));
             }
+            Debug.Log("enterred room");
         }
         
         private IEnumerator InformPlayerJoinedEndOfFrame(int actorNumber)
