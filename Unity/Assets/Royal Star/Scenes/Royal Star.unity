@@ -2849,12 +2849,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97cb150612388d4458a6b22ad08b6f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 40
-  hoverForce: 2000
+  speed: 500
+  hoverForce: 500
   hoverHeight: 3.5
-  speedRotate: 300
+  speedRotate: 50
   dampingHover: 0.85
-  dampingSpeed: 0.99
+  dampingSpeed: 0.95
   dampingHeight: 4.5
   photonView: {fileID: 1815358703}
   positionsDepart:

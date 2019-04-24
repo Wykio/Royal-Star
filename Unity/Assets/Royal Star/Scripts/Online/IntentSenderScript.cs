@@ -14,7 +14,7 @@ public class IntentSenderScript : AIntentReceiver
 
     public void Update()
     {
-        Debug.Log(PlayerNumbering.SortedPlayers.Length );
+        
         //si le joueur n'est pas dans la liste des joueurs ou que son numéro ne correspond pas au numéro de son indice
         if (PlayerNumbering.SortedPlayers.Length <= IndiceJoueur ||
                 PlayerNumbering.SortedPlayers[IndiceJoueur].ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)

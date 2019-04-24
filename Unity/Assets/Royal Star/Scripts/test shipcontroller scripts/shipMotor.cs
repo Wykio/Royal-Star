@@ -8,13 +8,13 @@ public class shipMotor : MonoBehaviour
 {
     //potentiomètres pour bidouiller les stats du vaisseau
     [Header ("Potentiomètres du vaisseau")]
-    [SerializeField] private float speed = 90f;
-    [SerializeField] private float hoverForce = 65f;
-    [SerializeField] private float hoverHeight = 3.5f;
-    [SerializeField] private float speedRotate = 100;
-    [SerializeField] private float dampingHover = 0.85f;
-    [SerializeField] private float dampingSpeed = 0.95f;
-    [SerializeField] private float dampingHeight = 4f;
+    [SerializeField] private float speed;
+    [SerializeField] private float hoverForce;
+    [SerializeField] private float hoverHeight;
+    [SerializeField] private float speedRotate;
+    [SerializeField] private float dampingHover;
+    [SerializeField] private float dampingSpeed;
+    [SerializeField] private float dampingHeight;
 
     //composants Photon pour mise en réseau
     [Header("Composants Photon")]
@@ -66,9 +66,7 @@ public class shipMotor : MonoBehaviour
         var activatedAvatarsCount = 0;
 
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
-        {
-            Debug.Log($"{i} indice de joueur");
-            
+        {   
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
@@ -108,10 +106,12 @@ public class shipMotor : MonoBehaviour
                     if(intentReceiver.BoostPicht != 0f)
                     {
                         vaisseau.ShipRigidBody.AddRelativeTorque(0, 0, intentReceiver.BoostTurn * (speed / 2f));
+                        intentReceiver.WantToTurn = 0f;
                     }
                     if(intentReceiver.BoostTurn != 0f)
                     {
                         vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * (speed / 2f), 0);
+                        intentReceiver.WantToTurn = 0f;
                     }
                 }
                 else
@@ -158,12 +158,13 @@ public class shipMotor : MonoBehaviour
                 }
                 if(intentReceiver.WantToTurn != 0f)
                 {
-                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * (speed / 2f), 0);
+                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * speedRotate, 0);
+                    intentReceiver.WantToTurn = 0f;
                 }
 
                 moveIntent = moveIntent.normalized;
 
-                vaisseau.ShipRigidBody.AddForce(moveIntent * speed * propulsionAvantAppliquee, ForceMode.Force);
+                vaisseau.ShipRigidBody.AddForce(moveIntent * propulsionAvantAppliquee, ForceMode.Force);
             }
    
         }
@@ -189,17 +190,15 @@ public class shipMotor : MonoBehaviour
     void DetectionDuSolOnLine(ShipExposer vaisseau)
     {
         Aerien = true;
-
-        foreach(Transform point in vaisseau.ShipHoverPoints)
+        
+        Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
+        RaycastHit hit;
+ 
+        if(Physics.Raycast(scan, out hit, hoverHeight + 1f))
         {
-            Ray scan = new Ray(point.position, -point.up);
-            RaycastHit hit;
-
-            if(Physics.Raycast(scan, out hit, hoverHeight + 1f))
-            {
-                Aerien = false;
-            }
+            Aerien = false;
         }
+        
     }
 
     //fonction de lévitation
@@ -209,7 +208,6 @@ public class shipMotor : MonoBehaviour
         Ray scanDamping = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
         RaycastHit hitDamping;
-        Vector3 upvector;
 
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
@@ -220,22 +218,20 @@ public class shipMotor : MonoBehaviour
             {
                 propulsionAvantAppliquee = speed * compensation;
                 forceLevitationAppliquee = hoverForce * (compensation / 2);
-                upvector = Vector3.up;
             }
             else
             {
                 //sinon on applique la règle simple
                 propulsionAvantAppliquee = speed;
                 forceLevitationAppliquee = hoverForce;
-                upvector = Vector3.up;
             }
 
             //plus on est proche du sol, plus la force de léviation est grande
-            if (distance < hoverHeight)
-            {
-                vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
-                vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight + 1f)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
-            }
+            vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
+
+            //pour que l'inclinaison du vaisseau suive le terrain
+            vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
+            Debug.Log("vecteur levitation" + recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight).ToString());
         }
 
         // effet de damping pour limiter le rebond du vaisseau
@@ -251,6 +247,13 @@ public class shipMotor : MonoBehaviour
                 vaisseau.ShipRigidBody.velocity.z);
             }
         }
+
+        //effet de damping sur la propulsion
+        vaisseau.ShipRigidBody.velocity = new Vector3(
+            vaisseau.ShipRigidBody.velocity.x * dampingSpeed,
+            vaisseau.ShipRigidBody.velocity.y,
+            vaisseau.ShipRigidBody.velocity.z * dampingSpeed);
+
     }
 
     //methode pour récupérer la moyenne des normales détectées par les capteurs
