@@ -89,11 +89,11 @@ public class shipMotor : MonoBehaviour
                 {
                     if(intentReceiver.BoostForward)
                     {
-                        vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 2f), ForceMode.Force);
+                        vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
                     }
                     if(intentReceiver.BoostBackward)
                     {
-                        vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * 2f), ForceMode.Force);
+                        vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
                     }
                     if(intentReceiver.AirRollLeft)
                     {
@@ -214,10 +214,10 @@ public class shipMotor : MonoBehaviour
             float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
             
             //vérification si la surface détectée est horizontale ou non, si c'est le cas, on ajoute une compensation au mouvement du vaisseau
-            if (Vector3.Magnitude(Quaternion.FromToRotation(Vector3.up, hit.normal).eulerAngles) > 0)
+            if (Vector3.Magnitude(Quaternion.FromToRotation(vaisseau.ShipTransform.up, hit.normal).eulerAngles) > 0)
             {
-                propulsionAvantAppliquee = speed * compensation;
-                forceLevitationAppliquee = hoverForce * (compensation / 2);
+                propulsionAvantAppliquee = speed;
+                forceLevitationAppliquee = hoverForce;
             }
             else
             {
@@ -230,8 +230,8 @@ public class shipMotor : MonoBehaviour
             vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
 
             //pour que l'inclinaison du vaisseau suive le terrain
-            vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(transform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
-            Debug.Log("vecteur levitation" + recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight).ToString());
+            vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(vaisseau.ShipTransform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
+            Debug.DrawRay(vaisseau.ShipCentreGravite.position, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight), Color.red);
         }
 
         // effet de damping pour limiter le rebond du vaisseau
