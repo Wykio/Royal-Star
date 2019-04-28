@@ -70,13 +70,13 @@ public class IntentSenderScript : AIntentReceiver
         if (Input.GetKeyDown(KeyCode.D))
         {
             photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, true);
-            photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, true);
+            photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, true);
         }
 
         if (Input.GetKeyUp(KeyCode.D))
         {
             photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, false);
-            photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, false);
+            photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, false);
         }
 
         if (sourisHorizontale != 0f)
@@ -93,6 +93,11 @@ public class IntentSenderScript : AIntentReceiver
         if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, true);
+        }
+
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
         }
         #endregion
     }

@@ -49,6 +49,11 @@ public class shipMotor : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             FinPartie();
+
+            //on remet le curseur visible
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
             return;
         }
 
@@ -70,6 +75,8 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
+            Debug.Log(intentReceiver.BoostPicht.ToString());
+
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
 
@@ -78,8 +85,6 @@ public class shipMotor : MonoBehaviour
 
             //s'il est en contact avec le sol, on applique la fonction de lévitation
             if(!Aerien) Hover(vaisseau);
-
-            activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
 
             //si le vaisseau est en l'air on gère les intents suivants 
             if(Aerien)
@@ -105,13 +110,13 @@ public class shipMotor : MonoBehaviour
                     }
                     if(intentReceiver.BoostPicht != 0f)
                     {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(0, 0, intentReceiver.BoostTurn * (speed / 2f));
-                        intentReceiver.WantToTurn = 0f;
+                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPicht * speedRotate, 0, 0);
+                        intentReceiver.BoostPicht = 0f;
                     }
                     if(intentReceiver.BoostTurn != 0f)
                     {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * (speed / 2f), 0);
-                        intentReceiver.WantToTurn = 0f;
+                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate, 0);
+                        intentReceiver.BoostTurn = 0f;
                     }
                 }
                 else
@@ -166,25 +171,11 @@ public class shipMotor : MonoBehaviour
 
                 vaisseau.ShipRigidBody.AddForce(moveIntent * propulsionAvantAppliquee, ForceMode.Force);
             }
-   
+
+            //application de l'effet de damping sur le vaisseau
+            Damping(vaisseau);
         }
 
-    }
-
-    private void ResetGame()
-    {
-        for (var i = 0; i < vaisseaux.Length; i++)
-        {
-            var vaisseau = vaisseaux[i];
-            vaisseau.ShipRigidBody.velocity = Vector3.zero;
-            vaisseau.ShipRigidBody.angularVelocity = Vector3.zero;
-            vaisseau.ShipTransform.position = positionsDepart[i].position;
-            vaisseau.ShipTransform.rotation = positionsDepart[i].rotation;
-            vaisseau.ShipRigidbodyView.enabled = activatedIntentReceivers == onlineIntentReceivers;
-        }
-
-        ActiverIntentReceivers();
-        GameStarted = true;
     }
 
     void DetectionDuSolOnLine(ShipExposer vaisseau)
@@ -194,20 +185,17 @@ public class shipMotor : MonoBehaviour
         Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
  
-        if(Physics.Raycast(scan, out hit, hoverHeight + 1f))
+        if(Physics.Raycast(scan, out hit, dampingHeight))
         {
             Aerien = false;
-        }
-        
+        } 
     }
 
     //fonction de lévitation
     void Hover(ShipExposer vaisseau)
     {
         Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
-        Ray scanDamping = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
-        RaycastHit hitDamping;
 
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
@@ -230,34 +218,33 @@ public class shipMotor : MonoBehaviour
             vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
 
             //pour que l'inclinaison du vaisseau suive le terrain
-            vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(vaisseau.ShipTransform.up, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
-            Debug.DrawRay(vaisseau.ShipCentreGravite.position, recupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight), Color.red);
+            vaisseau.ShipRigidBody.rotation = Quaternion.Slerp(vaisseau.ShipRigidBody.rotation, Quaternion.FromToRotation(vaisseau.ShipTransform.up, RecupNormaleMoyenne(vaisseau.ShipHoverPoints, hoverHeight)) * vaisseau.ShipRigidBody.rotation, Time.fixedDeltaTime * 3.75f);
         }
+    }
 
-        // effet de damping pour limiter le rebond du vaisseau
-        if(Physics.Raycast(scanDamping, out hitDamping, dampingHeight))
+    //fonction de damping pour limiter les forces sur le vaisseau
+    void Damping(ShipExposer vaisseau)
+    {
+        //si le vaisseau est en l'air, le damping est modéré
+        if(Aerien)
         {
-            float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hitDamping.point);
-
-            // si le vaisseau dépasse la hauteur de lévitation, on active le damping
-            if(distance > hoverHeight)
-            {
-                vaisseau.ShipRigidBody.velocity = new Vector3(vaisseau.ShipRigidBody.velocity.x,
-                vaisseau.ShipRigidBody.velocity.y * dampingHover,
-                vaisseau.ShipRigidBody.velocity.z);
-            }
+            vaisseau.ShipRigidBody.velocity = new Vector3(
+                vaisseau.ShipRigidBody.velocity.x * dampingSpeed * 1.04f,
+                vaisseau.ShipRigidBody.velocity.y > 0 ? vaisseau.ShipRigidBody.velocity.y * dampingHover : vaisseau.ShipRigidBody.velocity.y,
+                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f);
         }
-
-        //effet de damping sur la propulsion
-        vaisseau.ShipRigidBody.velocity = new Vector3(
-            vaisseau.ShipRigidBody.velocity.x * dampingSpeed,
-            vaisseau.ShipRigidBody.velocity.y,
-            vaisseau.ShipRigidBody.velocity.z * dampingSpeed);
-
+        else
+        {
+            //s'il est au sol le damping est plus élevé
+            vaisseau.ShipRigidBody.velocity = new Vector3(
+                vaisseau.ShipRigidBody.velocity.x * dampingSpeed,
+                vaisseau.ShipRigidBody.velocity.y * dampingHover,
+                vaisseau.ShipRigidBody.velocity.z * dampingSpeed);
+        }
     }
 
     //methode pour récupérer la moyenne des normales détectées par les capteurs
-    Vector3 recupNormaleMoyenne(Transform[] points, float distance)
+    Vector3 RecupNormaleMoyenne(Transform[] points, float distance)
     {
         List<Vector3> listeNormales = new List<Vector3>();
         Vector3 normaleMoyenne = Vector3.zero;
@@ -281,9 +268,31 @@ public class shipMotor : MonoBehaviour
         return normaleMoyenne / listeNormales.Count;
     }
 
+    #region fonctions Photon
+
+    private void ResetGame()
+    {
+        for (var i = 0; i < vaisseaux.Length; i++)
+        {
+            var vaisseau = vaisseaux[i];
+            vaisseau.ShipRigidBody.velocity = Vector3.zero;
+            vaisseau.ShipRigidBody.angularVelocity = Vector3.zero;
+            vaisseau.ShipTransform.position = positionsDepart[i].position;
+            vaisseau.ShipTransform.rotation = positionsDepart[i].rotation;
+            vaisseau.ShipRigidbodyView.enabled = activatedIntentReceivers == onlineIntentReceivers;
+        }
+
+        ActiverIntentReceivers();
+        GameStarted = true;
+    }
+
     private void ActivationVaisseau(int id)
     {
-        if(PhotonNetwork.IsConnected)
+        //on bloque et cache le curseur de la souris
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        if (PhotonNetwork.IsConnected)
         {
             photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id);
         }
@@ -386,4 +395,6 @@ public class shipMotor : MonoBehaviour
             PhotonNetwork.Disconnect();
         }
     }
+
+    #endregion
 }

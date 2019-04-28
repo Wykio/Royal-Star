@@ -2748,10 +2748,10 @@ MonoBehaviour:
   speed: 500
   hoverForce: 800
   hoverHeight: 3.5
-  speedRotate: 50
+  speedRotate: 100
   dampingHover: 0.7
   dampingSpeed: 0.95
-  dampingHeight: 4.5
+  dampingHeight: 5
   photonView: {fileID: 1815358703}
   positionsDepart:
   - {fileID: 1376070143}
