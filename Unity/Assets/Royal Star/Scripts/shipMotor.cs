@@ -296,12 +296,12 @@ public class shipMotor : MonoBehaviour
     void HitboxTriggerEnter(Collider other, int id)
     {
         if (Equals(other.gameObject.tag, "Bullet"))
-            {
-                int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
+        {
+            int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 
-                vaisseaux[id].TakeDamage(damage);
-                Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
-            }
+            vaisseaux[id].TakeDamage(damage);
+            Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
+        }
     }
 
     #region fonctions Photon
@@ -430,7 +430,7 @@ public class shipMotor : MonoBehaviour
         {
             PhotonNetwork.Disconnect();
         }
-        
+
         gameController.AfficherMenu();
     }
 
