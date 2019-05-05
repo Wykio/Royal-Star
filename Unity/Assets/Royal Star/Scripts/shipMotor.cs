@@ -25,7 +25,6 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private MenuPrincipalScript gameController;
     private AIntentReceiver[] activatedIntentReceivers;
     private bool GameStarted { get; set; }
-    private bool Aerien;
 
     //paramètres avancés
     [SerializeField] private float compensation = 1.5f;
@@ -77,16 +76,20 @@ public class shipMotor : MonoBehaviour
 
             //Debug.Log(intentReceiver.BoostPitch.ToString());
 
+            if (!vaisseau.alive)
+            {
+                break;
+            }
+
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
 
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
-                
+            
             //S'il veut tirer
             if(intentReceiver.WantToShootFirst)
             {
-                Debug.Log(vaisseau.ShipWeapons[0]);
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex]?.Shoot();
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
@@ -95,10 +98,10 @@ public class shipMotor : MonoBehaviour
             }
 
             //s'il est en contact avec le sol, on applique la fonction de lévitation
-            if(!Aerien) Hover(vaisseau);
+            if(!vaisseau.Aerien) Hover(vaisseau);
 
             //si le vaisseau est en l'air on gère les intents suivants 
-            if(Aerien)
+            if(vaisseau.Aerien)
             {
                 //si le vaisseau active le boost on gère ces intents
                 if(intentReceiver.AirBoostActivate)
@@ -191,14 +194,14 @@ public class shipMotor : MonoBehaviour
 
     void DetectionDuSolOnLine(ShipExposer vaisseau)
     {
-        Aerien = true;
+        vaisseau.Aerien = true;
         
         Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
  
-        if(Physics.Raycast(scan, out hit, dampingHeight))
+        if (Physics.Raycast(scan, out hit, dampingHeight))
         {
-            Aerien = false;
+            vaisseau.Aerien = false;
         } 
     }
 
@@ -237,12 +240,13 @@ public class shipMotor : MonoBehaviour
     void Damping(ShipExposer vaisseau)
     {
         //si le vaisseau est en l'air, le damping est modéré
-        if(Aerien)
+        if(vaisseau.Aerien)
         {
             vaisseau.ShipRigidBody.velocity = new Vector3(
                 vaisseau.ShipRigidBody.velocity.x * dampingSpeed * 1.04f,
                 vaisseau.ShipRigidBody.velocity.y > 0 ? vaisseau.ShipRigidBody.velocity.y * dampingHover : vaisseau.ShipRigidBody.velocity.y,
-                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f);
+                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f
+            );
         }
         else
         {
@@ -250,7 +254,8 @@ public class shipMotor : MonoBehaviour
             vaisseau.ShipRigidBody.velocity = new Vector3(
                 vaisseau.ShipRigidBody.velocity.x * dampingSpeed,
                 vaisseau.ShipRigidBody.velocity.y * dampingHover,
-                vaisseau.ShipRigidBody.velocity.z * dampingSpeed);
+                vaisseau.ShipRigidBody.velocity.z * dampingSpeed
+            );
         }
     }
 
@@ -277,6 +282,17 @@ public class shipMotor : MonoBehaviour
         }
 
         return normaleMoyenne / listeNormales.Count;
+    }
+
+    void HitboxTriggerEnter(Collider other, int id)
+    {
+        if (Equals(other.gameObject.tag, "Bullet"))
+            {
+                int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
+
+                vaisseaux[id].TakeDamage(damage);
+                Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
+            }
     }
 
     #region fonctions Photon
@@ -318,19 +334,19 @@ public class shipMotor : MonoBehaviour
     {
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
         vaisseaux[idVaisseau].ShipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
-
+        vaisseaux[idVaisseau].ShipHitbox.Subscribe((Collider other) => HitboxTriggerEnter(other, idVaisseau));
     }
 
     private void DesactivationVaisseau(int id)
     {
         if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id);
-            }
-            else
-            {
-                DesactivationVaisseauRPC(id);
-            }
+        {
+            photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id);
+        }
+        else
+        {
+            DesactivationVaisseauRPC(id);
+        }
     }
 
     [PunRPC]
@@ -384,6 +400,7 @@ public class shipMotor : MonoBehaviour
             activatedIntentReceivers[i].WantToStrafeLeft = false;
             activatedIntentReceivers[i].WantToStrafeRight = false;
             activatedIntentReceivers[i].WantToTurn = 0f;
+            activatedIntentReceivers[i].WantToShootFirst = false;
         }
     }
 

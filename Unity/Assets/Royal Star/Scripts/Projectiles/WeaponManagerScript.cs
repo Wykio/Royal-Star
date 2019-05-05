@@ -30,10 +30,8 @@ public class WeaponManagerScript : MonoBehaviour
 
     public void Shoot()
     {
-        Debug.Log($"{nextPopTime} ${Time.time}");
         if (Time.time > nextPopTime)
         {
-            Debug.Log("SHOOOOOOOOT");
             bulletPoolManager.Shoot(bulletPopPosition);
             setNextPopTime();
         }

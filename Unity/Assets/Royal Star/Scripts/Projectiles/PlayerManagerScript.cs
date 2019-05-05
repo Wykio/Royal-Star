@@ -14,10 +14,6 @@ public class PlayerManagerScript : MonoBehaviour
     [SerializeField]
     private string playerName = "Test";
 
-    [SerializeField]
-    private bool activePlayer;
-
-    private float speed = 10.0f;
     private bool alive = true;
     private int hp = 150;
 
@@ -37,7 +33,7 @@ public class PlayerManagerScript : MonoBehaviour
 
     void Update()
     {
-        if (!alive || !activePlayer)
+        if (!alive)
             return ;
         /*if (Input.GetMouseButtonDown(0) && Time.time > nextPopTime)
         {

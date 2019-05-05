@@ -64,7 +64,6 @@ public class BulletExposerScript : MonoBehaviour
 
 	public void SetParentReference(Vector3 position, Vector3 velocity, Quaternion rotation)
 	{
-		Debug.Log(velocity);
 		targetTransform.position = position;
 		targetRigidBody.velocity = velocity * speed;
 		targetTransform.rotation = rotation;
