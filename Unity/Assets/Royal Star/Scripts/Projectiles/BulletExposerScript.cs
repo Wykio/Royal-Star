@@ -29,11 +29,6 @@ public class BulletExposerScript : MonoBehaviour
 	private float lifeTime = 2.0f;
 	private float popTime = 0.0f;
 
-	void Start()
-	{
-		triggerExposer.Subscribe(MyOnTriggerEnter);
-	}
-
 	void MyOnTriggerEnter(Collider other)
 	{
 		destroy = true;
@@ -50,6 +45,7 @@ public class BulletExposerScript : MonoBehaviour
         targetCollider.enabled = true;
         targetRigidBody.isKinematic = false;
         targetMeshRenderer.enabled = true;
+		triggerExposer.Subscribe(MyOnTriggerEnter);
 		destroy = false;
 		popTime = Time.time;
 	}
@@ -59,6 +55,7 @@ public class BulletExposerScript : MonoBehaviour
 		targetCollider.enabled = false;
         targetRigidBody.isKinematic = true;
         targetMeshRenderer.enabled = false;
+		triggerExposer.UnSubscribe();
 		destroy = false;
 	}
 
