@@ -423,14 +423,15 @@ public class shipMotor : MonoBehaviour
         {
             vaisseaux[i].ShipRootGameObject.SetActive(false);
         }
-
-        gameController.AfficherMenu();
+        
         DesactiverIntentReceivers();
 
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.Disconnect();
         }
+        
+        gameController.AfficherMenu();
     }
 
     #endregion
