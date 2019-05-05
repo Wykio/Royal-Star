@@ -80,11 +80,22 @@ public class shipMotor : MonoBehaviour
             if(intentReceiver.WantToShootFirst)
             {
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex]?.Shoot();
+
+                //Si l'arme est automatique, il peut rester appuyé pour tirer
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
                     intentReceiver.WantToShootFirst = false;
                 }
             }
+
+            float totalWeight = 0;
+
+            for (int j = 0; j < vaisseau.ShipWeapons.Length; j++)
+            {
+                totalWeight += vaisseau.ShipWeapons[j].GetWeight();
+            }
+
+            float weightRatio = 2 / (totalWeight + 1);
 
             //s'il est en contact avec le sol, on applique la fonction de lévitation
             if(!vaisseau.Aerien) Hover(vaisseau);
@@ -97,11 +108,11 @@ public class shipMotor : MonoBehaviour
                 {
                     if(intentReceiver.BoostForward)
                     {
-                        vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
+                        vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * weightRatio * 1.5f), ForceMode.Force);
                     }
                     if(intentReceiver.BoostBackward)
                     {
-                        vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
+                        vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * weightRatio * 1.5f), ForceMode.Force);
                     }
                     if(intentReceiver.AirRollLeft)
                     {
@@ -113,12 +124,12 @@ public class shipMotor : MonoBehaviour
                     }
                     if(intentReceiver.BoostPitch != 0f)
                     {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate, 0, 0);
+                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate * weightRatio, 0, 0);
                         intentReceiver.BoostPitch = 0f;
                     }
                     if(intentReceiver.BoostTurn != 0f)
                     {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate, 0);
+                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate * weightRatio, 0);
                         intentReceiver.BoostTurn = 0f;
                     }
                 }
@@ -127,19 +138,19 @@ public class shipMotor : MonoBehaviour
                     //sinon on gère ces intents
                     if(intentReceiver.AirPitchUp)
                     {
-                        vaisseau.ShipTransform.Rotate(-speedRotate * Time.deltaTime, 0, 0);
+                        vaisseau.ShipTransform.Rotate(-speedRotate * weightRatio * Time.deltaTime, 0, 0);
                     }
                     if(intentReceiver.AirPitchDown)
                     {
-                        vaisseau.ShipTransform.Rotate(speedRotate * Time.deltaTime, 0, 0);
+                        vaisseau.ShipTransform.Rotate(speedRotate * weightRatio * Time.deltaTime, 0, 0);
                     }
                     if(intentReceiver.AirRollLeft)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
+                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * weightRatio * Time.deltaTime);
                     }
                     if(intentReceiver.AirRollRight)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
+                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * weightRatio * Time.deltaTime);
                     }
                 }
             }
@@ -166,23 +177,23 @@ public class shipMotor : MonoBehaviour
                 }
                 if(intentReceiver.WantToTurn != 0f)
                 {
-                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * speedRotate, 0);
+                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * speedRotate * weightRatio, 0);
                     intentReceiver.WantToTurn = 0f;
                 }
 
                 moveIntent = moveIntent.normalized;
 
-                vaisseau.ShipRigidBody.AddForce(moveIntent * propulsionAvantAppliquee, ForceMode.Force);
+                vaisseau.ShipRigidBody.AddForce(moveIntent * propulsionAvantAppliquee * weightRatio, ForceMode.Force);
             }
 
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }
 
-        if (activatedAvatarsCount <= 1) {
+        /*if (activatedAvatarsCount <= 1) {
             gameStarted = false;
             FinPartie();
-        }
+        }*/
     }
 
     void FixedUpdate()
@@ -295,7 +306,7 @@ public class shipMotor : MonoBehaviour
 
     void HitboxTriggerEnter(Collider other, int id)
     {
-        if (Equals(other.gameObject.tag, "Bullet"))
+        if (vaisseaux[id].alive && Equals(other.gameObject.tag, "Bullet"))
         {
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 

@@ -16,6 +16,9 @@ public class WeaponManagerScript : MonoBehaviour
     [SerializeField]
     private Transform bulletPopPosition;
 
+    [SerializeField]
+    private float weaponWeight;
+
     private float nextPopTime = float.MinValue;
 
     private void setNextPopTime()
@@ -26,6 +29,11 @@ public class WeaponManagerScript : MonoBehaviour
     public bool GetAutomatic()
     {
         return automatic;
+    }
+
+    public float GetWeight()
+    {
+        return weaponWeight;
     }
 
     public void Shoot()
