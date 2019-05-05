@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 094f2297b719e46f4a2dd3dc0c28cd94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 18
+  speed: 270
   triggerExposer: {fileID: 6730916917441119360}
   targetMeshRenderer: {fileID: 123603032429473281}
   targetRigidBody: {fileID: 1612006165030118780}

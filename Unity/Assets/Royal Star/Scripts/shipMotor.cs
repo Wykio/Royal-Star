@@ -75,13 +75,24 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            Debug.Log(intentReceiver.BoostPicht.ToString());
+            //Debug.Log(intentReceiver.BoostPitch.ToString());
 
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
 
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
+                
+            //S'il veut tirer
+            if(intentReceiver.WantToShootFirst)
+            {
+                Debug.Log(vaisseau.ShipWeapons[0]);
+                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex]?.Shoot();
+                if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
+                {
+                    intentReceiver.WantToShootFirst = false;
+                }
+            }
 
             //s'il est en contact avec le sol, on applique la fonction de lévitation
             if(!Aerien) Hover(vaisseau);
@@ -108,10 +119,10 @@ public class shipMotor : MonoBehaviour
                     {
                         vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
                     }
-                    if(intentReceiver.BoostPicht != 0f)
+                    if(intentReceiver.BoostPitch != 0f)
                     {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPicht * speedRotate, 0, 0);
-                        intentReceiver.BoostPicht = 0f;
+                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate, 0, 0);
+                        intentReceiver.BoostPitch = 0f;
                     }
                     if(intentReceiver.BoostTurn != 0f)
                     {
@@ -122,7 +133,7 @@ public class shipMotor : MonoBehaviour
                 else
                 {
                     //sinon on gère ces intents
-                    if(intentReceiver.AirPicthUp)
+                    if(intentReceiver.AirPitchUp)
                     {
                         vaisseau.ShipTransform.Rotate(-speedRotate * Time.deltaTime, 0, 0);
                     }
@@ -306,7 +317,7 @@ public class shipMotor : MonoBehaviour
     private void ActivationVaisseauRPC(int idVaisseau)
     {
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
-        vaisseaux[idVaisseau].shipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
+        vaisseaux[idVaisseau].ShipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
 
     }
 
@@ -360,13 +371,13 @@ public class shipMotor : MonoBehaviour
         {
             activatedIntentReceivers[i].enabled = true;
             activatedIntentReceivers[i].AirBoostActivate = false;
-            activatedIntentReceivers[i].AirPicthUp = false;
+            activatedIntentReceivers[i].AirPitchUp = false;
             activatedIntentReceivers[i].AirPitchDown = false;
             activatedIntentReceivers[i].AirRollRight = false;
             activatedIntentReceivers[i].AirRollLeft = false;
             activatedIntentReceivers[i].BoostBackward = false;
             activatedIntentReceivers[i].BoostForward = false;
-            activatedIntentReceivers[i].BoostPicht = 0f;
+            activatedIntentReceivers[i].BoostPitch = 0f;
             activatedIntentReceivers[i].BoostTurn = 0f;
             activatedIntentReceivers[i].WantToGoBackward = false;
             activatedIntentReceivers[i].WantToGoForward = false;

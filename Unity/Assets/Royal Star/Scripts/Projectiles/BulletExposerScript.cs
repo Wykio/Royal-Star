@@ -5,6 +5,12 @@ using UnityEngine;
 public class BulletExposerScript : MonoBehaviour
 {
 	[SerializeField]
+	private int damage;
+
+	[SerializeField]
+	private float speed;
+
+	[SerializeField]
 	private HitboxExposerScript triggerExposer;
     
 	[SerializeField]
@@ -19,15 +25,12 @@ public class BulletExposerScript : MonoBehaviour
 	[SerializeField]
 	private Collider targetCollider;
 
-	private bool destroy;
-	private float lifeTime;
-	private float popTime;
+	private bool destroy = false;
+	private float lifeTime = 2.0f;
+	private float popTime = 0.0f;
 
 	void Start()
 	{
-		destroy = false;
-		lifeTime = 2.0f;
-		popTime = 0.0f;
 		triggerExposer.Subscribe(MyOnTriggerEnter);
 	}
 
@@ -61,11 +64,13 @@ public class BulletExposerScript : MonoBehaviour
 
 	public void SetParentReference(Vector3 position, Vector3 velocity, Quaternion rotation)
 	{
+		Debug.Log(velocity);
 		targetTransform.position = position;
-		targetRigidBody.velocity = velocity * 250;
+		targetRigidBody.velocity = velocity * speed;
 		targetTransform.rotation = rotation;
 		targetTransform.Rotate(new Vector3(-90, -90, -90));
 	}
+
 	public void SetPosition(Vector3 position)
 	{
 		targetTransform.position = position;
@@ -84,7 +89,7 @@ public class BulletExposerScript : MonoBehaviour
 
 	public int GetDamage()
 	{
-		return 30;
+		return damage;
 	}
 
 	void Update()
