@@ -24,7 +24,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private ShipExposer[] vaisseaux;
     [SerializeField] private MenuPrincipalScript gameController;
     private AIntentReceiver[] activatedIntentReceivers;
-    private bool GameStarted { get; set; }
+    private bool gameStarted { get; set; }
 
     //paramètres avancés
     [SerializeField] private float compensation = 1.5f;
@@ -42,7 +42,7 @@ public class shipMotor : MonoBehaviour
         gameController.MasterclientSwitch += FinPartie;
     }
 
-    void FixedUpdate()
+    void UpdateGameState()
     {
         //touche ECHAP pour quitter le jeu
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -53,17 +53,6 @@ public class shipMotor : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-            return;
-        }
-
-        //si le client n'est pas le masterClient, on ne fait rien
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-
-        if (!GameStarted)
-        {
             return;
         }
 
@@ -190,6 +179,26 @@ public class shipMotor : MonoBehaviour
             Damping(vaisseau);
         }
 
+        if (activatedAvatarsCount <= 1) {
+            gameStarted = false;
+            FinPartie();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        //si le client n'est pas le masterClient, on ne fait rien
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        if (!gameStarted)
+        {
+            return;
+        }
+
+        UpdateGameState();
     }
 
     void DetectionDuSolOnLine(ShipExposer vaisseau)
@@ -310,7 +319,7 @@ public class shipMotor : MonoBehaviour
         }
 
         ActiverIntentReceivers();
-        GameStarted = true;
+        gameStarted = true;
     }
 
     private void ActivationVaisseau(int id)
@@ -407,7 +416,7 @@ public class shipMotor : MonoBehaviour
     //désactiver les vaisseaux et les intents
     private void FinPartie()
     {
-        GameStarted = false;
+        gameStarted = false;
         activatedIntentReceivers = null;
 
         for (var i = 0; i < vaisseaux.Length; i++)
