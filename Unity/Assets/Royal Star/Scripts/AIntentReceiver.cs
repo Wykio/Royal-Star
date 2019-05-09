@@ -28,6 +28,4 @@ public class AIntentReceiver : MonoBehaviour
     public float BoostTurn { get; set; }
 
     #endregion
-
-
 }

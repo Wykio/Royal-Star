@@ -39,8 +39,9 @@ public class shipMotor : MonoBehaviour
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
-        gameController.Deconnecte += FinPartie;
-        gameController.MasterclientSwitch += FinPartie;
+        gameController.Deconnecte += FinJeu;
+        gameController.MasterclientSwitch += FinJeu;
+        gameController.FinDePartie += FinPartieRetourMenu;
     }
 
     void FixedUpdate()
@@ -48,7 +49,7 @@ public class shipMotor : MonoBehaviour
         //touche ECHAP pour quitter le jeu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            FinPartie();
+            FinJeu();
 
             //on remet le curseur visible
             Cursor.visible = true;
@@ -75,7 +76,7 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            Debug.Log(intentReceiver.BoostPicht.ToString());
+            //Debug.Log(intentReceiver.BoostPicht.ToString());
 
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
@@ -346,6 +347,10 @@ public class shipMotor : MonoBehaviour
         {
             activatedIntentReceivers[i].enabled = false;
         }
+        for (var i = 0; i < onlineIntentReceivers.Length; i++)
+        {
+            onlineIntentReceivers[i].enabled = false;
+        }
     }
     
     //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
@@ -375,9 +380,8 @@ public class shipMotor : MonoBehaviour
             activatedIntentReceivers[i].WantToTurn = 0f;
         }
     }
-
-    //désactiver les vaisseaux et les intents
-    private void FinPartie()
+    
+    private void FinPartieRetourMenu()
     {
         GameStarted = false;
         activatedIntentReceivers = null;
@@ -386,8 +390,23 @@ public class shipMotor : MonoBehaviour
         {
             vaisseaux[i].ShipRootGameObject.SetActive(false);
         }
+        DesactiverIntentReceivers();
+        PhotonNetwork.LeaveRoom();
+    }
+    
+    //désactiver les vaisseaux et les intents
+    //fonction a revoir
+    private void FinJeu()
+    {
+        GameStarted = false;
+        activatedIntentReceivers = null;
 
-        gameController.AfficherMenu();
+        for (var i = 0; i < vaisseaux.Length; i++)
+        {
+            vaisseaux[i].ShipRootGameObject.SetActive(false);
+        }
+        
+        gameController.ChargementMenu(); // ?
         DesactiverIntentReceivers();
 
         if (PhotonNetwork.IsConnected)
