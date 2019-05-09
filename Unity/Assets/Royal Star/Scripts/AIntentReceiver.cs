@@ -14,7 +14,7 @@ public class AIntentReceiver : MonoBehaviour
     #endregion
 
     #region Commandes en vol
-    public bool AirPicthUp { get; set; }
+    public bool AirPitchUp { get; set; }
     public bool AirPitchDown { get; set; }
     public bool AirRollRight { get; set; }
     public bool AirRollLeft { get; set; }
@@ -24,8 +24,15 @@ public class AIntentReceiver : MonoBehaviour
     public bool AirBoostActivate { get; set; }
     public bool BoostForward { get; set; }
     public bool BoostBackward { get; set; }
-    public float BoostPicht { get; set; }
+    public float BoostPitch { get; set; }
     public float BoostTurn { get; set; }
 
     #endregion
+
+    #region commandes de tir
+
+    public bool WantToShootFirst { get; set; }
+
+    #endregion
+
 }

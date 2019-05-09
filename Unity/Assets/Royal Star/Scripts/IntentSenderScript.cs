@@ -85,19 +85,27 @@ public class IntentSenderScript : AIntentReceiver
             photonView.RPC("BoostTurnRPC", RpcTarget.MasterClient, sourisHorizontale);
         }
 
-        if(sourisVerticale != 0f)
+        if (sourisVerticale != 0f)
         {
             photonView.RPC("BoostPitchRPC", RpcTarget.MasterClient, sourisVerticale);
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, true);
         }
 
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, true);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, false);
         }
         #endregion
     }
@@ -153,7 +161,7 @@ public class IntentSenderScript : AIntentReceiver
     {
         if(PhotonNetwork.IsMasterClient)
         {
-            AirPicthUp = intent;
+            AirPitchUp = intent;
         }
     }
 
@@ -225,7 +233,16 @@ public class IntentSenderScript : AIntentReceiver
     {
         if(PhotonNetwork.IsMasterClient)
         {
-            BoostPicht = intent;
+            BoostPitch = intent;
+        }
+    }
+
+    [PunRPC]
+    void WantToShootFirstRPC(bool intent)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            WantToShootFirst = intent;
         }
     }
 

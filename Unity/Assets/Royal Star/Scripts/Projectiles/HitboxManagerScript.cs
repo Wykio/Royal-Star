@@ -19,8 +19,10 @@ public class HitboxManagerScript : MonoBehaviour
     {
         if (Equals(other.gameObject.tag, "Bullet"))
         {
-            Debug.Log($"{player.GetName()} has lost 30hp");
-            player.TakeDamage(other.gameObject.GetComponent<BulletExposerScript>().GetDamage());
+            int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
+
+            Debug.Log($"{player.GetName()} has lost {damage}hp");
+            player.TakeDamage(damage);
         }
     }
 
