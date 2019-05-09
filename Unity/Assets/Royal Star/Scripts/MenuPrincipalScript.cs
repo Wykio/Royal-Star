@@ -26,6 +26,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action<int> JoueurAQuitte;
     public event Action Deconnecte;
     public event Action MasterclientSwitch;
+
+    public event Action FinDePartie;
     #endregion
 
     //Connexion à Photon et on ajoute les listeners aux boutons
@@ -51,11 +53,11 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        AfficherMenu();
+        ChargementMenu();
     }
 
     //affichage des boutons du menu et des textes
-    public void AfficherMenu()
+    public void ChargementMenu()
     {
         boutonCreerRoom.gameObject.SetActive(false);
         boutonRejoindre.gameObject.SetActive(false);
@@ -64,12 +66,21 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         erreur.text = "Connexion au Master...";
     }
 
-    //dès qu'on est connecté au Master on rend les boutons Créer et Rejoindre cliquables
-    public override void OnConnectedToMaster()
+    public void AfficherMenu()
     {
+        boutonCreerRoom.interactable = true;
+        boutonRejoindre.interactable = true;
         boutonCreerRoom.gameObject.SetActive(true);
         boutonRejoindre.gameObject.SetActive(true);
         erreur.text = "";
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    //dès qu'on est connecté au Master on rend les boutons Créer et Rejoindre cliquables
+    public override void OnConnectedToMaster()
+    {
+        AfficherMenu();
     }
 
     //Quand on clique sur "Créer une partie"
@@ -117,6 +128,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         StartCoroutine(SetWelcomeDebugAndSetReadyAtTheEndOfFrame());
+        //StartCoroutine(WaitForOtherPlayerToLaunchGame());
     }
 
     //a la déconnexion du client local
@@ -181,24 +193,55 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
-        yield return new WaitForSeconds(2f);
-
-        var i = 0;
-        for (; i < PlayerNumbering.SortedPlayers.Length; i++)
+        //activation des textes
+        message.gameObject.SetActive(true);
+        erreur.gameObject.SetActive(true);
+        
+        Debug.Log("En attente de joueur ...");
+        erreur.text = "En attente de joueur ...";
+        yield return new WaitForSeconds(30f);
+        if (PlayerNumbering.SortedPlayers.Length <= 1)
         {
-            if (PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
+            Debug.Log("Partie annulée retour au menu");
+            erreur.text = "Partie annulée retour au menu";
+            yield return new WaitForSeconds(2f);
+            PhotonNetwork.LeaveRoom();
+            AfficherMenu();
+        }
+        else
+        {
+            //desactivation des textes
+            message.gameObject.SetActive(false);
+            erreur.gameObject.SetActive(false);
+            
+            Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
+        
+            var i = 0;
+            for (; i < PlayerNumbering.SortedPlayers.Length; i++)
             {
-                break;
+                if (PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
+                {
+                    break;
+                }
+            }
+
+            Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
+
+            OnlinePret?.Invoke();
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                JoueurARejoint?.Invoke(i);
             }
         }
-
-        Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
-
-        OnlinePret?.Invoke();
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            JoueurARejoint?.Invoke(i);
-        }
+    }
+    
+    // coroutine pour faire revenir le joueur au menu si personne rejoins la room
+    private IEnumerator WaitForOtherPlayerToLaunchGame()
+    {
+        yield return new WaitForSeconds(10f);
+        Debug.Log("Partie annulée retour au menu");
+        FinDePartie?.Invoke();
+        AfficherMenu();
     }
 }
