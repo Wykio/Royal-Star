@@ -8,7 +8,10 @@ public class BulletPoolManagerScript : MonoBehaviour
     private GameObject bulletPrefab;
 
     private BulletExposerScript[] alreadyInstanciatedBullets;
+
     private readonly Queue<BulletExposerScript> availableBullets = new Queue<BulletExposerScript>(100);
+
+    private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(100);
 
     public void Awake()
     {
@@ -29,6 +32,7 @@ public class BulletPoolManagerScript : MonoBehaviour
     public BulletExposerScript GetBullet()
     {
         BulletExposerScript bullet = availableBullets.Dequeue();
+
         bullet.Enable();
         return bullet;
     }
@@ -37,5 +41,31 @@ public class BulletPoolManagerScript : MonoBehaviour
     {
         availableBullets.Enqueue(bullet);
         bullet.Disable();
+    }
+
+    public void Shoot(Transform popPosition)
+    {
+        BulletExposerScript bullet = GetBullet();
+
+        bullet.SetParentReference(
+            popPosition.position,
+            popPosition.forward,
+            popPosition.rotation
+        );
+        poppedBullets.Add(bullet);
+    }
+
+    void FixedUpdate()
+    {
+        for (int i = 0; i < poppedBullets.Count; i++)
+        {
+            BulletExposerScript bullet = poppedBullets[i];
+
+			if (bullet.GetDestroy())
+            {
+                poppedBullets.RemoveAt(i--);
+                ReleaseBullet(bullet);
+            }
+        }
     }
 }

@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class PlayerManagerScript : MonoBehaviour
 {
-    [SerializeField]
-    private BulletManagerScript bulletManager;
-
-    [SerializeField]
-    private Transform bulletPopPositionTransform;
-
-    [SerializeField]
-    private float popInterval;
     
     [SerializeField]
     private Rigidbody playerRigidbody;
@@ -22,12 +14,6 @@ public class PlayerManagerScript : MonoBehaviour
     [SerializeField]
     private string playerName = "Test";
 
-    [SerializeField]
-    private bool activePlayer;
-
-
-    private float nextPopTime = float.MinValue;
-    private float speed = 10.0f;
     private bool alive = true;
     private int hp = 150;
 
@@ -47,12 +33,12 @@ public class PlayerManagerScript : MonoBehaviour
 
     void Update()
     {
-        if (!alive || !activePlayer)
+        if (!alive)
             return ;
-        if (Input.GetMouseButtonDown(0) && Time.time > nextPopTime)
+        /*if (Input.GetMouseButtonDown(0) && Time.time > nextPopTime)
         {
             bulletManager.Shoot(bulletPopPositionTransform);
             nextPopTime = Time.time + popInterval;
-        }
+        }*/
     }
 }

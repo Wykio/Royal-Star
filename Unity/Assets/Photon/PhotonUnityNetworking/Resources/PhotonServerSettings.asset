@@ -58,4 +58,6 @@ MonoBehaviour:
   - WantToStrafeLeftRPC
   - WantToStrafeRightRPC
   - WantToTurnRPC
+  - WantToShootRPC
+  - WantToShootFirstRPC
   DisableAutoOpenWizard: 1
