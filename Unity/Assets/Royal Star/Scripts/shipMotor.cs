@@ -64,7 +64,7 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            Debug.Log(intentReceiver.BoostPicht.ToString());
+            Debug.Log(intentReceiver.BoostPitch.ToString());
 
             if (!vaisseau.alive)
             {
@@ -179,11 +179,6 @@ public class shipMotor : MonoBehaviour
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }
-
-        if (activatedAvatarsCount <= 1) {
-            gameStarted = false;
-            FinPartie();
-        }
     }
 
     void FixedUpdate()
@@ -250,12 +245,13 @@ public class shipMotor : MonoBehaviour
     void Damping(ShipExposer vaisseau)
     {
         //si le vaisseau est en l'air, le damping est modéré
-        if(Aerien)
+        if(vaisseau.Aerien)
         {
             vaisseau.ShipRigidBody.velocity = new Vector3(
                 vaisseau.ShipRigidBody.velocity.x * dampingSpeed * 1.04f,
                 vaisseau.ShipRigidBody.velocity.y > 0 ? vaisseau.ShipRigidBody.velocity.y * dampingHover : vaisseau.ShipRigidBody.velocity.y,
-                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f);
+                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f
+            );
         }
         else
         {
@@ -323,6 +319,17 @@ public class shipMotor : MonoBehaviour
         else
         {
             ActivationVaisseauRPC(id);
+        }
+    }
+    
+    void HitboxTriggerEnter(Collider other, int id)
+    {
+        if (Equals(other.gameObject.tag, "Bullet"))
+        {
+            int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
+
+            vaisseaux[id].TakeDamage(damage);
+            Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
         }
     }
 
@@ -407,7 +414,7 @@ public class shipMotor : MonoBehaviour
     
     private void FinPartieRetourMenu()
     {
-        GameStarted = false;
+        gameStarted = false;
         activatedIntentReceivers = null;
 
         for (var i = 0; i < vaisseaux.Length; i++)
@@ -430,7 +437,7 @@ public class shipMotor : MonoBehaviour
             vaisseaux[i].ShipRootGameObject.SetActive(false);
         }
 
-        gameController.AfficherMenu();
+        gameController.ChargementMenu();
         DesactiverIntentReceivers();
 
         if (PhotonNetwork.IsConnected)
@@ -441,41 +448,3 @@ public class shipMotor : MonoBehaviour
 
     #endregion
 }
-
-            //Debug.Log(intentReceiver.BoostPitch.ToString());
-    void Damping(ShipExposer vaisseau)
-    {
-        //si le vaisseau est en l'air, le damping est modéré
-        if(vaisseau.Aerien)
-        {
-                vaisseau.ShipRigidBody.velocity.z * dampingSpeed * 1.04f
-            );
-        }
-        else
-        {
-            //s'il est au sol le damping est plus élevé
-            vaisseau.ShipRigidBody.velocity = new Vector3(
-                vaisseau.ShipRigidBody.velocity.x * dampingSpeed,
-                vaisseau.ShipRigidBody.velocity.y * dampingHover,
-                vaisseau.ShipRigidBody.velocity.z * dampingSpeed
-            );
-        }
-    }
-    }
-
-    void HitboxTriggerEnter(Collider other, int id)
-    {
-        if (Equals(other.gameObject.tag, "Bullet"))
-        {
-            int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
-
-            vaisseaux[id].TakeDamage(damage);
-            Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
-        }
-    }
-
-    #region fonctions Photon
-
-        
-        gameController.ChargementMenu(); // ?
-    }
