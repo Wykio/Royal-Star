@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657856, g: 0.49641234, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1174,7 +1174,7 @@ GameObject:
   m_Layer: 0
   m_Name: "PositionD\xE9part2"
   m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1325,7 +1325,7 @@ GameObject:
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1828,7 +1828,7 @@ GameObject:
   m_Layer: 0
   m_Name: "PositionD\xE9part1"
   m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2032,7 +2032,7 @@ GameObject:
   m_Layer: 5
   m_Name: erreur
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2708,7 +2708,7 @@ GameObject:
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
-  m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2724,6 +2724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waitForPlayersToPlay: 0
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
   message: {fileID: 1302076278}
@@ -3025,7 +3026,7 @@ GameObject:
   m_Layer: 0
   m_Name: "Positions de d\xE9part"
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

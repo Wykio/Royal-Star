@@ -10,6 +10,10 @@ using System;
 //Script pour le menu principal : choix entre créer ou rejoindre une partie
 public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 {
+    #region ClassVariables
+    [SerializeField] private bool waitForPlayersToPlay = false;
+    #endregion
+    
     #region Interface
     [Header ("Boutons")]
     [SerializeField] private Button boutonCreerRoom;
@@ -190,52 +194,65 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         MasterclientSwitch?.Invoke();
 
     }
-
+    
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
-        //activation des textes
-        message.gameObject.SetActive(true);
-        erreur.gameObject.SetActive(true);
-        
-        Debug.Log("En attente de joueur ...");
-        erreur.text = "En attente de joueur ...";
-        yield return new WaitForSeconds(30f);
-        if (PlayerNumbering.SortedPlayers.Length <= 1)
+        if (waitForPlayersToPlay)
         {
-            Debug.Log("Partie annulée retour au menu");
-            erreur.text = "Partie annulée retour au menu";
-            yield return new WaitForSeconds(2f);
-            PhotonNetwork.LeaveRoom();
-            AfficherMenu();
+            //activation des textes
+            message.gameObject.SetActive(true);
+            erreur.gameObject.SetActive(true);
+        
+            Debug.Log("En attente de joueur ...");
+            erreur.text = "En attente de joueur ...";
+            yield return new WaitForSeconds(30f);
+            if (PlayerNumbering.SortedPlayers.Length <= 1)
+            {
+                Debug.Log("Partie annulée retour au menu");
+                erreur.text = "Partie annulée retour au menu";
+                yield return new WaitForSeconds(2f);
+                PhotonNetwork.LeaveRoom();
+                AfficherMenu();
+            }
+            else
+            {
+                StartCoroutine(SetPlayerReady());
+            }
         }
         else
         {
-            //desactivation des textes
-            message.gameObject.SetActive(false);
-            erreur.gameObject.SetActive(false);
-            
-            Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
-        
-            var i = 0;
-            for (; i < PlayerNumbering.SortedPlayers.Length; i++)
-            {
-                if (PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
-                {
-                    break;
-                }
-            }
-
-            Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
-
-            OnlinePret?.Invoke();
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                JoueurARejoint?.Invoke(i);
-            }
+            StartCoroutine(SetPlayerReady());
         }
     }
     
+    private IEnumerator SetPlayerReady()
+    {
+        //desactivation des textes
+        //message.gameObject.SetActive(false);
+        //erreur.gameObject.SetActive(false);
+            
+        //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
+        yield return new WaitForSeconds(2f);
+        var i = 0;
+        for (; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
+            {
+                break;
+            }
+        }
+
+        Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
+
+        OnlinePret?.Invoke();
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            JoueurARejoint?.Invoke(i);
+        }
+    }
+    
+    /*
     // coroutine pour faire revenir le joueur au menu si personne rejoins la room
     private IEnumerator WaitForOtherPlayerToLaunchGame()
     {
@@ -244,4 +261,5 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         FinDePartie?.Invoke();
         AfficherMenu();
     }
+    */
 }

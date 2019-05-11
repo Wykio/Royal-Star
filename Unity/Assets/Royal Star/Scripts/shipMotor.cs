@@ -48,12 +48,11 @@ public class shipMotor : MonoBehaviour
         //touche ECHAP pour quitter le jeu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            FinJeu();
+            //FinJeu();
 
             //on remet le curseur visible
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-
             return;
         }
 
