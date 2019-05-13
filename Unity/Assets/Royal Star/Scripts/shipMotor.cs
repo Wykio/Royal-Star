@@ -212,25 +212,17 @@ public class shipMotor : MonoBehaviour
     //fonction de lévitation
     void Hover(ShipExposer vaisseau)
     {
+        //raycast vertical au centre du vaisseau
         Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
 
+        //si le vaisseau est en dessous de la hauteur maximale, on applique une force vers le haut relative à la distance entre le sol et le vaisseau
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
             float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
             
-            //vérification si la surface détectée est horizontale ou non, si c'est le cas, on ajoute une compensation au mouvement du vaisseau
-            if (Vector3.Magnitude(Quaternion.FromToRotation(vaisseau.ShipTransform.up, hit.normal).eulerAngles) > 0)
-            {
-                propulsionAvantAppliquee = speed;
-                forceLevitationAppliquee = hoverForce;
-            }
-            else
-            {
-                //sinon on applique la règle simple
-                propulsionAvantAppliquee = speed;
-                forceLevitationAppliquee = hoverForce;
-            }
+            propulsionAvantAppliquee = speed;
+            forceLevitationAppliquee = hoverForce;
 
             //plus on est proche du sol, plus la force de léviation est grande
             vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);

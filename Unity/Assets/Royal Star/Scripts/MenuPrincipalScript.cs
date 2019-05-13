@@ -15,13 +15,20 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     #endregion
     
     #region Interface
-    [Header ("Boutons")]
+    [Header ("Boutons Menu Principal")]
     [SerializeField] private Button boutonCreerRoom;
     [SerializeField] private Button boutonRejoindre;
 
-    [Header ("Zones de texte")]
+    [Header ("Zones de texte Menu Principal")]
     [SerializeField] private Text message;
     [SerializeField] private Text erreur;
+
+    [Header("Interface en jeu")]
+    [SerializeField] private Text pv;
+    [SerializeField] private Text bouclier;
+    [SerializeField] private Text compteurJoueurs;
+    [SerializeField] private Text boost;
+    [SerializeField] private Text timerZone;
     #endregion
 
     #region Events
@@ -40,6 +47,14 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //connexion à Photon, gestion de l'exception en cas d'absence de connexion Internet
         try
         {
+            //on cache l'interface in game
+            pv.gameObject.SetActive(false);
+            bouclier.gameObject.SetActive(false);
+            compteurJoueurs.gameObject.SetActive(false);
+            boost.gameObject.SetActive(false);
+            timerZone.gameObject.SetActive(false);
+
+            //on active le message d'erreur (vide) pour le menu principal
             erreur.gameObject.SetActive(true);
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -216,11 +231,25 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
             else
             {
+                //activation de l'interface in game
+                pv.gameObject.SetActive(true);
+                bouclier.gameObject.SetActive(true);
+                compteurJoueurs.gameObject.SetActive(true);
+                boost.gameObject.SetActive(true);
+                timerZone.gameObject.SetActive(true);
+
                 StartCoroutine(SetPlayerReady());
             }
         }
         else
         {
+            //activation de l'interface in game
+            pv.gameObject.SetActive(true);
+            bouclier.gameObject.SetActive(true);
+            compteurJoueurs.gameObject.SetActive(true);
+            boost.gameObject.SetActive(true);
+            timerZone.gameObject.SetActive(true);
+
             StartCoroutine(SetPlayerReady());
         }
     }
