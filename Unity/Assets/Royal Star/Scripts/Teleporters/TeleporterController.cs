@@ -11,7 +11,7 @@ public class TeleporterController : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
-            Debug.Log("collision");
+            //Debug.Log("collision");
             Vector3 endPosition = connectedTeleport.transform.position;
             endPosition.z += distanceAfterTeleport;
             col.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
