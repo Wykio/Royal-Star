@@ -669,7 +669,7 @@ GameObject:
   - component: {fileID: 4825093255687255936}
   - component: {fileID: 4825093255687255939}
   m_Layer: 5
-  m_Name: message
+  m_Name: titre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

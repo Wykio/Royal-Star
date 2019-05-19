@@ -26,7 +26,6 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     public event Action FinDePartie;
     #endregion
 
-    private GameObject menuControllerGO;
     private List<GameObject> listeElements;
     private bool ingame = false;
 
@@ -138,9 +137,4 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
