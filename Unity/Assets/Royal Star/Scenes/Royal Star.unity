@@ -1341,6 +1341,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415601859}
+  - component: {fileID: 415601858}
+  - component: {fileID: 415601860}
+  - component: {fileID: 415601861}
+  - component: {fileID: 415601862}
   m_Layer: 0
   m_Name: Interface Manager
   m_TagString: Untagged
@@ -1348,6 +1352,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &415601858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415601857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba40fd6a9014ee4ebec36ec71be0c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  erreur: {fileID: 1577373848}
+  titre: {fileID: 1302076278}
+  compteurJoueursLobby: {fileID: 1911597110}
+  creerRoomButton: {fileID: 1734441889}
+  joinRoomButton: {fileID: 1010809659}
+  menuController: {fileID: 1815358699}
 --- !u!4 &415601859
 Transform:
   m_ObjectHideFlags: 0
@@ -1362,6 +1384,77 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &415601860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415601857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf11eef4a3e4404dab5d1ea43d22728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vaisseaux:
+  - {fileID: 1685602666}
+  - {fileID: 1410908513}
+  - {fileID: 1683379792}
+  - {fileID: 1115189411}
+  - {fileID: 1899943747}
+  - {fileID: 1177207101}
+  - {fileID: 1055898593}
+  - {fileID: 142806262}
+  - {fileID: 55887753}
+  - {fileID: 1486859626}
+  - {fileID: 1841439952}
+  - {fileID: 899321688}
+  - {fileID: 1207565348}
+  - {fileID: 879927570}
+  - {fileID: 355726106}
+  - {fileID: 479466719}
+  - {fileID: 1063694987}
+  - {fileID: 357079682}
+  - {fileID: 1082048856}
+  - {fileID: 1942909334}
+  photonView: {fileID: 415601861}
+--- !u!114 &415601861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415601857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 415601862}
+  viewIdField: 43
+  InstantiationId: 43
+  isRuntimeInstantiated: 0
+--- !u!114 &415601862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415601857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &416777070
 GameObject:
   m_ObjectHideFlags: 0
@@ -4796,6 +4889,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
+        type: 3}
+      propertyPath: ShipBulletManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
+        type: 3}
+      propertyPath: ShipBulletPopPosition
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
+        type: 3}
+      propertyPath: healthPoints
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 3361519573493428610, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4870,21 +4978,6 @@ PrefabInstance:
         type: 3}
       propertyPath: InstantiationId
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
-        type: 3}
-      propertyPath: ShipBulletManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
-        type: 3}
-      propertyPath: ShipBulletPopPosition
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
-        type: 3}
-      propertyPath: healthPoints
-      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3361519573493428620, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
@@ -5248,7 +5341,6 @@ GameObject:
   - component: {fileID: 1815358703}
   - component: {fileID: 1815358702}
   - component: {fileID: 1815358701}
-  - component: {fileID: 1815358704}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -5372,6 +5464,7 @@ MonoBehaviour:
   - {fileID: 1082048856}
   - {fileID: 1942909334}
   gameController: {fileID: 1815358699}
+  ingameInterfaceManager: {fileID: 415601860}
 --- !u!114 &1815358702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5407,26 +5500,6 @@ MonoBehaviour:
   viewIdField: 6
   InstantiationId: 6
   isRuntimeInstantiated: 0
---- !u!114 &1815358704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815358698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ba40fd6a9014ee4ebec36ec71be0c60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pv: {fileID: 4825093254536178935}
-  bouclier: {fileID: 4825093254536178934}
-  erreur: {fileID: 1577373848}
-  titre: {fileID: 1302076278}
-  compteurJoueursLobby: {fileID: 1911597110}
-  creerRoomButton: {fileID: 1734441889}
-  joinRoomButton: {fileID: 1010809659}
-  menuController: {fileID: 1815358699}
 --- !u!114 &1841439952 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
@@ -6398,30 +6471,6 @@ PrefabInstance:
       objectReference: {fileID: 964565050}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49f66b7044930fb43b93c1cef3a98b15, type: 3}
---- !u!114 &4825093254536178934 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3862593461003596372, guid: 49f66b7044930fb43b93c1cef3a98b15,
-    type: 3}
-  m_PrefabInstance: {fileID: 4825093254536178933}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4825093254536178935 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2372735840496608178, guid: 49f66b7044930fb43b93c1cef3a98b15,
-    type: 3}
-  m_PrefabInstance: {fileID: 4825093254536178933}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6173530183464132753 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6173530183464132753, guid: 3b492417f75edc04b80e70e62bbbec1f,

@@ -23,6 +23,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private AIntentReceiver[] onlineIntentReceivers;
     [SerializeField] private ShipExposer[] vaisseaux;
     [SerializeField] private MenuPrincipalScript gameController;
+    [SerializeField] private IngameInterfaceManagerScript ingameInterfaceManager;
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
 
@@ -296,20 +297,17 @@ public class shipMotor : MonoBehaviour
         gameStarted = true;
     }
 
-    private void ActivationVaisseau(int id)
+    private void ActivationVaisseau(int id, int playerActorNumber)
     {
         Debug.Log("ShipMotor ActivationVaisseau");
-        //on bloque et cache le curseur de la souris
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id);
+            photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
         }
         else
         {
-            ActivationVaisseauRPC(id);
+            ActivationVaisseauRPC(id, playerActorNumber);
         }
     }
     
@@ -326,15 +324,17 @@ public class shipMotor : MonoBehaviour
     }
 
     [PunRPC]
-    private void ActivationVaisseauRPC(int idVaisseau)
+    private void ActivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
         Debug.Log("ShipMotor ActivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
         vaisseaux[idVaisseau].ShipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
         vaisseaux[idVaisseau].ShipHitbox.Subscribe((Collider other) => HitboxTriggerEnter(other, idVaisseau));
+        vaisseaux[idVaisseau].playerID = playerActorNumber;
+        ingameInterfaceManager.ActivationUpdateInterfaceToggle(true);
     }
 
-    private void DesactivationVaisseau(int id)
+    private void DesactivationVaisseau(int id, int playerActorNumber)
     {
         Debug.Log("ShipMotor DesactivationVaisseau");
         if (PhotonNetwork.IsConnected)
@@ -343,12 +343,12 @@ public class shipMotor : MonoBehaviour
         }
         else
         {
-            DesactivationVaisseauRPC(id);
+            DesactivationVaisseauRPC(id, playerActorNumber);
         }
     }
 
     [PunRPC]
-    private void DesactivationVaisseauRPC(int idVaisseau)
+    private void DesactivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
         Debug.Log("ShipMotor DesactivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(false);

@@ -31,9 +31,10 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action OnClicCreer;
     public event Action OnClicRejoindre;
     public event Action connexionRoom;
-    public event Action<int> ConnectedToMaster;
-    public event Action<int> JoueurARejoint;
-    public event Action<int> JoueurAQuitte;
+    public event Action nouveauJoueurDansRoom;
+    public event Action<int, int> ConnectedToMaster;
+    public event Action<int, int> JoueurARejoint;
+    public event Action<int, int> JoueurAQuitte;
     public event Action Deconnecte;
     public event Action MasterclientSwitch;
     public event Action FinDePartie;
@@ -51,7 +52,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         catch(Exception e)
         {
             //on affiche le message dans le Text d'erreur
-            OnError.Invoke("Erreur à la connexion à Photon");
+            OnError.Invoke("Erreur à la connexion à Photon : " + e.ToString());
         }
 
         //ajout des listeners
@@ -126,7 +127,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
         }
 
-        JoueurARejoint?.Invoke(i);
+        JoueurARejoint?.Invoke(i, actorNumber);
     }
 
     //quand un joueur quitte la room
@@ -149,7 +150,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
         }
 
-        JoueurAQuitte?.Invoke(i);
+        JoueurAQuitte?.Invoke(i, otherPlayer.ActorNumber);
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -163,9 +164,23 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         Debug.Log("MenuPrincipal SetWelcomeDebugAndSetReadyAtTheEndOfFrame");
 
+        //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
         if (waitForPlayersToPlay)
         {
-            yield return new WaitForSeconds(30f);
+            //yield return new WaitForSeconds(30f);
+
+            int currentNbPlayer = PlayerNumbering.SortedPlayers.Length;
+
+            for(int i = 0; i < 30; i++)
+            {
+                if(PlayerNumbering.SortedPlayers.Length > currentNbPlayer)
+                {
+                    //mise à jour du compteur de joueurs sur l'interface
+                    nouveauJoueurDansRoom.Invoke();
+                }
+
+                yield return new WaitForSeconds(1f);
+            }
 
             //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
             if (PlayerNumbering.SortedPlayers.Length <= 1)
@@ -176,6 +191,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
             else
             {
+                //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
+                PhotonNetwork.CurrentRoom.IsOpen = false;
                 StartCoroutine(SetPlayerReady());
             }
         }
@@ -188,9 +205,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private IEnumerator SetPlayerReady()
     {
         Debug.Log("MenuPrincipal SetPlayerReady");
-        //desactivation des textes
-        //message.gameObject.SetActive(false);
-        //erreur.gameObject.SetActive(false);
 
         //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
@@ -211,8 +225,19 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            JoueurARejoint?.Invoke(i);
+            //envoi d'une RPC au nouveau joueur pour que sa souris soit masquer et lockée
+            photonView.RPC("MasquerSourisRPC", PlayerNumbering.SortedPlayers[i]);
+
+            JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);   
         }
+    }
+
+    [PunRPC]
+    private void MasquerSourisRPC()
+    {
+        //on bloque et cache le curseur de la souris
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     
     /*

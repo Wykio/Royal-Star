@@ -8,8 +8,6 @@ using System;
 public class InterfaceManager : MonoBehaviourPunCallbacks
 {
     [Header("éléments de l'interface")]
-    [SerializeField] private Text pv;
-    [SerializeField] private Text bouclier;
     [SerializeField] private Text erreur;
     [SerializeField] private Text titre;
     [SerializeField] private Text compteurJoueursLobby;
@@ -27,21 +25,18 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     #endregion
 
     private List<GameObject> listeElements;
-    private bool ingame = false;
 
     private void Awake()
     {
         menuController.OnlinePret += setInterfaceJeu;
         menuController.ConnectedToMaster += AfficherMenuPrincipal;
         menuController.JoueurAQuitte += AfficherMenuPrincipal;
-        //menuController.JoueurARejoint += masquerMenuPrincipal;
         menuController.OnError += afficherErreur;
         menuController.OnClicCreer += connexionRoomEnCours;
         menuController.OnClicRejoindre += connexionRoomEnCours;
+        menuController.nouveauJoueurDansRoom += MiseAJourCompteurJoueur;
 
         listeElements = new List<GameObject>();
-        listeElements.Add(pv.gameObject);
-        listeElements.Add(bouclier.gameObject);
         listeElements.Add(erreur.gameObject);
         listeElements.Add(titre.gameObject);
         listeElements.Add(creerRoomButton.gameObject);
@@ -65,9 +60,10 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.text = "Connexion à la room";
     }
 
+    //dès qu'on est connecté à Photon, on affiche les boutons
     public override void OnConnectedToMaster()
     {
-        AfficherMenuPrincipal(0);
+        AfficherMenuPrincipal(0, 0);
         erreur.text = "";
     }
 
@@ -81,7 +77,15 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         if (menuController.waitForPlayersToPlay)
         {
             compteurJoueursLobby.gameObject.SetActive(true);
+
+            if(PhotonNetwork.PlayerList.Length == 1) compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueur";
+            else compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
         }
+    }
+
+    public void MiseAJourCompteurJoueur()
+    {
+        compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
     }
 
     //masquer les éléments de l'interface du menu
@@ -96,7 +100,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     }
 
     //afficher les éléments du menu principal
-    public void AfficherMenuPrincipal(int i)
+    public void AfficherMenuPrincipal(int i, int j)
     {
         //affichage du titre et des boutons
         titre.gameObject.SetActive(true);
@@ -109,8 +113,13 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        //masquer le compteur de joueurs
+        compteurJoueursLobby.text = "";
+        compteurJoueursLobby.gameObject.SetActive(false);
     }
 
+    //active ou désactive un élément donné en fonction du booleen en paramètre
     public void MasquerActiverElement(GameObject g, bool value)
     {
         foreach (var e in listeElements)
@@ -123,11 +132,10 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //afficher les éléments de l'interface de gameplay
+    //Masque l'interface du menu
     public void setInterfaceJeu()
     {
-        pv.gameObject.SetActive(true);
-        bouclier.gameObject.SetActive(true);
+        erreur.gameObject.GetComponentInParent(typeof(Canvas)).gameObject.SetActive(false);
     }
 
     //afficher l'erreur
