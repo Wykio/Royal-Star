@@ -11,42 +11,48 @@ using System;
 public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 {
     #region ClassVariables
-    [SerializeField] private bool waitForPlayersToPlay = false;
-    #endregion
+    [SerializeField] public bool waitForPlayersToPlay = false;
     
+    #endregion
+
     #region Interface
-    [Header ("Boutons")]
+    [Header("Boutons Menu Principal")]
     [SerializeField] private Button boutonCreerRoom;
     [SerializeField] private Button boutonRejoindre;
 
-    [Header ("Zones de texte")]
+    [Header ("Zones de texte Menu Principal")]
     [SerializeField] private Text message;
     [SerializeField] private Text erreur;
     #endregion
 
     #region Events
     public event Action OnlinePret;
-    public event Action<int> JoueurARejoint;
-    public event Action<int> JoueurAQuitte;
+    public event Action<string> OnError;
+    public event Action OnClicCreer;
+    public event Action OnClicRejoindre;
+    public event Action connexionRoom;
+    public event Action nouveauJoueurDansRoom;
+    public event Action<int, int> ConnectedToMaster;
+    public event Action<int, int> JoueurARejoint;
+    public event Action<int, int> JoueurAQuitte;
     public event Action Deconnecte;
     public event Action MasterclientSwitch;
-
     public event Action FinDePartie;
     #endregion
 
     //Connexion à Photon et on ajoute les listeners aux boutons
     private void Awake()
     {
+        Debug.Log("MenuPrincipal Awake");
         //connexion à Photon, gestion de l'exception en cas d'absence de connexion Internet
         try
-        {
-            erreur.gameObject.SetActive(true);
+        { 
             PhotonNetwork.ConnectUsingSettings();
         }
         catch(Exception e)
         {
             //on affiche le message dans le Text d'erreur
-            erreur.text = e.Message;
+            OnError.Invoke("Erreur à la connexion à Photon : " + e.ToString());
         }
 
         //ajout des listeners
@@ -54,49 +60,12 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         boutonRejoindre.onClick.AddListener(RejoindreRoom);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        ChargementMenu();
-    }
-
-    //affichage des boutons du menu et des textes
-    public void ChargementMenu()
-    {
-        boutonCreerRoom.gameObject.SetActive(false);
-        boutonRejoindre.gameObject.SetActive(false);
-
-        message.text = "Royal Star";
-        erreur.text = "Connexion au Master...";
-    }
-
-    public void AfficherMenu()
-    {
-        boutonCreerRoom.interactable = true;
-        boutonRejoindre.interactable = true;
-        boutonCreerRoom.gameObject.SetActive(true);
-        boutonRejoindre.gameObject.SetActive(true);
-        erreur.text = "";
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-    }
-
-    //dès qu'on est connecté au Master on rend les boutons Créer et Rejoindre cliquables
-    public override void OnConnectedToMaster()
-    {
-        AfficherMenu();
-    }
-
     //Quand on clique sur "Créer une partie"
     private void CreerRoom()
     {
-        //desactivation des boutons
-        boutonCreerRoom.gameObject.SetActive(false);
-        boutonCreerRoom.interactable = false;
+        Debug.Log("MenuPrincipal creerRoom");
 
-        boutonRejoindre.gameObject.SetActive(false);
-        boutonRejoindre.interactable = false;
-
+        
         //création de la room
         PhotonNetwork.CreateRoom("Room1", new RoomOptions
         {
@@ -104,33 +73,24 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             PlayerTtl = 10000
         });
 
-        //désactivation des textes
-        message.gameObject.SetActive(false);
-        erreur.gameObject.SetActive(false);
+        OnClicCreer.Invoke();
     }
 
     //Quand on clique sur "Rejoidre une partie"
     private void RejoindreRoom()
     {
-        //desactivation des boutons
-        boutonCreerRoom.gameObject.SetActive(false);
-        boutonCreerRoom.interactable = false;
-
-        boutonRejoindre.gameObject.SetActive(false);
-        boutonRejoindre.interactable = false;
+        Debug.Log("MenuPrincipal RejoindreRoom");
 
         //connexion à la room
         PhotonNetwork.JoinRandomRoom();
 
-        //désactivation des textes
-        message.gameObject.SetActive(false);
-        erreur.gameObject.SetActive(false);
+        OnClicRejoindre.Invoke();
     }
 
     //callback quand le joueur rejoind une room
     public override void OnJoinedRoom()
     {
-        base.OnJoinedRoom();
+        Debug.Log("MenuPrincipal OnJoinedRoom");
         StartCoroutine(SetWelcomeDebugAndSetReadyAtTheEndOfFrame());
         //StartCoroutine(WaitForOtherPlayerToLaunchGame());
     }
@@ -138,12 +98,14 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //a la déconnexion du client local
     public override void OnDisconnected(DisconnectCause cause)
     {
+        Debug.Log("MenuPrincipal OnDisconnected");
         Deconnecte?.Invoke();
     }
 
     //a la connexion d'un joueur à la room
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        Debug.Log("MenuPrincipal On Player enter room");
         //si le client local est MasterClient
         if (PhotonNetwork.IsMasterClient)
         {
@@ -154,6 +116,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //methode du MasterClient pour gérer l'arrivée d'un nouveau joueur
     private IEnumerator InformPlayerJoinedEndOfFrame(int actorNumber)
     {
+        Debug.Log("MenuPrincipal InformPlayerJoinedEndOfFrame");
         yield return new WaitForSeconds(2f);
         var i = 0;
         for (; i < PlayerNumbering.SortedPlayers.Length; i++)
@@ -164,14 +127,15 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
         }
 
-        JoueurARejoint?.Invoke(i);
+        JoueurARejoint?.Invoke(i, actorNumber);
     }
 
     //quand un joueur quitte la room
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        Debug.Log("MenuPrincipal OnPlayerLeftRoom");
         //si le client local n'est pas MasterClient on ne fait rien 
-        if(!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
@@ -186,36 +150,49 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
         }
 
-        JoueurAQuitte?.Invoke(i);
+        JoueurAQuitte?.Invoke(i, otherPlayer.ActorNumber);
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        Debug.Log("MenuPrincipal OnMasterClientSwitched");
         MasterclientSwitch?.Invoke();
 
     }
     
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
+        Debug.Log("MenuPrincipal SetWelcomeDebugAndSetReadyAtTheEndOfFrame");
+
+        //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
         if (waitForPlayersToPlay)
         {
-            //activation des textes
-            message.gameObject.SetActive(true);
-            erreur.gameObject.SetActive(true);
-        
-            Debug.Log("En attente de joueur ...");
-            erreur.text = "En attente de joueur ...";
-            yield return new WaitForSeconds(30f);
+            //yield return new WaitForSeconds(30f);
+
+            int currentNbPlayer = PlayerNumbering.SortedPlayers.Length;
+
+            for(int i = 0; i < 30; i++)
+            {
+                if(PlayerNumbering.SortedPlayers.Length > currentNbPlayer)
+                {
+                    //mise à jour du compteur de joueurs sur l'interface
+                    nouveauJoueurDansRoom.Invoke();
+                }
+
+                yield return new WaitForSeconds(1f);
+            }
+
+            //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
             if (PlayerNumbering.SortedPlayers.Length <= 1)
             {
-                Debug.Log("Partie annulée retour au menu");
                 erreur.text = "Partie annulée retour au menu";
                 yield return new WaitForSeconds(2f);
                 PhotonNetwork.LeaveRoom();
-                AfficherMenu();
             }
             else
             {
+                //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
+                PhotonNetwork.CurrentRoom.IsOpen = false;
                 StartCoroutine(SetPlayerReady());
             }
         }
@@ -227,13 +204,13 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     
     private IEnumerator SetPlayerReady()
     {
-        //desactivation des textes
-        //message.gameObject.SetActive(false);
-        //erreur.gameObject.SetActive(false);
-            
+        Debug.Log("MenuPrincipal SetPlayerReady");
+
         //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
         var i = 0;
+
+        //on recherche le joueur local dans la liste des joueurs, dès qu'on le trouve, on sort de la boucle
         for (; i < PlayerNumbering.SortedPlayers.Length; i++)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
@@ -242,14 +219,25 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
         }
 
-        Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
+        //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
 
         if (PhotonNetwork.IsMasterClient)
         {
-            JoueurARejoint?.Invoke(i);
+            //envoi d'une RPC au nouveau joueur pour que sa souris soit masquer et lockée
+            photonView.RPC("MasquerSourisRPC", PlayerNumbering.SortedPlayers[i]);
+
+            JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);   
         }
+    }
+
+    [PunRPC]
+    private void MasquerSourisRPC()
+    {
+        //on bloque et cache le curseur de la souris
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     
     /*

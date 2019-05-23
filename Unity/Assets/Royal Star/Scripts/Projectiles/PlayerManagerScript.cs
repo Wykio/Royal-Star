@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Photon.Pun;
 
 public class PlayerManagerScript : MonoBehaviour
 {
@@ -24,8 +26,10 @@ public class PlayerManagerScript : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        Debug.Log("Player Manager takeDamage");
         hp -= damage;
-        if (hp <= 0) {
+        if (hp <= 0)
+        {
             hp = 0;
             alive = false;
         }
@@ -33,12 +37,11 @@ public class PlayerManagerScript : MonoBehaviour
 
     void Update()
     {
-        if (!alive)
-            return ;
         /*if (Input.GetMouseButtonDown(0) && Time.time > nextPopTime)
         {
             bulletManager.Shoot(bulletPopPositionTransform);
             nextPopTime = Time.time + popInterval;
         }*/
+
     }
 }

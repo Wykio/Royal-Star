@@ -23,18 +23,16 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private AIntentReceiver[] onlineIntentReceivers;
     [SerializeField] private ShipExposer[] vaisseaux;
     [SerializeField] private MenuPrincipalScript gameController;
+    [SerializeField] private IngameInterfaceManagerScript ingameInterfaceManager;
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
-
-    //paramètres avancés
-    [SerializeField] private float compensation = 1.5f;
-
 
     private float propulsionAvantAppliquee;
     private float forceLevitationAppliquee;
 
     void Awake()
     {
+        Debug.Log("ShipMotor Awake");
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
@@ -45,6 +43,7 @@ public class shipMotor : MonoBehaviour
 
     void UpdateGameState()
     {
+        
         //touche ECHAP pour quitter le jeu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -63,7 +62,7 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            Debug.Log(intentReceiver.BoostPitch.ToString());
+            //Debug.Log(intentReceiver.BoostPitch.ToString());
 
             if (!vaisseau.alive)
             {
@@ -212,25 +211,17 @@ public class shipMotor : MonoBehaviour
     //fonction de lévitation
     void Hover(ShipExposer vaisseau)
     {
+        //raycast vertical au centre du vaisseau
         Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
         RaycastHit hit;
 
+        //si le vaisseau est en dessous de la hauteur maximale, on applique une force vers le haut relative à la distance entre le sol et le vaisseau
         if(Physics.Raycast(scan, out hit, hoverHeight))
         {
             float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
             
-            //vérification si la surface détectée est horizontale ou non, si c'est le cas, on ajoute une compensation au mouvement du vaisseau
-            if (Vector3.Magnitude(Quaternion.FromToRotation(vaisseau.ShipTransform.up, hit.normal).eulerAngles) > 0)
-            {
-                propulsionAvantAppliquee = speed;
-                forceLevitationAppliquee = hoverForce;
-            }
-            else
-            {
-                //sinon on applique la règle simple
-                propulsionAvantAppliquee = speed;
-                forceLevitationAppliquee = hoverForce;
-            }
+            propulsionAvantAppliquee = speed;
+            forceLevitationAppliquee = hoverForce;
 
             //plus on est proche du sol, plus la force de léviation est grande
             vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.up * forceLevitationAppliquee * (1f - distance / hoverHeight), ForceMode.Force);
@@ -291,6 +282,7 @@ public class shipMotor : MonoBehaviour
 
     private void ResetGame()
     {
+        Debug.Log("ShipMotor ResetGame");
         for (var i = 0; i < vaisseaux.Length; i++)
         {
             var vaisseau = vaisseaux[i];
@@ -305,61 +297,66 @@ public class shipMotor : MonoBehaviour
         gameStarted = true;
     }
 
-    private void ActivationVaisseau(int id)
+    private void ActivationVaisseau(int id, int playerActorNumber)
     {
-        //on bloque et cache le curseur de la souris
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Debug.Log("ShipMotor ActivationVaisseau");
 
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id);
+            photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
         }
         else
         {
-            ActivationVaisseauRPC(id);
+            ActivationVaisseauRPC(id, playerActorNumber);
         }
     }
     
     void HitboxTriggerEnter(Collider other, int id)
     {
+        Debug.Log("ShipMotor HitboxTriggerEnter");
         if (Equals(other.gameObject.tag, "Bullet"))
         {
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 
             vaisseaux[id].TakeDamage(damage);
-            Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
+            //Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
         }
     }
 
     [PunRPC]
-    private void ActivationVaisseauRPC(int idVaisseau)
+    private void ActivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
+        Debug.Log("ShipMotor ActivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
         vaisseaux[idVaisseau].ShipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
         vaisseaux[idVaisseau].ShipHitbox.Subscribe((Collider other) => HitboxTriggerEnter(other, idVaisseau));
+        vaisseaux[idVaisseau].playerID = playerActorNumber;
+        ingameInterfaceManager.ActivationUpdateInterfaceToggle(true);
     }
 
-    private void DesactivationVaisseau(int id)
+    private void DesactivationVaisseau(int id, int playerActorNumber)
     {
+        Debug.Log("ShipMotor DesactivationVaisseau");
         if (PhotonNetwork.IsConnected)
         {
             photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id);
         }
         else
         {
-            DesactivationVaisseauRPC(id);
+            DesactivationVaisseauRPC(id, playerActorNumber);
         }
     }
 
     [PunRPC]
-    private void DesactivationVaisseauRPC(int idVaisseau)
+    private void DesactivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
+        Debug.Log("ShipMotor DesactivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(false);
     }
 
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
+        Debug.Log("ShipMotor ChooseAndSubscribeToOnlineIntentReceivers");
         activatedIntentReceivers = onlineIntentReceivers;
         ResetGame();
     }
@@ -367,6 +364,7 @@ public class shipMotor : MonoBehaviour
     //Desactiver l'ensemble des IntentReceivers de chaque vaisseau de la room
     private void DesactiverIntentReceivers()
     {
+        Debug.Log("ShipMotor DesactiverIntentReceivers");
         if (activatedIntentReceivers == null)
         {
             return;
@@ -385,6 +383,7 @@ public class shipMotor : MonoBehaviour
     //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
     private void ActiverIntentReceivers()
     {
+        Debug.Log("ShipMotor ActiverIntentReceivers");
         if (activatedIntentReceivers == null)
         {
             return;
@@ -413,6 +412,7 @@ public class shipMotor : MonoBehaviour
     
     private void FinPartieRetourMenu()
     {
+        Debug.Log("ShipMotor FinPartieRetourMenu");
         gameStarted = false;
         activatedIntentReceivers = null;
 
@@ -428,6 +428,7 @@ public class shipMotor : MonoBehaviour
     //fonction a revoir
     private void FinJeu()
     {
+        Debug.Log("ShipMotor FinJeu");
         gameStarted = false;
         activatedIntentReceivers = null;
 
@@ -436,7 +437,7 @@ public class shipMotor : MonoBehaviour
             vaisseaux[i].ShipRootGameObject.SetActive(false);
         }
 
-        gameController.ChargementMenu();
+        //gameController.ChargementMenu();
         DesactiverIntentReceivers();
 
         if (PhotonNetwork.IsConnected)

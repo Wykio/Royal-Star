@@ -21,7 +21,7 @@ public class HitboxManagerScript : MonoBehaviour
         {
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 
-            Debug.Log($"{player.GetName()} has lost {damage}hp");
+            //Debug.Log($"{player.GetName()} has lost {damage}hp");
             player.TakeDamage(damage);
         }
     }

@@ -60,4 +60,6 @@ MonoBehaviour:
   - WantToTurnRPC
   - WantToShootRPC
   - WantToShootFirstRPC
+  - UpdateInterfaceRPC
+  - MasquerSourisRPC
   DisableAutoOpenWizard: 1
