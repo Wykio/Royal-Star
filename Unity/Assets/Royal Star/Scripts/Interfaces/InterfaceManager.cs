@@ -8,6 +8,7 @@ using System;
 public class InterfaceManager : MonoBehaviourPunCallbacks
 {
     [Header("éléments de l'interface")]
+    [SerializeField] private Image background;
     [SerializeField] private Text erreur;
     [SerializeField] private Text titre;
     [SerializeField] private Text compteurJoueursLobby;
@@ -46,7 +47,8 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         creerRoomButton.gameObject.SetActive(false);
         joinRoomButton.gameObject.SetActive(false);
 
-        //on active le message d'erreur (vide) pour le menu principal
+        //on active le message d'erreur (vide) pour le menu principal ainsi que le background
+        background.gameObject.SetActive(true);
         erreur.gameObject.SetActive(true);
         erreur.text = "Connexion au serveur Photon";
         titre.text = "Royal Star";

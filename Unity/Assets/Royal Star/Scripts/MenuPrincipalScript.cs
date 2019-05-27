@@ -163,6 +163,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
     {
         Debug.Log("MenuPrincipal SetWelcomeDebugAndSetReadyAtTheEndOfFrame");
+        yield return new WaitForSeconds(2f);
 
         //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
         if (waitForPlayersToPlay)
