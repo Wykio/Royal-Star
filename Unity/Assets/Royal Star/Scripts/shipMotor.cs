@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
+using System;
 
 public class shipMotor : MonoBehaviour
 {
@@ -27,6 +28,15 @@ public class shipMotor : MonoBehaviour
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
 
+    [Header("Attribut pour le client")]
+    //booléen pour savoir si le menu est affiché ou non
+    private bool menuPauseAffiche = false;
+
+    #region Events
+    public event Action AfficherMenuPause;
+    public event Action MasquerMenuPause;
+    #endregion
+
     private float propulsionAvantAppliquee;
     private float forceLevitationAppliquee;
 
@@ -43,18 +53,6 @@ public class shipMotor : MonoBehaviour
 
     void UpdateGameState()
     {
-        
-        //touche ECHAP pour quitter le jeu
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //FinJeu();
-
-            //on remet le curseur visible
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            return;
-        }
-
         var activatedAvatarsCount = 0;
 
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
@@ -62,10 +60,10 @@ public class shipMotor : MonoBehaviour
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            //Debug.Log(intentReceiver.BoostPitch.ToString());
-
+            //si le vaisseau à 0 PV, afficher l'écran de défaite
             if (!vaisseau.alive)
             {
+
                 break;
             }
 
@@ -74,7 +72,7 @@ public class shipMotor : MonoBehaviour
 
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
-            
+
             //S'il veut tirer
             if(intentReceiver.WantToShootFirst)
             {
@@ -181,6 +179,21 @@ public class shipMotor : MonoBehaviour
 
     void FixedUpdate()
     {
+        //au niveau du client, si le joueur presse ECHAP, le menu de pause s'active ou se désactive en fonction de son état
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!menuPauseAffiche)
+            {
+                AfficherMenuPause.Invoke();
+                menuPauseAffiche = true;
+            }
+            else
+            {
+                MasquerMenuPause.Invoke();
+                menuPauseAffiche = false;
+            }
+        }
+
         //si le client n'est pas le masterClient, on ne fait rien
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
         {

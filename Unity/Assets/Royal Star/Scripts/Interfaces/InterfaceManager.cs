@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System;
 
 public class InterfaceManager : MonoBehaviourPunCallbacks
@@ -10,10 +11,16 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [Header("éléments de l'interface")]
     [SerializeField] private Text erreur;
     [SerializeField] private Text titre;
-    [SerializeField] private Text compteurJoueursLobby;
     [SerializeField] private Button creerRoomButton;
     [SerializeField] private Button joinRoomButton;
+    [SerializeField] private Text titreLobby;
+    [SerializeField] private Text decompteLobby;
+    [SerializeField] private Text listeJoueurs;
     [SerializeField] private MenuPrincipalScript menuController;
+    [SerializeField] private shipMotor ShipManager;
+    [SerializeField] private Button quitterMenuPause;
+    [SerializeField] private Button reprendreMenuPause;
+    [SerializeField] private Canvas Ui;
 
     #region Events
     public event Action OnlinePret;
@@ -34,7 +41,11 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         menuController.OnError += afficherErreur;
         menuController.OnClicCreer += connexionRoomEnCours;
         menuController.OnClicRejoindre += connexionRoomEnCours;
-        menuController.nouveauJoueurDansRoom += MiseAJourCompteurJoueur;
+        menuController.MettreAJourLobby += MettreAJourLobby;
+        menuController.FinDePartie += resetInterface;
+        menuController.masquerMenuPause += MasquerMenuPause;
+        ShipManager.AfficherMenuPause += AfficherMenuPause;
+        ShipManager.MasquerMenuPause += MasquerMenuPause;
 
         listeElements = new List<GameObject>();
         listeElements.Add(erreur.gameObject);
@@ -52,6 +63,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         titre.text = "Royal Star";
     }
 
+    //quand on clique sur une des boutons, le menu principal est masqué et le message de connexion est affiché
     private void connexionRoomEnCours()
     {
         masquerMenuPrincipal();
@@ -73,20 +85,14 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         //on désactive le message de connexion
         erreur.gameObject.SetActive(false);
 
-        //si le lobby est activé, on affiche les éléments
-        if (menuController.waitForPlayersToPlay)
+        //si le lobby est activé, le masterClient envoie une RPC pour que les clients affichent l'interface du lobby
+        if (menuController.waitForPlayersToPlay && PhotonNetwork.IsMasterClient)
         {
-            compteurJoueursLobby.gameObject.SetActive(true);
-
-            if(PhotonNetwork.PlayerList.Length == 1) compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueur";
-            else compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
+            photonView.RPC("AfficherLobbyRPC", RpcTarget.AllBuffered);
         }
     }
 
-    public void MiseAJourCompteurJoueur()
-    {
-        compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
-    }
+
 
     //masquer les éléments de l'interface du menu
     public void masquerMenuPrincipal()
@@ -110,13 +116,14 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         joinRoomButton.interactable = true;
         erreur.text = "";
 
+        //masquer les éléments du lobby
+        titreLobby.gameObject.SetActive(false);
+        decompteLobby.gameObject.SetActive(false);
+        listeJoueurs.gameObject.SetActive(false);
+
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        //masquer le compteur de joueurs
-        compteurJoueursLobby.text = "";
-        compteurJoueursLobby.gameObject.SetActive(false);
     }
 
     //active ou désactive un élément donné en fonction du booleen en paramètre
@@ -135,7 +142,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     //Masque l'interface du menu
     public void setInterfaceJeu()
     {
-        erreur.gameObject.GetComponentInParent(typeof(Canvas)).gameObject.SetActive(false);
+        Ui.gameObject.SetActive(false);
     }
 
     //afficher l'erreur
@@ -143,6 +150,78 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     {
         erreur.text = err;
         erreur.gameObject.SetActive(true);
+    }
+
+    //fonction de mise à jour du lobby appelée par l'event du MenuPrincipal
+    public void MettreAJourLobby(int dureeRestante)
+    {
+        photonView.RPC("MettreAJourLobbyRPC", RpcTarget.All, dureeRestante);
+    }
+
+    //fonction appelée en fin de partie ou en cas de partie annulée
+    public void resetInterface()
+    {
+        titreLobby.text = "";
+        titreLobby.gameObject.SetActive(false);
+
+        decompteLobby.text = "";
+        decompteLobby.gameObject.SetActive(false);
+
+        listeJoueurs.text = "";
+        listeJoueurs.gameObject.SetActive(false);
+    }
+
+    public void ActiverInterface()
+    {
+        Ui.gameObject.SetActive(true);
+    }
+
+    [PunRPC]
+    private void MettreAJourLobbyRPC(int dureeRestante)
+    {
+        titreLobby.text = "En attente d'autres pilotes :" + PhotonNetwork.PlayerList.Length.ToString() + "/20";
+        decompteLobby.text = dureeRestante.ToString() + " secondes avant l'entrée dans l'arène";
+    }
+
+    [PunRPC]
+    private void AfficherLobbyRPC()
+    {
+        titreLobby.gameObject.SetActive(true);
+        listeJoueurs.gameObject.SetActive(true);
+        decompteLobby.gameObject.SetActive(true);
+    }
+
+    [PunRPC]
+    private void MasquerLobbyRPC()
+    {
+        titreLobby.gameObject.SetActive(false);
+        listeJoueurs.gameObject.SetActive(false);
+        decompteLobby.gameObject.SetActive(false);
+    }
+
+    //afficher les boutons du menu pause
+    public void AfficherMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(true);
+        quitterMenuPause.interactable = true;
+        reprendreMenuPause.gameObject.SetActive(true);
+        reprendreMenuPause.interactable = true;
+
+        //curseur de la souris délocké et visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        ActiverInterface();
+    }
+
+    public void MasquerMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(false);
+        quitterMenuPause.interactable = false;
+        reprendreMenuPause.gameObject.SetActive(false);
+        reprendreMenuPause.interactable = false;
+
+        setInterfaceJeu();
     }
 
 }

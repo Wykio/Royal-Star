@@ -19,10 +19,10 @@ public class IngameInterfaceManagerScript : MonoBehaviour
     {
         if (!ingame) return;
 
-        Debug.Log("Update de l'interface MASTERCLIENT");
         if(PhotonNetwork.IsMasterClient)
         {
             int indice = 0;
+
             //pour chaque vaisseau, on envoie les stats que le masterclient dispose aux clients
             foreach (var ship in vaisseaux)
             {
