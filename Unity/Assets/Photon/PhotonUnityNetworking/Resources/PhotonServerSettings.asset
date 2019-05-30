@@ -66,4 +66,6 @@ MonoBehaviour:
   - MasquerLobbyRPC
   - MettreAJourLobbyRPC
   - SetPlayerReadyRPC
+  - AfficherMenuPauseRPC
+  - MasquerMenuPauseRPC
   DisableAutoOpenWizard: 1

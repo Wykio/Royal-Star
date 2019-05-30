@@ -99,6 +99,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private void QuitterPartie()
     {
         masquerMenuPause.Invoke();
+
+        photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         PhotonNetwork.LeaveRoom();
     }
 
@@ -244,6 +246,13 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private void SetPlayerReadyRPC()
     {
         StartCoroutine(SetPlayerReady());
+    }
+
+    //RPC envoyé par un client au masterclient pour se déconnecter de la partie
+    [PunRPC]
+    private void DeconnexionViaClientRPC(int playerActorNumber)
+    {
+
     }
     
     /*
