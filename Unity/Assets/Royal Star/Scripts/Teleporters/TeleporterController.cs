@@ -7,15 +7,25 @@ public class TeleporterController : MonoBehaviour
 {
     public GameObject connectedTeleport;
     public float distanceAfterTeleport = 1.0f;
-    void OnCollisionEnter(Collision col)
+    void OnCollisionEnter(Collision other)
     {
-        if (col.gameObject.tag == "Player")
-        {
+        Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = true;
+            
+        if (other.gameObject.tag == "Player")
+        {     
             //Debug.Log("collision");
             Vector3 endPosition = connectedTeleport.transform.position;
             endPosition.z += distanceAfterTeleport;
-            col.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
+            other.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
         }
     }
-    
+
+    private void OnCollisionExit(Collision other)
+    {
+        Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = false;
+    }
 }
