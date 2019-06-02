@@ -68,4 +68,5 @@ MonoBehaviour:
   - SetPlayerReadyRPC
   - AfficherMenuPauseRPC
   - MasquerMenuPauseRPC
+  - DeconnexionViaClientRPC
   DisableAutoOpenWizard: 1

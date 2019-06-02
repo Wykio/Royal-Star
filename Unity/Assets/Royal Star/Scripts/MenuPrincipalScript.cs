@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 
@@ -35,6 +36,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action OnClicCreer;
     public event Action OnClicRejoindre;
     public event Action connexionRoom;
+    public event Action LancementPartie;
     public event Action<int> MettreAJourLobby;
     public event Action<int, int> ConnectedToMaster;
     public event Action<int, int> JoueurARejoint;
@@ -98,10 +100,17 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur Quitter dans le menu pause
     private void QuitterPartie()
     {
-        masquerMenuPause.Invoke();
+        ////masquer le menu pause
+        //masquerMenuPause.Invoke();
 
-        photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+        ////indiquer au masterclient que le client va quitter la room
+        //photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+
+        //quitter la room
         PhotonNetwork.LeaveRoom();
+
+        //rechargement du jeu
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     //quand on clique sur reprendre, le menu pause est masqué ainsi que la souris
@@ -188,6 +197,9 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
                     //tous les clients connectés lancent SetPlayerReady
                     photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
+
+                    //masquer l'interface du lobby
+                    LancementPartie.Invoke();
 
                     //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
                     for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)

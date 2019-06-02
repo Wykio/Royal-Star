@@ -44,6 +44,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         menuController.MettreAJourLobby += MettreAJourLobby;
         menuController.FinDePartie += resetInterface;
         menuController.masquerMenuPause += MasquerMenuPause;
+        menuController.LancementPartie += PartieLancee;
         ShipManager.AfficherMenuPause += AfficherMenuPause;
         ShipManager.MasquerMenuPause += MasquerMenuPause;
 
@@ -92,7 +93,11 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         }
     }
 
-
+    //le masterclient lance cette fonction au lancement de la partie pour que tout les clients masquent l'interface de lobby
+    public void PartieLancee()
+    {
+        photonView.RPC("MasquerLobbyRPC", RpcTarget.All);
+    }
 
     //masquer les éléments de l'interface du menu
     public void masquerMenuPrincipal()
@@ -197,6 +202,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         titreLobby.gameObject.SetActive(false);
         listeJoueurs.gameObject.SetActive(false);
         decompteLobby.gameObject.SetActive(false);
+        resetInterface();
     }
 
     //afficher les boutons du menu pause
