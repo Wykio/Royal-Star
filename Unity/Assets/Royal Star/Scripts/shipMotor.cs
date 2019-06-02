@@ -352,7 +352,7 @@ public class shipMotor : MonoBehaviour
         Debug.Log("ShipMotor DesactivationVaisseau");
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
+            photonView.RPC("DesactivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
         }
         else
         {

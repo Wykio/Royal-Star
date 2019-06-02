@@ -100,11 +100,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur Quitter dans le menu pause
     private void QuitterPartie()
     {
-        ////masquer le menu pause
-        //masquerMenuPause.Invoke();
-
-        ////indiquer au masterclient que le client va quitter la room
-        //photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+        //indiquer au masterclient que le client va quitter la room
+        photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
 
         //quitter la room
         PhotonNetwork.LeaveRoom();
@@ -264,7 +261,23 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [PunRPC]
     private void DeconnexionViaClientRPC(int playerActorNumber)
     {
+        //si le client local n'est pas MasterClient on ne fait rien 
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
 
+        //s'il est MasterClient, on appelle le delegate correspondant
+        var i = 0;
+        for (; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            if (playerActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
+            {
+                break;
+            }
+        }
+
+        JoueurAQuitte?.Invoke(i, playerActorNumber);
     }
     
     /*
