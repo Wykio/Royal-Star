@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System;
 
 public class InterfaceManager : MonoBehaviourPunCallbacks
@@ -11,10 +12,17 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Image background;
     [SerializeField] private Text erreur;
     [SerializeField] private Text titre;
-    [SerializeField] private Text compteurJoueursLobby;
     [SerializeField] private Button creerRoomButton;
     [SerializeField] private Button joinRoomButton;
+    [SerializeField] private Text titreLobby;
+    [SerializeField] private Text decompteLobby;
+    [SerializeField] private Text listeJoueurs;
     [SerializeField] private MenuPrincipalScript menuController;
+    [SerializeField] private shipMotor ShipManager;
+    [SerializeField] private Button quitterMenuPause;
+    [SerializeField] private Button reprendreMenuPause;
+    [SerializeField] private Canvas Ui;
+    [SerializeField] private Text finDePartie;
 
     #region Events
     public event Action OnlinePret;
@@ -35,7 +43,13 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         menuController.OnError += afficherErreur;
         menuController.OnClicCreer += connexionRoomEnCours;
         menuController.OnClicRejoindre += connexionRoomEnCours;
-        menuController.nouveauJoueurDansRoom += MiseAJourCompteurJoueur;
+        menuController.MettreAJourLobby += MettreAJourLobby;
+        menuController.FinDePartie += resetInterface;
+        menuController.masquerMenuPause += MasquerMenuPause;
+        menuController.LancementPartie += PartieLancee;
+        ShipManager.AfficherMenuPause += AfficherMenuPause;
+        ShipManager.MasquerMenuPause += MasquerMenuPause;
+        ShipManager.FinDePartiePourUnJoueur += AfficherEcranFinPartie;
 
         listeElements = new List<GameObject>();
         listeElements.Add(erreur.gameObject);
@@ -54,6 +68,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         titre.text = "Royal Star";
     }
 
+    //quand on clique sur une des boutons, le menu principal est masqué et le message de connexion est affiché
     private void connexionRoomEnCours()
     {
         masquerMenuPrincipal();
@@ -75,19 +90,17 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         //on désactive le message de connexion
         erreur.gameObject.SetActive(false);
 
-        //si le lobby est activé, on affiche les éléments
-        if (menuController.waitForPlayersToPlay)
+        //si le lobby est activé, le masterClient envoie une RPC pour que les clients affichent l'interface du lobby
+        if (menuController.waitForPlayersToPlay && PhotonNetwork.IsMasterClient)
         {
-            compteurJoueursLobby.gameObject.SetActive(true);
-
-            if(PhotonNetwork.PlayerList.Length == 1) compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueur";
-            else compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
+            photonView.RPC("AfficherLobbyRPC", RpcTarget.AllBuffered);
         }
     }
 
-    public void MiseAJourCompteurJoueur()
+    //le masterclient lance cette fonction au lancement de la partie pour que tout les clients masquent l'interface de lobby
+    public void PartieLancee()
     {
-        compteurJoueursLobby.text = PhotonNetwork.PlayerList.Length.ToString() + " joueurs";
+        photonView.RPC("MasquerLobbyRPC", RpcTarget.All);
     }
 
     //masquer les éléments de l'interface du menu
@@ -101,9 +114,12 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.gameObject.SetActive(false);
     }
 
-    //afficher les éléments du menu principal
-    public void AfficherMenuPrincipal(int i, int j)
+    //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
+    public void AfficherMenuPrincipal(int i, int playerActorNumber)
     {
+        //condition pour que seulement le client qui quitte la room ait l'affichage du menu. dans le cas où playerActorNumber est à 0, c'est que tous les clients doivent afficher le menu
+        if (PhotonNetwork.LocalPlayer.ActorNumber != playerActorNumber && playerActorNumber != 0) return;
+
         //affichage du titre et des boutons
         titre.gameObject.SetActive(true);
         creerRoomButton.gameObject.SetActive(true);
@@ -112,13 +128,14 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         joinRoomButton.interactable = true;
         erreur.text = "";
 
+        //masquer les éléments du lobby
+        titreLobby.gameObject.SetActive(false);
+        decompteLobby.gameObject.SetActive(false);
+        listeJoueurs.gameObject.SetActive(false);
+
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        //masquer le compteur de joueurs
-        compteurJoueursLobby.text = "";
-        compteurJoueursLobby.gameObject.SetActive(false);
     }
 
     //active ou désactive un élément donné en fonction du booleen en paramètre
@@ -137,7 +154,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     //Masque l'interface du menu
     public void setInterfaceJeu()
     {
-        erreur.gameObject.GetComponentInParent(typeof(Canvas)).gameObject.SetActive(false);
+        Ui.gameObject.SetActive(false);
     }
 
     //afficher l'erreur
@@ -145,6 +162,128 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     {
         erreur.text = err;
         erreur.gameObject.SetActive(true);
+    }
+
+    //fonction de mise à jour du lobby appelée par l'event du MenuPrincipal
+    public void MettreAJourLobby(int dureeRestante)
+    {
+        photonView.RPC("MettreAJourLobbyRPC", RpcTarget.All, dureeRestante);
+    }
+
+    //fonction appelée en fin de partie ou en cas de partie annulée
+    public void resetInterface()
+    {
+        titreLobby.text = "";
+        titreLobby.gameObject.SetActive(false);
+
+        decompteLobby.text = "";
+        decompteLobby.gameObject.SetActive(false);
+
+        listeJoueurs.text = "";
+        listeJoueurs.gameObject.SetActive(false);
+    }
+
+    public void ActiverInterface()
+    {
+        Ui.gameObject.SetActive(true);
+    }
+
+    //fonction du masterclient pour ordonner aux clients d'afficher le résultat de la partie
+    public void AfficherEcranFinPartie(int playerActorNumber, bool victoire)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        //récupérer le player défini par playerActorNumber
+        int i = 0;
+        for(; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerActorNumber)
+            {
+                break;
+            }
+        }
+
+        //envoie de la RPC au client avec son résultat
+        photonView.RPC("AfficherEcranFinPartieRPC", PlayerNumbering.SortedPlayers[i], victoire);
+    }
+
+    //code exécuté par le client sous ordre du masterclient pour afficher le résultat de fin de partie donné en paramètre
+    [PunRPC]
+    private void AfficherEcranFinPartieRPC(bool victoire)
+    {
+        Ui.gameObject.SetActive(true);
+
+        //activation du texte de fin de partie
+        finDePartie.gameObject.SetActive(true);
+
+        //en fonction du résultat, le texte prend la valeur adéquate
+        if(victoire)
+        {
+            finDePartie.text = "Victoire !";
+            finDePartie.color = Color.green;
+        }
+        else
+        {
+            finDePartie.text = "Défaite !";
+            finDePartie.color = Color.red;
+        }
+
+        //réutilisation du bouton retour menu principal du menu pause pour revenir au menu
+        quitterMenuPause.gameObject.SetActive(true);
+        quitterMenuPause.interactable = true;
+
+        //curseur de la souris délocké et visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    [PunRPC]
+    private void MettreAJourLobbyRPC(int dureeRestante)
+    {
+        titreLobby.text = "En attente d'autres pilotes :" + PhotonNetwork.PlayerList.Length.ToString() + "/20";
+        decompteLobby.text = dureeRestante.ToString() + " secondes avant l'entrée dans l'arène";
+    }
+
+    [PunRPC]
+    private void AfficherLobbyRPC()
+    {
+        titreLobby.gameObject.SetActive(true);
+        listeJoueurs.gameObject.SetActive(true);
+        decompteLobby.gameObject.SetActive(true);
+    }
+
+    [PunRPC]
+    private void MasquerLobbyRPC()
+    {
+        titreLobby.gameObject.SetActive(false);
+        listeJoueurs.gameObject.SetActive(false);
+        decompteLobby.gameObject.SetActive(false);
+        resetInterface();
+    }
+
+    //afficher les boutons du menu pause
+    public void AfficherMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(true);
+        quitterMenuPause.interactable = true;
+        reprendreMenuPause.gameObject.SetActive(true);
+        reprendreMenuPause.interactable = true;
+
+        //curseur de la souris délocké et visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        ActiverInterface();
+    }
+
+    public void MasquerMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(false);
+        quitterMenuPause.interactable = false;
+        reprendreMenuPause.gameObject.SetActive(false);
+        reprendreMenuPause.interactable = false;
+
+        setInterfaceJeu();
     }
 
 }

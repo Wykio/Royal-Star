@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 
@@ -12,7 +13,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 {
     #region ClassVariables
     [SerializeField] public bool waitForPlayersToPlay = false;
-    
+    [SerializeField] public int DureeMatchmaking = 30;
     #endregion
 
     #region Interface
@@ -23,6 +24,10 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [Header ("Zones de texte Menu Principal")]
     [SerializeField] private Text message;
     [SerializeField] private Text erreur;
+
+    [Header("Boutons Menu Pause")]
+    [SerializeField] private Button boutonReprendrePartie;
+    [SerializeField] private Button boutonQuitterPartie;
     #endregion
 
     #region Events
@@ -31,13 +36,16 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action OnClicCreer;
     public event Action OnClicRejoindre;
     public event Action connexionRoom;
-    public event Action nouveauJoueurDansRoom;
+    public event Action LancementPartie;
+    public event Action<int> MettreAJourLobby;
     public event Action<int, int> ConnectedToMaster;
     public event Action<int, int> JoueurARejoint;
     public event Action<int, int> JoueurAQuitte;
     public event Action Deconnecte;
     public event Action MasterclientSwitch;
     public event Action FinDePartie;
+    public event Action decompteMatchmaking;
+    public event Action masquerMenuPause;
     #endregion
 
     //Connexion à Photon et on ajoute les listeners aux boutons
@@ -58,6 +66,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //ajout des listeners
         boutonCreerRoom.onClick.AddListener(CreerRoom);
         boutonRejoindre.onClick.AddListener(RejoindreRoom);
+        boutonQuitterPartie.onClick.AddListener(QuitterPartie);
+        boutonReprendrePartie.onClick.AddListener(ReprendrePartie);
     }
 
     //Quand on clique sur "Créer une partie"
@@ -87,12 +97,33 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         OnClicRejoindre.Invoke();
     }
 
-    //callback quand le joueur rejoind une room
+    //Quand on clique sur Quitter dans le menu pause
+    private void QuitterPartie()
+    {
+        //indiquer au masterclient que le client va quitter la room
+        photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+
+        //quitter la room
+        PhotonNetwork.LeaveRoom();
+
+        //rechargement du jeu
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    //quand on clique sur reprendre, le menu pause est masqué ainsi que la souris
+    private void ReprendrePartie()
+    {
+        masquerMenuPause.Invoke();
+
+        //curseur de la souris locké et non visible
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    //callback quand le joueur rejoind une room, s'il est masterclient, il lance le lobby
     public override void OnJoinedRoom()
     {
-        Debug.Log("MenuPrincipal OnJoinedRoom");
-        StartCoroutine(SetWelcomeDebugAndSetReadyAtTheEndOfFrame());
-        //StartCoroutine(WaitForOtherPlayerToLaunchGame());
+        if(PhotonNetwork.IsMasterClient) StartCoroutine(GestionLobby());
     }
 
     //a la déconnexion du client local
@@ -100,34 +131,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         Debug.Log("MenuPrincipal OnDisconnected");
         Deconnecte?.Invoke();
-    }
-
-    //a la connexion d'un joueur à la room
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        Debug.Log("MenuPrincipal On Player enter room");
-        //si le client local est MasterClient
-        if (PhotonNetwork.IsMasterClient)
-        {
-            StartCoroutine(InformPlayerJoinedEndOfFrame(newPlayer.ActorNumber));
-        }
-    }
-
-    //methode du MasterClient pour gérer l'arrivée d'un nouveau joueur
-    private IEnumerator InformPlayerJoinedEndOfFrame(int actorNumber)
-    {
-        Debug.Log("MenuPrincipal InformPlayerJoinedEndOfFrame");
-        yield return new WaitForSeconds(2f);
-        var i = 0;
-        for (; i < PlayerNumbering.SortedPlayers.Length; i++)
-        {
-            if (actorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
-            {
-                break;
-            }
-        }
-
-        JoueurARejoint?.Invoke(i, actorNumber);
     }
 
     //quand un joueur quitte la room
@@ -160,48 +163,63 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     }
     
-    private IEnumerator SetWelcomeDebugAndSetReadyAtTheEndOfFrame()
+    private IEnumerator GestionLobby()
     {
-        Debug.Log("MenuPrincipal SetWelcomeDebugAndSetReadyAtTheEndOfFrame");
-        yield return new WaitForSeconds(2f);
-
-        //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
-        if (waitForPlayersToPlay)
+        if (PhotonNetwork.IsMasterClient)
         {
-            //yield return new WaitForSeconds(30f);
-
-            int currentNbPlayer = PlayerNumbering.SortedPlayers.Length;
-
-            for(int i = 0; i < 30; i++)
+            yield return new WaitForSeconds(3f);
+            //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
+            if (waitForPlayersToPlay)
             {
-                if(PlayerNumbering.SortedPlayers.Length > currentNbPlayer)
+                for (int i = 0; i < DureeMatchmaking; i++)
                 {
-                    //mise à jour du compteur de joueurs sur l'interface
-                    nouveauJoueurDansRoom.Invoke();
+                    MettreAJourLobby.Invoke(DureeMatchmaking - i);
+
+                    yield return new WaitForSeconds(1f);
                 }
 
-                yield return new WaitForSeconds(1f);
-            }
+                //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
+                if (PlayerNumbering.SortedPlayers.Length <= 1)
+                {
+                    erreur.gameObject.SetActive(true);
+                    erreur.text = "Pas assez de pilote - Partie annulée - Retour au menu";
+                    yield return new WaitForSeconds(2f);
+                    erreur.gameObject.SetActive(false);
+                    PhotonNetwork.LeaveRoom();
+                }
+                else
+                {
+                    //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
+                    PhotonNetwork.CurrentRoom.IsOpen = false;
 
-            //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
-            if (PlayerNumbering.SortedPlayers.Length <= 1)
-            {
-                erreur.text = "Partie annulée retour au menu";
-                yield return new WaitForSeconds(2f);
-                PhotonNetwork.LeaveRoom();
+                    //tous les clients connectés lancent SetPlayerReady
+                    photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
+
+                    //masquer l'interface du lobby
+                    LancementPartie.Invoke();
+
+                    //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
+                    for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)
+                    {
+                        JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);
+                    }
+                    photonView.RPC("MasquerSourisRPC", RpcTarget.All);
+                }
             }
             else
             {
-                //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
-                PhotonNetwork.CurrentRoom.IsOpen = false;
-                StartCoroutine(SetPlayerReady());
+                //tous les clients connectés lancent SetPlayerReady
+                photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
+
+                //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
+                for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)
+                {
+                    JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);
+                }
+                photonView.RPC("MasquerSourisRPC", RpcTarget.All);
             }
-        }
-        else
-        {
-            StartCoroutine(SetPlayerReady());
-        }
-    }
+        } 
+    } 
     
     private IEnumerator SetPlayerReady()
     {
@@ -223,14 +241,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            //envoi d'une RPC au nouveau joueur pour que sa souris soit masquer et lockée
-            photonView.RPC("MasquerSourisRPC", PlayerNumbering.SortedPlayers[i]);
-
-            JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);   
-        }
     }
 
     [PunRPC]
@@ -239,6 +249,35 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //on bloque et cache le curseur de la souris
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    [PunRPC]
+    private void SetPlayerReadyRPC()
+    {
+        StartCoroutine(SetPlayerReady());
+    }
+
+    //RPC envoyé par un client au masterclient pour se déconnecter de la partie
+    [PunRPC]
+    private void DeconnexionViaClientRPC(int playerActorNumber)
+    {
+        //si le client local n'est pas MasterClient on ne fait rien 
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        //s'il est MasterClient, on appelle le delegate correspondant
+        var i = 0;
+        for (; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            if (playerActorNumber == PlayerNumbering.SortedPlayers[i].ActorNumber)
+            {
+                break;
+            }
+        }
+
+        JoueurAQuitte?.Invoke(i, playerActorNumber);
     }
     
     /*

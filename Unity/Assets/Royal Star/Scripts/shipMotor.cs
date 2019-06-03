@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
+using System;
 
 public class shipMotor : MonoBehaviour
 {
@@ -27,6 +28,16 @@ public class shipMotor : MonoBehaviour
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
 
+    [Header("Attribut pour le client")]
+    //booléen pour savoir si le menu est affiché ou non
+    private bool menuPauseAffiche = false;
+
+    #region Events
+    public event Action AfficherMenuPause;
+    public event Action MasquerMenuPause;
+    public event Action<int, bool> FinDePartiePourUnJoueur;
+    #endregion
+
     private float propulsionAvantAppliquee;
     private float forceLevitationAppliquee;
 
@@ -36,45 +47,38 @@ public class shipMotor : MonoBehaviour
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
-        gameController.Deconnecte += FinJeu;
         gameController.MasterclientSwitch += FinJeu;
         gameController.FinDePartie += FinPartieRetourMenu;
     }
 
+    //fonction du masterclient pour update l'ensemble des vaisseaux en fonction des inputs envoyés par leurs clients respectifs
     void UpdateGameState()
     {
-        
-        //touche ECHAP pour quitter le jeu
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //FinJeu();
-
-            //on remet le curseur visible
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            return;
-        }
-
         var activatedAvatarsCount = 0;
 
+        //boucle pour controller l'ensemble des vaisseaux
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
         {   
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            //Debug.Log(intentReceiver.BoostPitch.ToString());
-
-            if (!vaisseau.alive)
+            //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
+            if (!vaisseau.alive && vaisseau.ShipRootGameObject.activeSelf)
             {
-                break;
+                //affichage de l'écran de défaite par l'interfaceManager via l'event
+                FinDePartiePourUnJoueur(vaisseau.playerID, false);
+
+                //désactivation du vaisseau
+                DesactivationVaisseau(i, vaisseau.playerID);
             }
 
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
 
+
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
-            
+
             //S'il veut tirer
             if(intentReceiver.WantToShootFirst)
             {
@@ -177,10 +181,43 @@ public class shipMotor : MonoBehaviour
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }
+
+        //s'il ne reste qu'un joueur en vie, il gagne la partie
+        if (activatedAvatarsCount == 1)
+        {
+            int parcours = 0;
+
+            for(; parcours < vaisseaux.Length; parcours++)
+            {
+                if(vaisseaux[parcours].ShipRootGameObject.activeSelf)
+                {
+                    break;
+                }
+            }
+
+            FinDePartiePourUnJoueur(vaisseaux[parcours].playerID, true);
+
+            DesactivationVaisseau(parcours, vaisseaux[parcours].playerID);
+        }
     }
 
     void FixedUpdate()
     {
+        //au niveau du client, si le joueur presse ECHAP, le menu de pause s'active ou se désactive en fonction de son état
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!menuPauseAffiche)
+            {
+                AfficherMenuPause.Invoke();
+                menuPauseAffiche = true;
+            }
+            else
+            {
+                MasquerMenuPause.Invoke();
+                menuPauseAffiche = false;
+            }
+        }
+
         //si le client n'est pas le masterClient, on ne fait rien
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
         {
@@ -339,7 +376,7 @@ public class shipMotor : MonoBehaviour
         Debug.Log("ShipMotor DesactivationVaisseau");
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC("DeactivativationVaisseauRPC", RpcTarget.AllBuffered, id);
+            photonView.RPC("DesactivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
         }
         else
         {

@@ -62,4 +62,12 @@ MonoBehaviour:
   - WantToShootFirstRPC
   - UpdateInterfaceRPC
   - MasquerSourisRPC
+  - AfficherLobbyRPC
+  - MasquerLobbyRPC
+  - MettreAJourLobbyRPC
+  - SetPlayerReadyRPC
+  - AfficherMenuPauseRPC
+  - MasquerMenuPauseRPC
+  - DeconnexionViaClientRPC
+  - AfficherEcranFinPartieRPC
   DisableAutoOpenWizard: 1
