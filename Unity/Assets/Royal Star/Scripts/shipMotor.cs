@@ -51,17 +51,19 @@ public class shipMotor : MonoBehaviour
         gameController.FinDePartie += FinPartieRetourMenu;
     }
 
+    //fonction du masterclient pour update l'ensemble des vaisseaux en fonction des inputs envoyés par leurs clients respectifs
     void UpdateGameState()
     {
         var activatedAvatarsCount = 0;
 
+        //boucle pour controller l'ensemble des vaisseaux
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
         {   
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
 
-            //si le vaisseau à 0 PV, afficher l'écran de défaite
-            if (!vaisseau.alive)
+            //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
+            if (!vaisseau.alive && vaisseau.ShipRootGameObject.activeSelf)
             {
                 //affichage de l'écran de défaite par l'interfaceManager via l'event
                 FinDePartiePourUnJoueur(vaisseau.playerID, false);
@@ -72,6 +74,7 @@ public class shipMotor : MonoBehaviour
 
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
+
 
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
@@ -177,6 +180,24 @@ public class shipMotor : MonoBehaviour
 
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
+        }
+
+        //s'il ne reste qu'un joueur en vie, il gagne la partie
+        if (activatedAvatarsCount == 1)
+        {
+            int parcours = 0;
+
+            for(; parcours < vaisseaux.Length; parcours++)
+            {
+                if(vaisseaux[parcours].ShipRootGameObject.activeSelf)
+                {
+                    break;
+                }
+            }
+
+            FinDePartiePourUnJoueur(vaisseaux[parcours].playerID, true);
+
+            DesactivationVaisseau(parcours, vaisseaux[parcours].playerID);
         }
     }
 
