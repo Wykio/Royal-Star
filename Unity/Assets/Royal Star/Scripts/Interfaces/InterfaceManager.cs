@@ -21,6 +21,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button quitterMenuPause;
     [SerializeField] private Button reprendreMenuPause;
     [SerializeField] private Canvas Ui;
+    [SerializeField] private Text finDePartie;
 
     #region Events
     public event Action OnlinePret;
@@ -47,6 +48,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         menuController.LancementPartie += PartieLancee;
         ShipManager.AfficherMenuPause += AfficherMenuPause;
         ShipManager.MasquerMenuPause += MasquerMenuPause;
+        ShipManager.FinDePartiePourUnJoueur += AfficherEcranFinPartie;
 
         listeElements = new List<GameObject>();
         listeElements.Add(erreur.gameObject);
@@ -110,9 +112,12 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.gameObject.SetActive(false);
     }
 
-    //afficher les éléments du menu principal
-    public void AfficherMenuPrincipal(int i, int j)
+    //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
+    public void AfficherMenuPrincipal(int i, int playerActorNumber)
     {
+        //condition pour que seulement le client qui quitte la room ait l'affichage du menu. dans le cas où playerActorNumber est à 0, c'est que tous les clients doivent afficher le menu
+        if (PhotonNetwork.LocalPlayer.ActorNumber != playerActorNumber && playerActorNumber != 0) return;
+
         //affichage du titre et des boutons
         titre.gameObject.SetActive(true);
         creerRoomButton.gameObject.SetActive(true);
@@ -179,6 +184,55 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     public void ActiverInterface()
     {
         Ui.gameObject.SetActive(true);
+    }
+
+    //fonction du masterclient pour ordonner aux clients d'afficher le résultat de la partie
+    public void AfficherEcranFinPartie(int playerActorNumber, bool victoire)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        //récupérer le player défini par playerActorNumber
+        int i = 0;
+        for(; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerActorNumber)
+            {
+                break;
+            }
+        }
+
+        //envoie de la RPC au client avec son résultat
+        photonView.RPC("AfficherEcranFinPartieRPC", PlayerNumbering.SortedPlayers[i], victoire);
+    }
+
+    //code exécuté par le client sous ordre du masterclient pour afficher le résultat de fin de partie donné en paramètre
+    [PunRPC]
+    private void AfficherEcranFinPartieRPC(bool victoire)
+    {
+        Ui.gameObject.SetActive(true);
+
+        //activation du texte de fin de partie
+        finDePartie.gameObject.SetActive(true);
+
+        //en fonction du résultat, le texte prend la valeur adéquate
+        if(victoire)
+        {
+            finDePartie.text = "Victoire !";
+            finDePartie.color = Color.green;
+        }
+        else
+        {
+            finDePartie.text = "Défaite !";
+            finDePartie.color = Color.red;
+        }
+
+        //réutilisation du bouton retour menu principal du menu pause pour revenir au menu
+        quitterMenuPause.gameObject.SetActive(true);
+        quitterMenuPause.interactable = true;
+
+        //curseur de la souris délocké et visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     [PunRPC]

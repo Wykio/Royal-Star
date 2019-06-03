@@ -1226,6 +1226,18 @@ Transform:
   m_Father: {fileID: 567873126}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &347732941 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4789026138471431118, guid: 49f66b7044930fb43b93c1cef3a98b15,
+    type: 3}
+  m_PrefabInstance: {fileID: 4825093254536178933}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &355726106 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,
@@ -1388,6 +1400,7 @@ MonoBehaviour:
   quitterMenuPause: {fileID: 764841231}
   reprendreMenuPause: {fileID: 43864256}
   Ui: {fileID: 1344360283}
+  finDePartie: {fileID: 347732941}
 --- !u!4 &415601859
 Transform:
   m_ObjectHideFlags: 0
@@ -6545,7 +6558,7 @@ PrefabInstance:
     - target: {fileID: 7559162760317973457, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 69.1001
+      value: 69.099976
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49f66b7044930fb43b93c1cef3a98b15, type: 3}

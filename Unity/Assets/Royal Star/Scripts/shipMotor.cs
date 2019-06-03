@@ -35,6 +35,7 @@ public class shipMotor : MonoBehaviour
     #region Events
     public event Action AfficherMenuPause;
     public event Action MasquerMenuPause;
+    public event Action<int, bool> FinDePartiePourUnJoueur;
     #endregion
 
     private float propulsionAvantAppliquee;
@@ -46,7 +47,6 @@ public class shipMotor : MonoBehaviour
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
-        gameController.Deconnecte += FinJeu;
         gameController.MasterclientSwitch += FinJeu;
         gameController.FinDePartie += FinPartieRetourMenu;
     }
@@ -63,8 +63,11 @@ public class shipMotor : MonoBehaviour
             //si le vaisseau à 0 PV, afficher l'écran de défaite
             if (!vaisseau.alive)
             {
+                //affichage de l'écran de défaite par l'interfaceManager via l'event
+                FinDePartiePourUnJoueur(vaisseau.playerID, false);
 
-                break;
+                //désactivation du vaisseau
+                DesactivationVaisseau(i, vaisseau.playerID);
             }
 
             //Nombre de joueurs encore en vie
