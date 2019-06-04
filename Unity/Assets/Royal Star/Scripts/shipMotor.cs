@@ -183,7 +183,7 @@ public class shipMotor : MonoBehaviour
         }
 
         //s'il ne reste qu'un joueur en vie, il gagne la partie
-        if (activatedAvatarsCount == 1)
+        if (activatedAvatarsCount == 1 && gameController.Matchmaking)
         {
             int parcours = 0;
 

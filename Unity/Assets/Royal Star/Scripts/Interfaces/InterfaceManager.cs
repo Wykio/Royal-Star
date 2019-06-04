@@ -89,7 +89,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.gameObject.SetActive(false);
 
         //si le lobby est activé, le masterClient envoie une RPC pour que les clients affichent l'interface du lobby
-        if (menuController.waitForPlayersToPlay && PhotonNetwork.IsMasterClient)
+        if (menuController.Matchmaking && PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("AfficherLobbyRPC", RpcTarget.AllBuffered);
         }

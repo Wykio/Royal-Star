@@ -12,7 +12,7 @@ using System;
 public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 {
     #region ClassVariables
-    [SerializeField] public bool waitForPlayersToPlay = false;
+    [SerializeField] public bool Matchmaking = false;
     [SerializeField] public int DureeMatchmaking = 30;
     #endregion
 
@@ -169,7 +169,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         {
             yield return new WaitForSeconds(3f);
             //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
-            if (waitForPlayersToPlay)
+            if (Matchmaking)
             {
                 for (int i = 0; i < DureeMatchmaking; i++)
                 {
