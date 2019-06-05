@@ -16,6 +16,8 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float dampingHover;
     [SerializeField] private float dampingSpeed;
     [SerializeField] private float dampingHeight;
+    [SerializeField] private float utilisationBoost;
+    [SerializeField] private float rechargeBoost;
 
     //composants Photon pour mise en réseau
     [Header("Composants Photon")]
@@ -95,16 +97,30 @@ public class shipMotor : MonoBehaviour
             //si le vaisseau est en l'air on gère les intents suivants 
             if(vaisseau.Aerien)
             {
-                //si le vaisseau active le boost on gère ces intents
-                if(intentReceiver.AirBoostActivate)
+                //si le vaisseau active le boost et si son boost n'est pas en chargement on gère ces intents
+                if(intentReceiver.AirBoostActivate && vaisseau.getBoostState())
                 {
                     if(intentReceiver.BoostForward)
                     {
                         vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
+                        vaisseau.UtilisationBoost(utilisationBoost);
+
+                        //si la jauge de boost tombe à 0, le boost est désactivé le temps de sa recharge
+                        if(vaisseau.getBoost() <= 0.0f)
+                        {
+                            vaisseau.setBoostState(false);
+                        }
                     }
                     if(intentReceiver.BoostBackward)
                     {
                         vaisseau.ShipRigidBody.AddForce(-vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
+                        vaisseau.UtilisationBoost(utilisationBoost);
+
+                        //si la jauge de boost tombe à 0, le boost est désactivé le temps de sa recharge
+                        if (vaisseau.getBoost() <= 0.0f)
+                        {
+                            vaisseau.setBoostState(false);
+                        }
                     }
                     if(intentReceiver.AirRollLeft)
                     {
@@ -144,6 +160,15 @@ public class shipMotor : MonoBehaviour
                     {
                         vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
                     }
+
+                    //recharge du boost
+                    vaisseau.RechargeBoost(rechargeBoost);
+
+                    //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
+                    if(!vaisseau.getBoostState() && vaisseau.getBoost()>= 200f)
+                    {
+                        vaisseau.setBoostState(true);
+                    }
                 }
             }
             else
@@ -176,8 +201,17 @@ public class shipMotor : MonoBehaviour
                 moveIntent = moveIntent.normalized;
 
                 vaisseau.ShipRigidBody.AddForce(moveIntent * propulsionAvantAppliquee, ForceMode.Force);
-            }
 
+                //recharge du boost
+                vaisseau.RechargeBoost(rechargeBoost);
+
+                //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
+                if (!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
+                {
+                    vaisseau.setBoostState(true);
+                }
+            }
+            Debug.Log(vaisseau.getBoost());
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }

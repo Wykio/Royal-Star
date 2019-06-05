@@ -24,20 +24,26 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Canvas interfaceJoueur;
     [SerializeField] public Text pv;
     [SerializeField] public Text bouclier;
+    [SerializeField] public Slider boost;
     private int healthPoints = 200;
     private int shieldPoints = 100;
+    private float boostPoints = 200f;
+    private bool boostOK;
 
     public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
 
     public int currentWeaponIndex = 0;
 
-    public void MiseAJourStats(int healthPoints, int shieldPoints)
+    public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints)
     {
         //mise à jour des PV
         pv.text = healthPoints.ToString() + " PV";
 
         //mise à jour des PV
         bouclier.text = shieldPoints.ToString() + "% Bouclier";
+
+        //mise à jour du boost
+        boost.value = boostPoints;
     }
 
     public void TakeDamage(int damage)
@@ -65,7 +71,6 @@ public class ShipExposer : MonoBehaviour
                 alive = false;
             }
         }
-
     }
 
     public int getPV()
@@ -76,5 +81,34 @@ public class ShipExposer : MonoBehaviour
     public int getBouclier()
     {
         return shieldPoints;
+    }
+
+    public float getBoost()
+    {
+        return boostPoints;
+    }
+
+    public void UtilisationBoost(float points)
+    {
+        boostPoints -= points;
+
+        if (boostPoints < 0.0f) boostPoints = 0.0f;
+    }
+
+    public void RechargeBoost(float points)
+    {
+        boostPoints += points;
+
+        if (boostPoints > 200f) boostPoints = 200f;
+    }
+
+    public bool getBoostState()
+    {
+        return boostOK;
+    }
+
+    public void setBoostState(bool b)
+    {
+        boostOK = b;
     }
 }

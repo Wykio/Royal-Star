@@ -683,7 +683,7 @@ Transform:
   - {fileID: 1877685695}
   - {fileID: 1776801902}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &194180251
 GameObject:
@@ -1392,6 +1392,7 @@ MonoBehaviour:
   titre: {fileID: 1302076278}
   creerRoomButton: {fileID: 1734441889}
   joinRoomButton: {fileID: 1010809659}
+  quitterJeuButton: {fileID: 982612780}
   titreLobby: {fileID: 1097454779}
   decompteLobby: {fileID: 1678153195}
   listeJoueurs: {fileID: 1324930053}
@@ -1413,7 +1414,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &415601860
 MonoBehaviour:
@@ -2854,6 +2855,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &982612780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 468260805523185386, guid: 49f66b7044930fb43b93c1cef3a98b15,
+    type: 3}
+  m_PrefabInstance: {fileID: 4825093254536178933}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1002072140
 GameObject:
   m_ObjectHideFlags: 0
@@ -3920,7 +3933,7 @@ PrefabInstance:
     - target: {fileID: 3361519573493428610, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3361519573493428610, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
@@ -5027,7 +5040,7 @@ PrefabInstance:
     - target: {fileID: 3361519573493428610, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3361519573493428610, guid: 9cf49af71cda5df4586a99bf7188dfba,
         type: 3}
@@ -5445,10 +5458,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitForPlayersToPlay: 0
+  waitForPlayersToPlay: 1
   DureeMatchmaking: 30
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
+  boutonQuitterJeu: {fileID: 982612780}
   message: {fileID: 1302076278}
   erreur: {fileID: 1577373848}
   boutonReprendrePartie: {fileID: 43864256}
@@ -5487,6 +5501,8 @@ MonoBehaviour:
   dampingHover: 0.7
   dampingSpeed: 0.95
   dampingHeight: 5
+  utilisationBoost: 0.75
+  rechargeBoost: 0.5
   photonView: {fileID: 1815358703}
   positionsDepart:
   - {fileID: 1376070143}
@@ -6558,7 +6574,17 @@ PrefabInstance:
     - target: {fileID: 7559162760317973457, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 69.099976
+      value: 69.1001
+      objectReference: {fileID: 0}
+    - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 56.600098
+      objectReference: {fileID: 0}
+    - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -3.6999512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49f66b7044930fb43b93c1cef3a98b15, type: 3}

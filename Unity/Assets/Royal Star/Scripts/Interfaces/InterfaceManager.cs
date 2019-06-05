@@ -13,6 +13,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text titre;
     [SerializeField] private Button creerRoomButton;
     [SerializeField] private Button joinRoomButton;
+    [SerializeField] private Button quitterJeuButton;
     [SerializeField] private Text titreLobby;
     [SerializeField] private Text decompteLobby;
     [SerializeField] private Text listeJoueurs;
@@ -109,6 +110,8 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         creerRoomButton.interactable = false;
         joinRoomButton.gameObject.SetActive(false);
         joinRoomButton.interactable = false;
+        quitterJeuButton.gameObject.SetActive(false);
+        quitterJeuButton.interactable = false;
         erreur.gameObject.SetActive(false);
     }
 
@@ -124,6 +127,8 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         creerRoomButton.interactable = true;
         joinRoomButton.gameObject.SetActive(true);
         joinRoomButton.interactable = true;
+        quitterJeuButton.gameObject.SetActive(true);
+        quitterJeuButton.interactable = true;
         erreur.text = "";
 
         //masquer les éléments du lobby
@@ -134,19 +139,6 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-    }
-
-    //active ou désactive un élément donné en fonction du booleen en paramètre
-    public void MasquerActiverElement(GameObject g, bool value)
-    {
-        foreach (var e in listeElements)
-        {
-            if (e == g)
-            {
-                e.SetActive(value);
-                break;
-            }
-        }
     }
 
     //Masque l'interface du menu

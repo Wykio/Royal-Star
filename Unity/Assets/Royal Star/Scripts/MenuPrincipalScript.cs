@@ -20,6 +20,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [Header("Boutons Menu Principal")]
     [SerializeField] private Button boutonCreerRoom;
     [SerializeField] private Button boutonRejoindre;
+    [SerializeField] private Button boutonQuitterJeu;
 
     [Header ("Zones de texte Menu Principal")]
     [SerializeField] private Text message;
@@ -68,6 +69,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         boutonRejoindre.onClick.AddListener(RejoindreRoom);
         boutonQuitterPartie.onClick.AddListener(QuitterPartie);
         boutonReprendrePartie.onClick.AddListener(ReprendrePartie);
+        boutonQuitterJeu.onClick.AddListener(QuitterJeu);
     }
 
     //Quand on clique sur "Créer une partie"
@@ -108,6 +110,12 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
         //rechargement du jeu
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    //fonction du bouton Quitter qui ferme le jeu
+    private void QuitterJeu()
+    {
+        Application.Quit();
     }
 
     //quand on clique sur reprendre, le menu pause est masqué ainsi que la souris
