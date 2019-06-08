@@ -394,6 +394,11 @@ public class shipMotor : MonoBehaviour
         }
     }
 
+    public bool getGameStarted()
+    {
+        return gameStarted;
+    }
+
     [PunRPC]
     private void ActivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {

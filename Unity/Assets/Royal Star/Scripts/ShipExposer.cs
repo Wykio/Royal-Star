@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ShipExposer : MonoBehaviour
 {
-
+    [Header ("Composants du vaisseau")]
     public bool Aerien;
     public Rigidbody ShipRigidBody;
     public PhotonRigidbodyView ShipRigidbodyView;
@@ -16,6 +16,14 @@ public class ShipExposer : MonoBehaviour
     public Transform ShipCentreGravite;
     public Camera ShipCamera;
     public HitboxExposerScript ShipHitbox;
+
+    [Header ("Slots d'armes")]
+    public GameObject ArmeBleue1;
+    public GameObject ArmeBleue2;
+    public GameObject ArmeVerte1;
+    public GameObject ArmeVerte2;
+    public GameObject ArmeRouge1;
+
     public string playerName = "Sami";
     public int playerID;
     public bool alive = true;

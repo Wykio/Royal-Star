@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
+  - Item
+  - Arme
+  - Arme Bleue
+  - Arme Verte
+  - Arme Rouge
   layers:
   - Default
   - TransparentFX
