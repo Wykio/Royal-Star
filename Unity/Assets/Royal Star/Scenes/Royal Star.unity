@@ -5605,7 +5605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitForPlayersToPlay: 1
-  DureeMatchmaking: 30
+  DureeMatchmaking: 15
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
   boutonQuitterJeu: {fileID: 982612780}
@@ -5760,6 +5760,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1829976069}
   - component: {fileID: 1829976068}
+  - component: {fileID: 1829976070}
   m_Layer: 0
   m_Name: ItemManager
   m_TagString: Untagged
@@ -5787,6 +5788,7 @@ MonoBehaviour:
   armeRougePrefab: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
     type: 3}
   controlleurVaisseauxScript: {fileID: 1815358701}
+  photonView: {fileID: 1829976070}
 --- !u!4 &1829976069
 Transform:
   m_ObjectHideFlags: 0
@@ -5801,6 +5803,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1829976070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829976067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 44
+  InstantiationId: 44
+  isRuntimeInstantiated: 0
 --- !u!114 &1841439952 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,

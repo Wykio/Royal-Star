@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6779374387094105893}
   - component: {fileID: 1195463954286265256}
   - component: {fileID: 472522831935628272}
-  - component: {fileID: 3519416617708385909}
+  - component: {fileID: 128641194809601212}
+  - component: {fileID: 3608785180645176798}
   m_Layer: 0
   m_Name: Arme Bleue
   m_TagString: Arme
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2265936722477873036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.6, y: 3, z: -11.3856125}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -78,7 +79,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3519416617708385909
+--- !u!65 &128641194809601212
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,8 +87,21 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2265936722477873036}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3608785180645176798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2265936722477873036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5d1d837f081804587ea2a6ca6085bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemTransform: {fileID: 6779374387094105893}

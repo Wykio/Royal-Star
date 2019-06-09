@@ -106,23 +106,23 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
 
         //si le joueur souhaitant quitter est le masterclient, on donne ce role à un autre joueur
-        if(PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
-            Debug.Log("SWITCH MASTERCLIENT --- Recherche de joueur");
-            //récupération d'un joueur dans la liste
-            int i = 0;
-            for(; i < PhotonNetwork.PlayerListOthers.Length; i++)
-            {
-                //si ce joueur existe on le met en masterclient
-                if(PhotonNetwork.PlayerListOthers[i] != null)
-                {
-                    Debug.Log("SWITCH MASTERCLIENT --- nouveau masterclient trouvé");
-                    break;
-                }
-            }
+        //if(PhotonNetwork.LocalPlayer.IsMasterClient)
+        //{
+        //    Debug.Log("SWITCH MASTERCLIENT --- Recherche de joueur");
+        //    //récupération d'un joueur dans la liste
+        //    int i = 0;
+        //    for(; i < PhotonNetwork.PlayerListOthers.Length; i++)
+        //    {
+        //        //si ce joueur existe on le met en masterclient
+        //        if(PhotonNetwork.PlayerListOthers[i] != null)
+        //        {
+        //            Debug.Log("SWITCH MASTERCLIENT --- nouveau masterclient trouvé");
+        //            break;
+        //        }
+        //    }
 
-            PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerListOthers[i]);
-        }
+        //    PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerListOthers[i]);
+        //}
 
         //quitter la room
         PhotonNetwork.LeaveRoom();

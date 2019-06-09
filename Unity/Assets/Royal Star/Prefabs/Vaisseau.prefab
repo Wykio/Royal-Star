@@ -769,6 +769,11 @@ MonoBehaviour:
   ShipCentreGravite: {fileID: 3361519573417196520}
   ShipCamera: {fileID: 3361519573588220657}
   ShipHitbox: {fileID: 9006751233132591676}
+  ArmeBleue1: {fileID: 0}
+  ArmeBleue2: {fileID: 0}
+  ArmeVerte1: {fileID: 0}
+  ArmeVerte2: {fileID: 0}
+  ArmeRouge1: {fileID: 0}
   playerName: Sami
   playerID: 0
   alive: 1
