@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3608785180645176798}
   m_Layer: 0
   m_Name: Arme Bleue
-  m_TagString: Arme
+  m_TagString: Arme Bleue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,3 +105,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemTransform: {fileID: 6779374387094105893}
+  itemCollider: {fileID: 128641194809601212}

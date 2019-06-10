@@ -19,10 +19,15 @@ public class ShipExposer : MonoBehaviour
 
     [Header ("Slots d'armes")]
     public GameObject ArmeBleue1;
+    public Collider ArmeBleue1Collider;
     public GameObject ArmeBleue2;
+    public Collider ArmeBleue2Collider;
     public GameObject ArmeVerte1;
+    public Collider ArmeVerte1Collider;
     public GameObject ArmeVerte2;
+    public Collider ArmeVerte2Collider;
     public GameObject ArmeRouge1;
+    public Collider ArmeRouge1Collider;
 
     public string playerName = "Sami";
     public int playerID;
@@ -118,5 +123,51 @@ public class ShipExposer : MonoBehaviour
     public void setBoostState(bool b)
     {
         boostOK = b;
+    }
+
+    public void ActiverArmeRouge()
+    {
+        ArmeRouge1.SetActive(true);
+        ArmeRouge1Collider.isTrigger = false;
+    }
+
+    public void ActiverArmeVerte()
+    {
+        //si l'arme verte 1 est déjà activée, on vérifie la deuxième arme verte
+        if(ArmeVerte1.activeSelf)
+        {
+            //si l'arme Verte 2 n'est pas activée, on l'active
+            if(!ArmeVerte2.activeSelf)
+            {
+                ArmeVerte2.SetActive(true);
+                ArmeVerte2Collider.isTrigger = false;
+            }
+        }
+        else
+        {
+            //sinon on active l'arme verte 1
+            ArmeVerte1.SetActive(true);
+            ArmeVerte1Collider.isTrigger = false;
+        }
+    }
+
+    public void ActiverArmeBleue()
+    {
+        //si l'arme bleue 1 est déjà activée, on vérifie la deuxième arme bleue
+        if (ArmeBleue1.activeSelf)
+        {
+            //si l'arme bleue 2 n'est pas activée, on l'active
+            if (!ArmeBleue2.activeSelf)
+            {
+                ArmeBleue2.SetActive(true);
+                ArmeBleue2Collider.isTrigger = false;
+            }
+        }
+        else
+        {
+            //sinon on active l'arme bleue 1
+            ArmeBleue1.SetActive(true);
+            ArmeBleue1Collider.isTrigger = false;
+        }
     }
 }

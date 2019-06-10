@@ -71,4 +71,6 @@ MonoBehaviour:
   - DeconnexionViaClientRPC
   - AfficherEcranFinPartieRPC
   - GenererArmeBleueRPC
+  - GenererArmeRougeRPC
+  - GenererArmeVerteRPC
   DisableAutoOpenWizard: 1

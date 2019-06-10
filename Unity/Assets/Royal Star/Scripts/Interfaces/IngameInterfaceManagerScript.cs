@@ -53,8 +53,6 @@ public class IngameInterfaceManagerScript : MonoBehaviour
     [PunRPC]
     private void UpdateInterfaceRPC(int indice, int pv, int bouclier, float boost)
     {
-        Debug.Log("Update de l'interface coté client " + indice.ToString());
-
         vaisseaux[indice].MiseAJourStats(pv, bouclier, boost);
 
         if(!vaisseaux[indice].interfaceJoueur.isActiveAndEnabled)

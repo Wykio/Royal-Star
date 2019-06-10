@@ -76,38 +76,23 @@ public class ItemGeneratorScript : MonoBehaviour
             if (!test)
             {
                 GenererArmeBleue(new Vector3(0, 3, 0));
+                GenererArmeBleue(new Vector3(4, 3, 0));
+
+                GenererArmeVerte(new Vector3(6, 3, 2));
+                GenererArmeVerte(new Vector3(2, 3, 6));
+
+                GenererArmeRouge(new Vector3(0, 3, 3));
+                
+
                 test = true;
             }
         }
         
     }
 
-    public void GenererArmeBleue(Vector3 position)
-    {
-        //seul le masterClient peut donner l'ordre de générer des objets aux clients
-        if(PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("GenererArmeBleueRPC", RpcTarget.All, position);
-        }
-    }
-
-    [PunRPC]
-    private void GenererArmeBleueRPC(Vector3 position)
-    {
-        //faire spawn une arme bleue
-        var armeBleue = armesBleuesLibres.Dequeue();
-
-        //activation de l'item
-        armeBleue.ActivationItem();
-        armeBleue.SetPosition(position);
-
-        //ajout de l'item dans la liste des items placés
-        armesBleuesPlacees.Add(armeBleue);
-    }
-
     private void FixedUpdate()
     {
-        if(controlleurVaisseauxScript.getGameStarted() && PhotonNetwork.IsMasterClient)
+        if (controlleurVaisseauxScript.getGameStarted() && PhotonNetwork.IsMasterClient)
         {
             //vérification du pooling des armes bleues
             for (int i = 0; i < armesBleuesPlacees.Count; i++)
@@ -151,5 +136,72 @@ public class ItemGeneratorScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GenererArmeBleue(Vector3 position)
+    {
+        //seul le masterClient peut donner l'ordre de générer des objets aux clients
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GenererArmeBleueRPC", RpcTarget.All, position);
+        }
+    }
+
+    [PunRPC]
+    private void GenererArmeBleueRPC(Vector3 position)
+    {
+        //faire spawn une arme bleue
+        var armeBleue = armesBleuesLibres.Dequeue();
+
+        //activation de l'item
+        armeBleue.ActivationItem();
+        armeBleue.SetPosition(position);
+
+        //ajout de l'item dans la liste des items placés
+        armesBleuesPlacees.Add(armeBleue);
+    }
+
+    public void GenererArmeVerte(Vector3 position)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GenererArmeVerteRPC", RpcTarget.All, position);
+        }
+    }
+
+    [PunRPC]
+    private void GenererArmeVerteRPC(Vector3 position)
+    {
+        //faire spawn une arme verte
+        var armeVerte = armesVertesLibres.Dequeue();
+
+        //activation de l'item
+        armeVerte.ActivationItem();
+        armeVerte.SetPosition(position);
+
+        //ajout de l'item dans la liste des items placés
+        armesVertesPlacees.Add(armeVerte);
+    }
+
+    public void GenererArmeRouge(Vector3 position)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GenererArmeRougeRPC", RpcTarget.All, position);
+        }
+    }
+
+    [PunRPC]
+    private void GenererArmeRougeRPC(Vector3 position)
+    {
+        //faire spawn une arme verte
+        var armeRouge = armesRougesLibres.Dequeue();
+
+        //activation de l'item
+        armeRouge.ActivationItem();
+        armeRouge.SetPosition(position);
+
+        //ajout de l'item dans la liste des items placés
+        armesRougesPlacees.Add(armeRouge);
     }
 }

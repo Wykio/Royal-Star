@@ -30,10 +30,30 @@ public class ItemExposerScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //si le collider est un joueur
-        if(other.gameObject.tag == "Player")
+        if(other.attachedRigidbody.gameObject.tag == "Player")
         {
-
+            var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
+            
+            if(this.gameObject.tag == "Arme Bleue")
+            {
+                vaisseau.ActiverArmeBleue();
+            }
+            else
+            {
+                if(this.gameObject.tag == "Arme Verte")
+                {
+                    vaisseau.ActiverArmeVerte();
+                }
+                else
+                {
+                    if(this.gameObject.tag == "Arme Rouge")
+                    {
+                        vaisseau.ActiverArmeRouge();
+                    }
+                }
+            }
         }
+
         ramasse = true;
         DesactivationItem();
     }
