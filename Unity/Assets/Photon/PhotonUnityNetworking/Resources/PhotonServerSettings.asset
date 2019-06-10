@@ -73,4 +73,5 @@ MonoBehaviour:
   - GenererArmeBleueRPC
   - GenererArmeRougeRPC
   - GenererArmeVerteRPC
+  - ChangerArmeRPC
   DisableAutoOpenWizard: 1

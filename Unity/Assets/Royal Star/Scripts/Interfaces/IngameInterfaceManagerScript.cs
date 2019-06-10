@@ -36,6 +36,8 @@ public class IngameInterfaceManagerScript : MonoBehaviour
                     }
                 }
 
+                Debug.Log("ARME ACTIVE : " + ship.getArmeActive());
+
                 //envoi de la RPC pour le joueur avec les stats à mettre à jour
                 photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost());    
 

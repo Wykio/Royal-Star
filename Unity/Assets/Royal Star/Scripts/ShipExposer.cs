@@ -43,6 +43,9 @@ public class ShipExposer : MonoBehaviour
     private float boostPoints = 200f;
     private bool boostOK;
 
+    // 0 pour le laser de base, 1 pour les armes bleues, 2 pour les armes vertes et 3 pour l'arme rouge
+    private int armeActive = 0;
+
     public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
 
     public int currentWeaponIndex = 0;
@@ -125,12 +128,19 @@ public class ShipExposer : MonoBehaviour
         boostOK = b;
     }
 
+    public int getArmeActive()
+    {
+        return armeActive;
+    }
+
+    //fonction d'activation quand le vaisseau ramasse une arme rouge
     public void ActiverArmeRouge()
     {
         ArmeRouge1.SetActive(true);
         ArmeRouge1Collider.isTrigger = false;
     }
 
+    //fonction d'activation quand le vaisseau ramasse une arme verte
     public void ActiverArmeVerte()
     {
         //si l'arme verte 1 est déjà activée, on vérifie la deuxième arme verte
@@ -151,6 +161,7 @@ public class ShipExposer : MonoBehaviour
         }
     }
 
+    //fonction d'activation quand le vaisseau ramasse une arme bleue
     public void ActiverArmeBleue()
     {
         //si l'arme bleue 1 est déjà activée, on vérifie la deuxième arme bleue
@@ -168,6 +179,30 @@ public class ShipExposer : MonoBehaviour
             //sinon on active l'arme bleue 1
             ArmeBleue1.SetActive(true);
             ArmeBleue1Collider.isTrigger = false;
+        }
+    }
+
+    //fonction pour changer d'arme
+    public void ChangerArme(int choix)
+    {
+        switch(choix)
+        {
+            case 1:
+                if (armeActive != 1) armeActive = 1;
+                break;
+
+            case 2:
+                if (armeActive != 2 && (ArmeBleue1.activeSelf || ArmeBleue2.activeSelf)) armeActive = 2;
+                Debug.Log("SHIP EXPOSER arme active = " + armeActive);
+                break;
+
+            case 3:
+                if (armeActive != 3 && (ArmeVerte1.activeSelf || ArmeVerte2.activeSelf)) armeActive = 3;
+                break;
+
+            case 4:
+                if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
+                break;
         }
     }
 }

@@ -81,8 +81,15 @@ public class shipMotor : MonoBehaviour
             //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
             DetectionDuSolOnLine(vaisseau);
 
+            //s'il veut changer d'arme
+            if (intentReceiver.ChangerArme != -1)
+            {
+                Debug.Log("SHIP MOTOR arme switch " + intentReceiver.ChangerArme);
+                vaisseau.ChangerArme(intentReceiver.ChangerArme);
+            }
+
             //S'il veut tirer
-            if(intentReceiver.WantToShootFirst)
+            if (intentReceiver.WantToShootFirst)
             {
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex]?.Shoot();
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
