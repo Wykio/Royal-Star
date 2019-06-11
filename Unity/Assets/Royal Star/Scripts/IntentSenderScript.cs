@@ -99,18 +99,74 @@ public class IntentSenderScript : AIntentReceiver
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
         }
+
         if (Input.GetMouseButtonDown(0))
         {
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, true);
         }
+
         if (Input.GetMouseButtonUp(0))
         {
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, false);
+        }
+
+        //choisir l'arme de base
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 1);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha1))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, -1);
+        }
+
+        //choisir les armes bleues
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 2);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, -1);
+        }
+
+        //choisir les armes vertes
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 3);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha3))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, -1);
+        }
+
+        //choisir l'arme rouge
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 4);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha4))
+        {
+            photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, -1);
         }
         #endregion
     }
 
     #region [PunRPC]
+
+    [PunRPC]
+    void ChangerArmeRPC(int choix)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            ChangerArme = choix;
+        }
+    }
+
     [PunRPC]
     void WantToGoForwardRPC(bool intent)
     {

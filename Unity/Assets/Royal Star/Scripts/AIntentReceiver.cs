@@ -29,9 +29,10 @@ public class AIntentReceiver : MonoBehaviour
 
     #endregion
 
-    #region commandes de tir
+    #region commandes liées au tir
 
     public bool WantToShootFirst { get; set; }
+    public int ChangerArme { get; set; }
 
     #endregion
 

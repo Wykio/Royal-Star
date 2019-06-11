@@ -70,4 +70,8 @@ MonoBehaviour:
   - MasquerMenuPauseRPC
   - DeconnexionViaClientRPC
   - AfficherEcranFinPartieRPC
+  - GenererArmeBleueRPC
+  - GenererArmeRougeRPC
+  - GenererArmeVerteRPC
+  - ChangerArmeRPC
   DisableAutoOpenWizard: 1
