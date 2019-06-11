@@ -84,7 +84,6 @@ public class shipMotor : MonoBehaviour
             //s'il veut changer d'arme
             if (intentReceiver.ChangerArme != -1)
             {
-                Debug.Log("SHIP MOTOR arme switch " + intentReceiver.ChangerArme);
                 vaisseau.ChangerArme(intentReceiver.ChangerArme);
             }
 
