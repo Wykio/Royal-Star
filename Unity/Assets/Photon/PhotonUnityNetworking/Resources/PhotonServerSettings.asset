@@ -76,4 +76,6 @@ MonoBehaviour:
   - ChangerArmeRPC
   - AfficherMessageInterfaceRPC
   - MasquerMessageInterfaceRPC
+  - confirmationClientRPC
+  - GenererDecorViaTableauRPC
   DisableAutoOpenWizard: 1
