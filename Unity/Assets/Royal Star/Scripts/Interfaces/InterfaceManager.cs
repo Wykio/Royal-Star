@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using System;
+using MapGeneration;
 
 public class InterfaceManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text listeJoueurs;
     [SerializeField] private MenuPrincipalScript menuController;
     [SerializeField] private shipMotor ShipManager;
+    [SerializeField] private MapGeneratorBehaviour mapGenerateur;
     [SerializeField] private Button quitterMenuPause;
     [SerializeField] private Button reprendreMenuPause;
     [SerializeField] private Canvas Ui;
@@ -52,6 +54,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         ShipManager.AfficherMenuPause += AfficherMenuPause;
         ShipManager.MasquerMenuPause += MasquerMenuPause;
         ShipManager.FinDePartiePourUnJoueur += AfficherEcranFinPartie;
+        mapGenerateur.majInterface += AfficherMessageInterface;
 
         listeElements = new List<GameObject>();
         listeElements.Add(erreur.gameObject);

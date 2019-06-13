@@ -15,7 +15,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     #region ClassVariables
     [SerializeField] public bool waitForPlayersToPlay = false;
     [SerializeField] public int DureeMatchmaking = 30;
-    [SerializeField] MapGeneratorScript mapGenerator;
+    [SerializeField] MapGeneratorBehaviour mapGenerator;
     #endregion
 
     #region Interface
@@ -227,6 +227,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                     //générer la map et envoyer le tableau aux clients pour qu'ils la génèrent aussi
                     debutGenerationMap.Invoke("Génération de l'arène");
 
+                    mapGenerator.DesignBiomes();
+
                     finGenerationMap.Invoke();
 
                     //tous les clients connectés lancent SetPlayerReady
@@ -245,6 +247,13 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
             }
             else
             {
+                //générer la map et envoyer le tableau aux clients pour qu'ils la génèrent aussi
+                debutGenerationMap.Invoke("Génération de l'arène");
+
+                mapGenerator.DesignBiomes();
+
+                finGenerationMap.Invoke();
+
                 //tous les clients connectés lancent SetPlayerReady
                 photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
 
