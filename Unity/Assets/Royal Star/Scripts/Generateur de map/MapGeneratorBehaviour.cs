@@ -55,7 +55,20 @@ namespace MapGeneration
 
                 //envoyer le tableau du biome i aux clients
                 //convertir le tableau en string avant de l'envoyer aux clients
-                GenererDecor(generator.getTabBiome());
+                var tab = generator.getTabBiome();
+                string data = "";
+
+                for(int j = 0; j < tailleBiome; j++)
+                {
+                    for(int k = 0; k < tailleBiome; k++)
+                    {
+                        data += tab[j, k].ToString() + "_";
+                    }
+                }
+                //retirer le "_" en fin de string
+                data = data.Substring(0, data.Length - 1);
+
+                GenererDecor(data);
 
                 do
                 {
@@ -67,7 +80,7 @@ namespace MapGeneration
 
                 //diminution de la taille du prochain biome et reset des confirmations
                 tailleBiome -= 1;
-                hauteurBiome += 220;
+                hauteurBiome += 300;
                 nbConfirmationBiomeGenere = 0;
             }
         }
@@ -96,69 +109,93 @@ namespace MapGeneration
         private void GenererDecorViaTableauRPC(string data, int tailleBiome, int hauteurBiome)
         {
             //remettre la data sous forme d'un tableau de float
+            data.Replace(".", ",");
+            var dataDecor = data.Split('_');
+            double[,] tabDecor = new double[tailleBiome, tailleBiome];
+
+            int a = 0;
+            int b = 0;
+
+            Debug.Log("Taille de la data : " + dataDecor.Length);
+
+            foreach(var num in dataDecor)
+            {
+                if(b >= tailleBiome)
+                {
+                    a++;
+                    b = 0;
+                }
+
+                tabDecor[a, b] = Convert.ToDouble(num);
+
+                b++;
+            }
+
+            Debug.Log("Dimensions du tableau de float : " + dataDecor.Length);
 
             initialiserListeNumDecor();
 
             //générer le terrain
             GameObject terrain = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            terrain.transform.localScale = new Vector3(1000 * tailleBiome, 1f, 1000 * tailleBiome);
+            terrain.transform.localScale = new Vector3(1000 * tailleBiome, 3f, 1000 * tailleBiome);
             terrain.transform.position = new Vector3((1000 * tailleBiome)/2, hauteurBiome, (1000 * tailleBiome) / 2);
             terrain.name = "SolBiome";
 
             //pour chaque valeur du tableau
             for (int i = 0; i < tailleBiome; i++)
             {
-                for (int j = 0; j < tailleBiome; i++)
+                for (int j = 0; j < tailleBiome; j++)
                 {
                     //si la case contient un décor
                     if(tabDecor[i,j] > -1)
                     {
                         string decorSTR = tabDecor[i, j].ToString();
-                        var data = decorSTR.Split(',');
+                        var dataNum = decorSTR.Split(',');
 
-                        if(data.Length < 2)
+                        if(dataNum.Length < 2)
                         {
-                            data = decorSTR.Split('.');
+                            dataNum = decorSTR.Split('.');
                         }
 
                         //génération du décor
-                        int indice = int.Parse(data[0]);
+                        int indice = int.Parse(dataNum[0]);
                         GameObject decor = listePrefabDecors[indice];
                         decor = (GameObject)Instantiate(decor);
 
                         //placement du décor
                         Vector3 position = new Vector3((i * 1000 + 500), hauteurBiome+2, (j * 1000 + 500));
+                        Debug.Log("generation de" + listePrefabDecors[indice].name + "  en " + position.x + " " + position.z);
 
                         //ajout du decalage en x
-                        string decalXstr = data[1].Substring(0, 3);
-                        int decalX = int.Parse(decalXstr);
+                        //string decalXstr = dataNum[1].Substring(0, 3);
+                        //int decalX = int.Parse(decalXstr);
 
-                        if(decalX <= 250)
-                        {
-                            position.x -= decalX;
-                        }
-                        else
-                        {
-                            position.x += decalX;
-                        }
+                        //if(decalX <= 250)
+                        //{
+                        //    position.x -= decalX;
+                        //}
+                        //else
+                        //{
+                        //    position.x += decalX;
+                        //}
 
-                        //ajout du décalage en z
-                        string decalZstr = data[1].Substring(3, 3);
-                        int decalZ = int.Parse(decalZstr);
+                        ////ajout du décalage en z
+                        //string decalZstr = dataNum[1].Substring(3, 3);
+                        //int decalZ = int.Parse(decalZstr);
 
-                        if (decalZ <= 250)
-                        {
-                            position.x -= decalZ;
-                        }
-                        else
-                        {
-                            position.x += decalZ;
-                        }
+                        //if (decalZ <= 250)
+                        //{
+                        //    position.x -= decalZ;
+                        //}
+                        //else
+                        //{
+                        //    position.x += decalZ;
+                        //}
 
                         decor.transform.position = position;
 
                         //rotation
-                        float rotate = UnityEngine.Random.Range(0f, 100f);
+                        float rotate = UnityEngine.Random.Range(0f, 900f);
                         decor.transform.rotation = new Quaternion(0f, 1f, 0f, rotate);
                     }
                 }
