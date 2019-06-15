@@ -38,6 +38,8 @@ namespace MapGeneration
         //rempli le tableau pour générer un décor
         public void creerDecor()
         {
+            string data = "";
+
             System.Random generate = new System.Random();
 
             //pour chaque case, on détermine si on y place un élément de décor
@@ -60,18 +62,26 @@ namespace MapGeneration
                         string decimale = "0,";
 
                         //décalage en x
-                        int decal = generate.Next(0, 500);
+                        int decal = generate.Next(0, 400);
+                        Debug.Log("Decal en X" + decal);
                         decimale += decal.ToString();
 
                         //décalage en z
-                        decal = generate.Next(0, 500);
+                        decal = generate.Next(0, 400);
+                        Debug.Log("Decal en z" + decal);
                         decimale += decal.ToString();
 
+                        Debug.Log("DECIMALE : " + decimale);
+
                         //conversion de la partie decimale en float
-                        tableauBiome[i, j] += float.Parse(decimale);
+                        double d = float.Parse(decimale);
+                        tableauBiome[i, j] += d;
                     }
+                    data += tableauBiome[i, j] + "_";
                 }
             }
+
+            Debug.Log("Data générée : " + data);
         }
 
         public double[,] getTabBiome()

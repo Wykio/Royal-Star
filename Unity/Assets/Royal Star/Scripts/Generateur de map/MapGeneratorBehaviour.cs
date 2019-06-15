@@ -128,8 +128,6 @@ namespace MapGeneration
             int a = 0;
             int b = 0;
 
-            Debug.Log("Taille de la data : " + dataDecor.Length);
-
             foreach(var num in dataDecor)
             {
                 if(b >= tailleBiome)
@@ -179,35 +177,63 @@ namespace MapGeneration
                         Debug.Log("generation de" + listePrefabDecors[indice].name + "  en " + position.x + " " + position.z);
 
                         //ajout du decalage en x
-                        //string decalXstr = dataNum[1].Substring(0, 3);
-                        //int decalX = int.Parse(decalXstr);
+                        string decalXstr = dataNum[1].Substring(0, 3);
+                        int decalX = int.Parse(decalXstr);
+                        int decalXcopie = decalX;
+                        
+                        if(decalX <= 200)
+                        {
+                            position.x -= decalX;
+                        }
+                        else
+                        {
+                            //si decalX > 500, ca veut dire que la donnée initial est inférieure à 0, donc on la divise par 10 (.964 correspond à 96, le 4 provient du décalage en z)
+                            if(decalX > 400)
+                            {
+                                decalX = decalX / 10;
+                                position.x -= decalX;
+                            }
+                            else
+                            {
+                                position.x += decalX;
+                            }
+                        }
+                        
+                        //ajout du décalage en z
+                        string decalZstr;
 
-                        //if(decalX <= 250)
-                        //{
-                        //    position.x -= decalX;
-                        //}
-                        //else
-                        //{
-                        //    position.x += decalX;
-                        //}
+                        if (decalXcopie > 400)
+                        {
+                            decalZstr = dataNum[1].Substring(2, 3);
+                        }
+                        else
+                        {
+                            decalZstr = dataNum[1].Substring(3, 3);
+                        }
 
-                        ////ajout du décalage en z
-                        //string decalZstr = dataNum[1].Substring(3, 3);
-                        //int decalZ = int.Parse(decalZstr);
+                        int decalZ = int.Parse(decalZstr);
 
-                        //if (decalZ <= 250)
-                        //{
-                        //    position.x -= decalZ;
-                        //}
-                        //else
-                        //{
-                        //    position.x += decalZ;
-                        //}
+                        if (decalZ <= 200)
+                        {
+                            position.z -= decalZ;
+                        }
+                        else
+                        {
+                            if (decalZ > 400)
+                            {
+                                decalZ = decalZ / 10;
+                                position.z += decalZ;
+                            }
+                            else
+                            {
+                                position.z -= decalZ;
+                            }
+                        }
 
                         decor.transform.position = position;
 
                         //rotation
-                        float rotate = UnityEngine.Random.Range(0f, 900f);
+                        float rotate = UnityEngine.Random.Range(-3.14f, 3.14f);
                         decor.transform.rotation = new Quaternion(0f, 1f, 0f, rotate);
                     }
                 }
