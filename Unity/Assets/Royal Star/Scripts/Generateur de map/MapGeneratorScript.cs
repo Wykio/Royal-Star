@@ -46,9 +46,9 @@ namespace MapGeneration
                 for (int j = 0; j < tailleBiome; j++)
                 {
                     //on génère un random entre 0 et 4 exclu
-                    float decor = generate.Next(0, 4);
+                    float decor = generate.Next(0, 5);
 
-                    //on place un décor avec une probabilité de 75%
+                    //on place un décor avec une probabilité de 80%
                     if(decor != 0)
                     {
                         //selection d'un élément de décor dans la liste

@@ -74,6 +74,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         boutonQuitterPartie.onClick.AddListener(QuitterPartie);
         boutonReprendrePartie.onClick.AddListener(ReprendrePartie);
         boutonQuitterJeu.onClick.AddListener(QuitterJeu);
+        mapGenerator.mapGenereePourTous += LancerPartie;
     }
 
     //Quand on clique sur "Créer une partie"
@@ -198,7 +199,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
 
             //si le lobby est activé, on attends de nouveaux joueurs pendant 30 secondes
             if (waitForPlayersToPlay)
@@ -211,7 +212,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
 
                 //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
-                if (PlayerNumbering.SortedPlayers.Length <= 1)
+                if (PlayerNumbering.SortedPlayers.Length <= 0)
                 {
                     erreur.gameObject.SetActive(true);
                     erreur.text = "Pas assez de pilote - Partie annulée - Retour au menu";
@@ -221,28 +222,15 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
                 else
                 {
+                    Debug.Log("Lancement génération map");
                     //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
                     //générer la map et envoyer le tableau aux clients pour qu'ils la génèrent aussi
                     debutGenerationMap.Invoke("Génération de l'arène");
+                    StartCoroutine(mapGenerator.DesignBiomes());
 
-                    mapGenerator.DesignBiomes();
-
-                    finGenerationMap.Invoke();
-
-                    //tous les clients connectés lancent SetPlayerReady
-                    photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
-
-                    //masquer l'interface du lobby
-                    LancementPartie.Invoke();
-
-                    //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
-                    for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)
-                    {
-                        JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);
-                    }
-                    photonView.RPC("MasquerSourisRPC", RpcTarget.All);
+                    //la suite est lancée par la coroutine DesignBiomes quand celle-ci aura créé toute la map
                 }
             }
             else
@@ -250,19 +238,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 //générer la map et envoyer le tableau aux clients pour qu'ils la génèrent aussi
                 debutGenerationMap.Invoke("Génération de l'arène");
 
-                mapGenerator.DesignBiomes();
-
-                finGenerationMap.Invoke();
-
-                //tous les clients connectés lancent SetPlayerReady
-                photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
-
-                //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
-                for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)
-                {
-                    JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);
-                }
-                photonView.RPC("MasquerSourisRPC", RpcTarget.All);
+                StartCoroutine(mapGenerator.DesignBiomes());
             }
         } 
     } 
@@ -287,6 +263,24 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
+    }
+
+    private void LancerPartie()
+    {
+        finGenerationMap.Invoke();
+
+        //tous les clients connectés lancent SetPlayerReady
+        photonView.RPC("SetPlayerReadyRPC", RpcTarget.All);
+
+        //masquer l'interface du lobby
+        LancementPartie.Invoke();
+
+        //le masterclient s'occupe d'activer les vaisseaux pour tous les joueurs
+        for (int i = 0; i < PlayerNumbering.SortedPlayers.Length; i++)
+        {
+            JoueurARejoint?.Invoke(i, PlayerNumbering.SortedPlayers[i].ActorNumber);
+        }
+        photonView.RPC("MasquerSourisRPC", RpcTarget.All);
     }
 
     [PunRPC]

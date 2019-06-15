@@ -16,6 +16,7 @@ namespace MapGeneration
         [SerializeField] private int nbBiomes;
 
         public event Action<string> majInterface;
+        public event Action mapGenereePourTous;
 
         private double[] listeNumDecor;
         private int nbJoueurs;
@@ -30,6 +31,7 @@ namespace MapGeneration
         //fonction pour établir la liste des indices des décors
         public void initialiserListeNumDecor()
         {
+            Debug.Log("debut initialiserListeNumDecor");
             listeNumDecor = new double[listePrefabDecors.Length];
 
             for (int i = 0; i < listePrefabDecors.Length; i++)
@@ -38,16 +40,18 @@ namespace MapGeneration
             }
         }
 
-        //fonction pour générer les biomes
-        public void DesignBiomes()
+        //fonction du masterclient pour générer les biomes
+        public IEnumerator DesignBiomes()
         {
-            initialiserListeNumDecor();
+            if(listeNumDecor == null || listeNumDecor.Length ==0) initialiserListeNumDecor();
 
             for (int i = 0; i < nbBiomes; i++)
             {
+                bool ok = false;
+
                 MapGeneratorScript generator = new MapGeneratorScript(tailleBiome, listeNumDecor);
 
-                setNbJoueur(PhotonNetwork.PlayerList.Length);
+                setNbJoueur(PlayerNumbering.SortedPlayers.Length);
 
                 //mise à -1 et remplissage du décor
                 generator.InitialiserTableau();
@@ -68,21 +72,28 @@ namespace MapGeneration
                 //retirer le "_" en fin de string
                 data = data.Substring(0, data.Length - 1);
 
+                Debug.Log("data générée, taille : " + tab.Length);
+
+                //envoi de la RPC aux clients
                 GenererDecor(data);
 
-                do
+                while(!ok)
                 {
-                    Debug.Log("joueurs ayant chargé le" + (i + 1) + "biome : " + nbConfirmationBiomeGenere + " sur " + nbJoueurs);
-                    //majInterface.Invoke("joueurs ayant chargé le" + (i + 1) + "biome : " + nbConfirmationBiomeGenere + " sur " + nbJoueurs);
-                    
+                    //attente de la confirmation de tous les joueurs avant de générer le prochain biome
+                    if (nbConfirmationBiomeGenere < nbJoueurs)
+                    {
+                        yield return new WaitForSeconds(0.001f);
+                    }
+                    else ok = true;
                 }
-                while (nbConfirmationBiomeGenere != nbJoueurs);
 
                 //diminution de la taille du prochain biome et reset des confirmations
                 tailleBiome -= 1;
                 hauteurBiome += 300;
                 nbConfirmationBiomeGenere = 0;
             }
+
+            mapGenereePourTous.Invoke();
         }
 
         //le masterclient envoie le tableau qu'il a générer pour que les clients puissent générer le décor
@@ -90,6 +101,7 @@ namespace MapGeneration
         {
             if (PhotonNetwork.IsMasterClient)
             {
+                Debug.Log("data : " + data);
                 photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, tailleBiome, hauteurBiome);
             }
         }
@@ -98,7 +110,7 @@ namespace MapGeneration
         [PunRPC]
         private void confirmationClientRPC()
         {
-            if(PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.IsMasterClient)
             {
                 nbConfirmationBiomeGenere++;
             }
@@ -133,7 +145,7 @@ namespace MapGeneration
 
             Debug.Log("Dimensions du tableau de float : " + dataDecor.Length);
 
-            initialiserListeNumDecor();
+            if(listeNumDecor == null || listeNumDecor.Length == 0) initialiserListeNumDecor();
 
             //générer le terrain
             GameObject terrain = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -163,7 +175,7 @@ namespace MapGeneration
                         decor = (GameObject)Instantiate(decor);
 
                         //placement du décor
-                        Vector3 position = new Vector3((i * 1000 + 500), hauteurBiome+2, (j * 1000 + 500));
+                        Vector3 position = new Vector3((i * 1000 + 500), hauteurBiome+1.5f, (j * 1000 + 500));
                         Debug.Log("generation de" + listePrefabDecors[indice].name + "  en " + position.x + " " + position.z);
 
                         //ajout du decalage en x

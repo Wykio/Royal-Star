@@ -2968,12 +2968,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 1355495023}
   listePrefabDecors:
-  - {fileID: 8382801035452861800, guid: c7814e818de737e4bab8918f9d2b65f7, type: 3}
-  - {fileID: 100000, guid: 458bf20383b7adb49935fa301ccc5e16, type: 3}
-  - {fileID: 1641562786886399260, guid: 613984a354f57dc41966c626658271c1, type: 3}
+  - {fileID: 133520630023340895, guid: 19baa640d864ec847ba1957ab78e09a5, type: 3}
+  - {fileID: 443227887195062297, guid: 613be3a4cb617404ab57a91c84e00200, type: 3}
+  - {fileID: 8825049030531246158, guid: a3e54be4f736ccb48b9db1c0cc94c7ba, type: 3}
   hauteurBiome: 0
   tailleBiome: 4
-  nbBiomes: 1
+  nbBiomes: 4
 --- !u!1 &1376070142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4433,7 +4433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitForPlayersToPlay: 1
-  DureeMatchmaking: 15
+  DureeMatchmaking: 5
   mapGenerator: {fileID: 1355495025}
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
