@@ -10,16 +10,24 @@ namespace MapGeneration
     {
         // le tableau correspond au terrain, chaque case correspond à un carré de 1000 sur 1000
         private double[,] tableauBiome;
+        private string tabPortail;
+        private string tabRotation;
         private int tailleBiome;
         private double[] listeElementsDecor;
+        private int numBiome;
+        private int nbBiome;
 
         //constructeur
-        public MapGeneratorScript(int tailleBiome, double[] listeDecor)
+        public MapGeneratorScript(int tailleBiome, double[] listeDecor, int numBiome, int nbBiome)
         {
             this.tailleBiome = tailleBiome;
+            this.numBiome = numBiome;
+            this.nbBiome = nbBiome;
             listeElementsDecor = listeDecor;
 
             tableauBiome = new double[tailleBiome, tailleBiome];
+            tabPortail = "";
+            tabRotation = "";
         }
 
         //fonction pour initialiser le tableau
@@ -84,9 +92,63 @@ namespace MapGeneration
             Debug.Log("Data générée : " + data);
         }
 
+        //Générer le tableau indiquant les positions des portails
+        public void PlacerPortail()
+        {
+            //si la condition est validée, cela signifie que l'on est au dernier biome donc pas besoin de générer des portails
+            if (((nbBiome - numBiome) - 1) == 0) return;
+
+            //déterminer le nombre de portails à placer
+            for (int i = 0; i < (nbBiome-numBiome)-1; i++)
+            {
+                //position x du portail
+                int positionX = Random.Range(1 * 1000, tailleBiome * 1000) + Random.Range(-400, 400);
+                tabPortail += positionX + "/";
+
+                //Position z du portail
+                int positionZ = Random.Range(1 * 1000, tailleBiome * 1000) + Random.Range(-400, 400);
+                tabPortail += positionZ + "/";
+
+                //position x du portail de destination
+                int positionXDest = Random.Range(1 * 1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
+                tabPortail += positionXDest + "/";
+
+                //position z du portail de destination
+                int positionZDest = Random.Range(1 * 1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
+                tabPortail += positionZDest + "_";
+            }
+
+            //retirer le "_" en fin de string
+            tabPortail = tabPortail.Substring(0, tabPortail.Length - 1);
+        }
+
+        //Générer le tableau des rotations des objets du décor
+        public void DeterminerRotationDecors()
+        {
+            //pour chaque élément de décor, on choisit une rotation random
+            for (int i = 0; i < tableauBiome.Length; i++)
+            {
+                var value = Random.Range(-3.14f, 3.14f);
+                tabRotation += value.ToString() + "_";
+            }
+
+            //retirer le "_" en fin de string
+            tabRotation = tabRotation.Substring(0, tabRotation.Length - 1);
+        }
+
         public double[,] getTabBiome()
         {
             return tableauBiome;
+        }
+
+        public string getTabPortail()
+        {
+            return tabPortail;
+        }
+
+        public string getTabRotation()
+        {
+            return tabRotation;
         }
     }
 }

@@ -2971,6 +2971,8 @@ MonoBehaviour:
   - {fileID: 133520630023340895, guid: 19baa640d864ec847ba1957ab78e09a5, type: 3}
   - {fileID: 443227887195062297, guid: 613be3a4cb617404ab57a91c84e00200, type: 3}
   - {fileID: 8825049030531246158, guid: a3e54be4f736ccb48b9db1c0cc94c7ba, type: 3}
+  portailPrefab: {fileID: 6173530183464132757, guid: 3b492417f75edc04b80e70e62bbbec1f,
+    type: 3}
   hauteurBiome: 0
   tailleBiome: 4
   nbBiomes: 4
@@ -5510,6 +5512,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -3.6999512
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3.0999756
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49f66b7044930fb43b93c1cef3a98b15, type: 3}

@@ -11,6 +11,7 @@ namespace MapGeneration
     {
         [SerializeField] private PhotonView photonView;
         [SerializeField] private GameObject[] listePrefabDecors;
+        [SerializeField] private GameObject portailPrefab;
         [SerializeField] private int hauteurBiome;
         [SerializeField] private int tailleBiome;
         [SerializeField] private int nbBiomes;
@@ -49,13 +50,15 @@ namespace MapGeneration
             {
                 bool ok = false;
 
-                MapGeneratorScript generator = new MapGeneratorScript(tailleBiome, listeNumDecor);
+                MapGeneratorScript generator = new MapGeneratorScript(tailleBiome, listeNumDecor, i, nbBiomes);
 
                 setNbJoueur(PlayerNumbering.SortedPlayers.Length);
 
                 //mise à -1 et remplissage du décor
                 generator.InitialiserTableau();
                 generator.creerDecor();
+                generator.PlacerPortail();
+                generator.DeterminerRotationDecors();
 
                 //envoyer le tableau du biome i aux clients
                 //convertir le tableau en string avant de l'envoyer aux clients
@@ -75,7 +78,7 @@ namespace MapGeneration
                 Debug.Log("data générée, taille : " + tab.Length);
 
                 //envoi de la RPC aux clients
-                GenererDecor(data);
+                GenererDecor(data, generator.getTabRotation(), generator.getTabPortail());
 
                 while(!ok)
                 {
@@ -97,12 +100,11 @@ namespace MapGeneration
         }
 
         //le masterclient envoie le tableau qu'il a générer pour que les clients puissent générer le décor
-        public void GenererDecor(string data)
+        public void GenererDecor(string data, string dataRotation, string dataPortail)
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                Debug.Log("data : " + data);
-                photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, tailleBiome, hauteurBiome);
+                photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, dataRotation, dataPortail, tailleBiome, hauteurBiome);
             }
         }
 
@@ -118,12 +120,15 @@ namespace MapGeneration
 
         //RPC pour générer le décor à partir du tableau reçu
         [PunRPC]
-        private void GenererDecorViaTableauRPC(string data, int tailleBiome, int hauteurBiome)
+        private void GenererDecorViaTableauRPC(string data, string dataRotation, string dataPortail, int tailleBiome, int hauteurBiome)
         {
             //remettre la data sous forme d'un tableau de float
             data.Replace(".", ",");
             var dataDecor = data.Split('_');
             double[,] tabDecor = new double[tailleBiome, tailleBiome];
+
+            //split la dataRotation en la séparant selon le "_"
+            string[] dataRotationArray = dataRotation.Split('_');
 
             int a = 0;
             int b = 0;
@@ -140,8 +145,6 @@ namespace MapGeneration
 
                 b++;
             }
-
-            Debug.Log("Dimensions du tableau de float : " + dataDecor.Length);
 
             if(listeNumDecor == null || listeNumDecor.Length == 0) initialiserListeNumDecor();
 
@@ -174,7 +177,6 @@ namespace MapGeneration
 
                         //placement du décor
                         Vector3 position = new Vector3((i * 1000 + 500), hauteurBiome+1.5f, (j * 1000 + 500));
-                        Debug.Log("generation de" + listePrefabDecors[indice].name + "  en " + position.x + " " + position.z);
 
                         //ajout du decalage en x
                         string decalXstr = dataNum[1].Substring(0, 3);
@@ -233,9 +235,31 @@ namespace MapGeneration
                         decor.transform.position = position;
 
                         //rotation
-                        float rotate = UnityEngine.Random.Range(-3.14f, 3.14f);
+                        float rotate = float.Parse(dataRotationArray[((i+1)*(j+1))-1]);
                         decor.transform.rotation = new Quaternion(0f, 1f, 0f, rotate);
                     }
+                }
+            }
+
+            if(dataPortail != "")
+            {
+                //placement des portails, la donnée se présente ainsi : "positionX/positionZ/PositionDestinationX/positionDestinationZ_etc..."
+                var positionPortails = dataPortail.Split('_');
+
+                //pour chaque portail
+                for (int p = 0; p < positionPortails.Length; p++)
+                {
+                    var extract = positionPortails[p].Split('/');
+                    GameObject portail = portailPrefab;
+                    portail = (GameObject)Instantiate(portail);
+                    portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 10, float.Parse(extract[1]));
+
+                    GameObject portailDestination = portailPrefab;
+                    portailDestination = (GameObject)Instantiate(portailDestination);
+                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 310, float.Parse(extract[3]));
+
+                    TeleporterController transport = portail.GetComponent<TeleporterController>();
+                    transport.connectedTeleport = portailDestination;
                 }
             }
 
