@@ -22,6 +22,13 @@ public class IngameInterfaceManagerScript : MonoBehaviour
         if(PhotonNetwork.IsMasterClient)
         {
             int indice = 0;
+            int nbJoueursVivants = 0;
+
+            //déterminer le nombre de vaisseaux encore en vie
+            foreach(var ship in vaisseaux)
+            {
+                if (ship.gameObject.activeSelf) nbJoueursVivants++;
+            }
 
             //pour chaque vaisseau, on envoie les stats que le masterclient dispose aux clients
             foreach (var ship in vaisseaux)
@@ -36,10 +43,8 @@ public class IngameInterfaceManagerScript : MonoBehaviour
                     }
                 }
 
-                Debug.Log("ARME ACTIVE : " + ship.getArmeActive());
-
                 //envoi de la RPC pour le joueur avec les stats à mettre à jour
-                photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost(), ship.getArmeActive());    
+                photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost(), ship.getArmeActive(), nbJoueursVivants);    
 
                 indice++;
                 if (indice >= PlayerNumbering.SortedPlayers.Length) break;
@@ -53,9 +58,9 @@ public class IngameInterfaceManagerScript : MonoBehaviour
     }
 
     [PunRPC]
-    private void UpdateInterfaceRPC(int indice, int pv, int bouclier, float boost, int armeActive)
+    private void UpdateInterfaceRPC(int indice, int pv, int bouclier, float boost, int armeActive, int nbJoueurs)
     {
-        vaisseaux[indice].MiseAJourStats(pv, bouclier, boost);
+        vaisseaux[indice].MiseAJourStats(pv, bouclier, boost, nbJoueurs);
 
         if(!vaisseaux[indice].interfaceJoueur.isActiveAndEnabled)
         {

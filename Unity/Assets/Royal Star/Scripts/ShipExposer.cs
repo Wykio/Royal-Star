@@ -38,6 +38,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text pv;
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
+    [SerializeField] public Text compteurJoueurs;
     private int healthPoints = 200;
     private int shieldPoints = 100;
     private float boostPoints = 200f;
@@ -50,7 +51,7 @@ public class ShipExposer : MonoBehaviour
 
     public int currentWeaponIndex = 0;
 
-    public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints)
+    public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)
     {
         //mise à jour des PV
         pv.text = healthPoints.ToString() + " PV";
@@ -60,6 +61,9 @@ public class ShipExposer : MonoBehaviour
 
         //mise à jour du boost
         boost.value = boostPoints;
+
+        //mise à jour du compteur de joueurs
+        compteurJoueurs.text = "Pilotes restants : " + nbJoueursVivants;
     }
 
     public void TakeDamage(int damage)
