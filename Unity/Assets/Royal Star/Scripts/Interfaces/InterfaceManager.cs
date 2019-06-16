@@ -25,6 +25,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button reprendreMenuPause;
     [SerializeField] private Canvas Ui;
     [SerializeField] private Text finDePartie;
+    [SerializeField] private Image background;
 
     #region Events
     public event Action OnlinePret;
@@ -34,8 +35,6 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     public event Action MasterclientSwitch;
     public event Action FinDePartie;
     #endregion
-
-    private List<GameObject> listeElements;
 
     private void Awake()
     {
@@ -55,12 +54,6 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         ShipManager.MasquerMenuPause += MasquerMenuPause;
         ShipManager.FinDePartiePourUnJoueur += AfficherEcranFinPartie;
         mapGenerateur.majInterface += AfficherMessageInterface;
-
-        listeElements = new List<GameObject>();
-        listeElements.Add(erreur.gameObject);
-        listeElements.Add(titre.gameObject);
-        listeElements.Add(creerRoomButton.gameObject);
-        listeElements.Add(joinRoomButton.gameObject);
 
         //les boutons sont désactivés au démarrage
         creerRoomButton.gameObject.SetActive(false);
@@ -118,6 +111,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterJeuButton.gameObject.SetActive(false);
         quitterJeuButton.interactable = false;
         erreur.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
     }
 
     //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
@@ -135,6 +129,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterJeuButton.gameObject.SetActive(true);
         quitterJeuButton.interactable = true;
         erreur.text = "";
+        background.gameObject.SetActive(true);
 
         //masquer les éléments du lobby
         titreLobby.gameObject.SetActive(false);
