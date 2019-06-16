@@ -78,4 +78,6 @@ MonoBehaviour:
   - MasquerMessageInterfaceRPC
   - confirmationClientRPC
   - GenererDecorViaTableauRPC
+  - Disable
+  - Enable
   DisableAutoOpenWizard: 1
