@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using System;
+using MapGeneration;
 
 public class InterfaceManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Text listeJoueurs;
     [SerializeField] private MenuPrincipalScript menuController;
     [SerializeField] private shipMotor ShipManager;
+    [SerializeField] private MapGeneratorBehaviour mapGenerateur;
     [SerializeField] private Button quitterMenuPause;
     [SerializeField] private Button reprendreMenuPause;
     [SerializeField] private Canvas Ui;
@@ -47,9 +49,12 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         menuController.FinDePartie += resetInterface;
         menuController.masquerMenuPause += MasquerMenuPause;
         menuController.LancementPartie += PartieLancee;
+        menuController.debutGenerationMap += AfficherMessageInterface;
+        menuController.finGenerationMap += MasquerMessageInterface;
         ShipManager.AfficherMenuPause += AfficherMenuPause;
         ShipManager.MasquerMenuPause += MasquerMenuPause;
         ShipManager.FinDePartiePourUnJoueur += AfficherEcranFinPartie;
+        mapGenerateur.majInterface += AfficherMessageInterface;
 
         listeElements = new List<GameObject>();
         listeElements.Add(erreur.gameObject);
@@ -178,6 +183,51 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         Ui.gameObject.SetActive(true);
     }
 
+    //afficher les boutons du menu pause
+    public void AfficherMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(true);
+        quitterMenuPause.interactable = true;
+        reprendreMenuPause.gameObject.SetActive(true);
+        reprendreMenuPause.interactable = true;
+
+        //curseur de la souris délocké et visible
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        ActiverInterface();
+    }
+
+    //masquer les boutons du menu pause
+    public void MasquerMenuPause()
+    {
+        quitterMenuPause.gameObject.SetActive(false);
+        quitterMenuPause.interactable = false;
+        reprendreMenuPause.gameObject.SetActive(false);
+        reprendreMenuPause.interactable = false;
+
+        setInterfaceJeu();
+    }
+
+    //fonction pour afficher une information sur l'interface des joueurs
+    public void AfficherMessageInterface(string msg)
+    {
+        //seul le masterclient peut envoyer aux clients
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("AfficherMessageInterfaceRPC", RpcTarget.All, msg);
+        }
+    }
+
+    //fonction pour masquer le message sur l'interface des joueurs
+    public void MasquerMessageInterface()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("MasquerMessageInterfaceRPC", RpcTarget.All);
+        }
+    }
+
     //fonction du masterclient pour ordonner aux clients d'afficher le résultat de la partie
     public void AfficherEcranFinPartie(int playerActorNumber, bool victoire)
     {
@@ -228,6 +278,20 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    private void AfficherMessageInterfaceRPC(string msg)
+    {
+        erreur.gameObject.SetActive(true);
+        erreur.text = msg;
+    }
+
+    [PunRPC]
+    private void MasquerMessageInterfaceRPC()
+    {
+        erreur.text = "";
+        erreur.gameObject.SetActive(false);
+    }
+
+    [PunRPC]
     private void MettreAJourLobbyRPC(int dureeRestante)
     {
         titreLobby.text = "En attente d'autres pilotes :" + PhotonNetwork.PlayerList.Length.ToString() + "/20";
@@ -251,29 +315,5 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         resetInterface();
     }
 
-    //afficher les boutons du menu pause
-    public void AfficherMenuPause()
-    {
-        quitterMenuPause.gameObject.SetActive(true);
-        quitterMenuPause.interactable = true;
-        reprendreMenuPause.gameObject.SetActive(true);
-        reprendreMenuPause.interactable = true;
-
-        //curseur de la souris délocké et visible
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
-        ActiverInterface();
-    }
-
-    public void MasquerMenuPause()
-    {
-        quitterMenuPause.gameObject.SetActive(false);
-        quitterMenuPause.interactable = false;
-        reprendreMenuPause.gameObject.SetActive(false);
-        reprendreMenuPause.interactable = false;
-
-        setInterfaceJeu();
-    }
 
 }

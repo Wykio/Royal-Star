@@ -74,4 +74,8 @@ MonoBehaviour:
   - GenererArmeRougeRPC
   - GenererArmeVerteRPC
   - ChangerArmeRPC
+  - AfficherMessageInterfaceRPC
+  - MasquerMessageInterfaceRPC
+  - confirmationClientRPC
+  - GenererDecorViaTableauRPC
   DisableAutoOpenWizard: 1

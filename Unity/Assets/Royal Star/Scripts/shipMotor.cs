@@ -45,7 +45,6 @@ public class shipMotor : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("ShipMotor Awake");
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
@@ -84,7 +83,6 @@ public class shipMotor : MonoBehaviour
             //s'il veut changer d'arme
             if (intentReceiver.ChangerArme != -1)
             {
-                Debug.Log("SHIP MOTOR arme switch " + intentReceiver.ChangerArme);
                 vaisseau.ChangerArme(intentReceiver.ChangerArme);
             }
 
@@ -363,6 +361,9 @@ public class shipMotor : MonoBehaviour
         Debug.Log("ShipMotor ResetGame");
         for (var i = 0; i < vaisseaux.Length; i++)
         {
+            Vector3 position = new Vector3(UnityEngine.Random.Range(0, 4000), 200, UnityEngine.Random.Range(0, 4000));
+            positionsDepart[i].position = position;
+
             var vaisseau = vaisseaux[i];
             vaisseau.ShipRigidBody.velocity = Vector3.zero;
             vaisseau.ShipRigidBody.angularVelocity = Vector3.zero;
@@ -377,8 +378,6 @@ public class shipMotor : MonoBehaviour
 
     private void ActivationVaisseau(int id, int playerActorNumber)
     {
-        Debug.Log("ShipMotor ActivationVaisseau");
-
         if (PhotonNetwork.IsConnected)
         {
             photonView.RPC("ActivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
@@ -409,7 +408,6 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void ActivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
-        Debug.Log("ShipMotor ActivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(true);
         vaisseaux[idVaisseau].ShipCamera.enabled = PhotonNetwork.LocalPlayer.ActorNumber == PlayerNumbering.SortedPlayers[idVaisseau].ActorNumber;
         vaisseaux[idVaisseau].ShipHitbox.Subscribe((Collider other) => HitboxTriggerEnter(other, idVaisseau));
@@ -419,7 +417,6 @@ public class shipMotor : MonoBehaviour
 
     private void DesactivationVaisseau(int id, int playerActorNumber)
     {
-        Debug.Log("ShipMotor DesactivationVaisseau");
         if (PhotonNetwork.IsConnected)
         {
             photonView.RPC("DesactivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
@@ -433,13 +430,11 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void DesactivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
-        Debug.Log("ShipMotor DesactivationVaisseauRPC");
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(false);
     }
 
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
-        Debug.Log("ShipMotor ChooseAndSubscribeToOnlineIntentReceivers");
         activatedIntentReceivers = onlineIntentReceivers;
         ResetGame();
     }
@@ -447,7 +442,6 @@ public class shipMotor : MonoBehaviour
     //Desactiver l'ensemble des IntentReceivers de chaque vaisseau de la room
     private void DesactiverIntentReceivers()
     {
-        Debug.Log("ShipMotor DesactiverIntentReceivers");
         if (activatedIntentReceivers == null)
         {
             return;
@@ -466,7 +460,6 @@ public class shipMotor : MonoBehaviour
     //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
     private void ActiverIntentReceivers()
     {
-        Debug.Log("ShipMotor ActiverIntentReceivers");
         if (activatedIntentReceivers == null)
         {
             return;
@@ -495,7 +488,6 @@ public class shipMotor : MonoBehaviour
     
     private void FinPartieRetourMenu()
     {
-        Debug.Log("ShipMotor FinPartieRetourMenu");
         gameStarted = false;
         activatedIntentReceivers = null;
 
@@ -511,7 +503,6 @@ public class shipMotor : MonoBehaviour
     //fonction a revoir
     private void FinJeu()
     {
-        Debug.Log("ShipMotor FinJeu");
         gameStarted = false;
         activatedIntentReceivers = null;
 

@@ -75,14 +75,13 @@ public class ItemGeneratorScript : MonoBehaviour
         {
             if (!test)
             {
-                GenererArmeBleue(new Vector3(0, 3, 0));
+                GenererArmeBleue(new Vector3(10, 20, 10));
                 GenererArmeBleue(new Vector3(4, 3, 0));
 
                 GenererArmeVerte(new Vector3(6, 3, 2));
                 GenererArmeVerte(new Vector3(2, 3, 6));
 
                 GenererArmeRouge(new Vector3(0, 3, 3));
-                
 
                 test = true;
             }
@@ -156,6 +155,7 @@ public class ItemGeneratorScript : MonoBehaviour
         //activation de l'item
         armeBleue.ActivationItem();
         armeBleue.SetPosition(position);
+        armeBleue.SetPose(false);
 
         //ajout de l'item dans la liste des items placés
         armesBleuesPlacees.Add(armeBleue);
@@ -178,6 +178,7 @@ public class ItemGeneratorScript : MonoBehaviour
         //activation de l'item
         armeVerte.ActivationItem();
         armeVerte.SetPosition(position);
+        armeVerte.SetPose(false);
 
         //ajout de l'item dans la liste des items placés
         armesVertesPlacees.Add(armeVerte);
@@ -200,6 +201,7 @@ public class ItemGeneratorScript : MonoBehaviour
         //activation de l'item
         armeRouge.ActivationItem();
         armeRouge.SetPosition(position);
+        armeRouge.SetPose(false);
 
         //ajout de l'item dans la liste des items placés
         armesRougesPlacees.Add(armeRouge);

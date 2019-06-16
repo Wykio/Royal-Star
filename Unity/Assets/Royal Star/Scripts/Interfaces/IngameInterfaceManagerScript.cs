@@ -39,7 +39,7 @@ public class IngameInterfaceManagerScript : MonoBehaviour
                 Debug.Log("ARME ACTIVE : " + ship.getArmeActive());
 
                 //envoi de la RPC pour le joueur avec les stats à mettre à jour
-                photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost());    
+                photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost(), ship.getArmeActive());    
 
                 indice++;
                 if (indice >= PlayerNumbering.SortedPlayers.Length) break;
@@ -53,7 +53,7 @@ public class IngameInterfaceManagerScript : MonoBehaviour
     }
 
     [PunRPC]
-    private void UpdateInterfaceRPC(int indice, int pv, int bouclier, float boost)
+    private void UpdateInterfaceRPC(int indice, int pv, int bouclier, float boost, int armeActive)
     {
         vaisseaux[indice].MiseAJourStats(pv, bouclier, boost);
 

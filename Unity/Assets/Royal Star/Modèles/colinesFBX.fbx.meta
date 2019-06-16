@@ -12,10 +12,15 @@ ModelImporter:
     2100000: No Name
     2300000: Cube
     2300002: Cube.001
+    2300004: //RootNode
     3300000: Cube
     3300002: Cube.001
+    3300004: //RootNode
     4300000: Cube.001
     4300002: Cube
+    6400000: Cube
+    6400002: Cube.001
+    6400004: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -49,7 +54,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
@@ -59,7 +64,7 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
-    keepQuads: 0
+    keepQuads: 1
     weldVertices: 1
     preserveHierarchy: 0
     indexFormat: 0

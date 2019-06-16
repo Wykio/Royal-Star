@@ -88,7 +88,7 @@ Material:
     - _DstBlend: 0
     - _Flicker: 0
     - _FlickerSpeed: 18.2
-    - _Fold: 63
+    - _Fold: 60
     - _Glitch: 0
     - _GlitchIntensity: 0.35
     - _GlitchSpeed: 8
@@ -118,6 +118,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Direction: {r: 0, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0, g: 0, b: 1, a: 1}
+    - _MainColor: {r: 0.065680504, g: 0, b: 1, a: 1}
     - _RimColor: {r: 0, g: 1, b: 1, a: 1}
     - _ScanlineColor: {r: 0.0719575, g: 0.9485294, b: 0, a: 1}

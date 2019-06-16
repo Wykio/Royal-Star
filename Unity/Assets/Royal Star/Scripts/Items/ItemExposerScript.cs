@@ -5,8 +5,14 @@ using UnityEngine;
 public class ItemExposerScript : MonoBehaviour
 {
     [SerializeField] private Transform itemTransform;
+    private bool pose = true;
 
     private bool ramasse = false;
+
+    public void SetPose(bool b)
+    {
+        pose = b;
+    }
 
     //activer le gameobject de l'item
     public void ActivationItem()
@@ -55,6 +61,7 @@ public class ItemExposerScript : MonoBehaviour
         }
 
         ramasse = true;
+        SetPose(true);
         DesactivationItem();
     }
 
@@ -62,5 +69,20 @@ public class ItemExposerScript : MonoBehaviour
     public bool getRamasse()
     {
         return ramasse;
+    }
+
+    public void Update()
+    {
+        if (pose) return;
+
+        transform.position = new Vector3(transform.position.x, transform.position.y -0.2f, transform.position.z);
+
+        Ray chute = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+
+        if(Physics.Raycast(chute, out hit, 3.5f))
+        {
+            pose = true;
+        }
     }
 }
