@@ -71,15 +71,11 @@ namespace MapGeneration
 
                         //décalage en x
                         int decal = generate.Next(0, 400);
-                        Debug.Log("Decal en X" + decal);
                         decimale += decal.ToString();
 
                         //décalage en z
                         decal = generate.Next(0, 400);
-                        Debug.Log("Decal en z" + decal);
                         decimale += decal.ToString();
-
-                        Debug.Log("DECIMALE : " + decimale);
 
                         //conversion de la partie decimale en float
                         double d = float.Parse(decimale);
@@ -88,8 +84,6 @@ namespace MapGeneration
                     data += tableauBiome[i, j] + "_";
                 }
             }
-
-            Debug.Log("Data générée : " + data);
         }
 
         //Générer le tableau indiquant les positions des portails
@@ -102,24 +96,40 @@ namespace MapGeneration
             for (int i = 0; i < (nbBiome-numBiome)-1; i++)
             {
                 //position x du portail
-                int positionX = Random.Range(1 * 1000, tailleBiome * 1000) + Random.Range(-400, 400);
+                int positionX = Random.Range(1000, (tailleBiome-1) * 1000) + Random.Range(-400, 400);
                 tabPortail += positionX + "/";
 
                 //Position z du portail
-                int positionZ = Random.Range(1 * 1000, tailleBiome * 1000) + Random.Range(-400, 400);
+                int positionZ = Random.Range(1000, (tailleBiome-1) * 1000) + Random.Range(-400, 400);
                 tabPortail += positionZ + "/";
 
-                //position x du portail de destination
-                int positionXDest = Random.Range(1 * 1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
-                tabPortail += positionXDest + "/";
+                if(tailleBiome <= 2)
+                {
+                    //position x du portail de destination
+                    int positionXDest = Random.Range(1000, (tailleBiome - 1) * 1000) + Random.Range(-400, 0);
+                    tabPortail += positionXDest + "/";
 
-                //position z du portail de destination
-                int positionZDest = Random.Range(1 * 1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
-                tabPortail += positionZDest + "_";
+                    //position z du portail de destination
+                    int positionZDest = Random.Range(1000, (tailleBiome - 1) * 1000) + Random.Range(-400, 0);
+                    tabPortail += positionZDest + "_";
+                }
+                else
+                {
+                    //position x du portail de destination
+                    int positionXDest = Random.Range(1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
+                    tabPortail += positionXDest + "/";
+
+                    //position z du portail de destination
+                    int positionZDest = Random.Range(1000, (tailleBiome - 1) * 1000) + Random.Range(-400, +400);
+                    tabPortail += positionZDest + "_";
+                }
+                
             }
 
             //retirer le "_" en fin de string
             tabPortail = tabPortail.Substring(0, tabPortail.Length - 1);
+
+            if (numBiome == 0) Debug.Log("DATA PORTAIL : " + tabPortail);
         }
 
         //Générer le tableau des rotations des objets du décor
