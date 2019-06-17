@@ -23,6 +23,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [SerializeField] private Button boutonCreerRoom;
     [SerializeField] private Button boutonRejoindre;
     [SerializeField] private Button boutonQuitterJeu;
+    [SerializeField] private Button optionsButton;
 
     [Header ("Zones de texte Menu Principal")]
     [SerializeField] private Text message;
@@ -38,6 +39,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action<string> OnError;
     public event Action OnClicCreer;
     public event Action OnClicRejoindre;
+    public event Action OnClickOptionsMenu;
+    public event Action ExitFromOptionsMenu;
     public event Action connexionRoom;
     public event Action LancementPartie;
     public event Action<int> MettreAJourLobby;

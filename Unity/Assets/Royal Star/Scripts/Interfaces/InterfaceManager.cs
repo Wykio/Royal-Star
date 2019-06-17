@@ -81,10 +81,17 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.text = "Connexion à la room";
     }
 
+    //Permet d'afficher le menu d'options
+    private void DisplayOptionsMenu(String origin)
+    {
+
+    }
+
     //dès qu'on est connecté à Photon, on affiche les boutons
     public override void OnConnectedToMaster()
     {
         AfficherMenuPrincipal(0, 0);
+        menuController.OnClickOptionsMenu += () => DisplayOptionsMenu("principal");
         erreur.text = "";
     }
 
@@ -190,6 +197,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterMenuPause.interactable = true;
         reprendreMenuPause.gameObject.SetActive(true);
         reprendreMenuPause.interactable = true;
+        menuController.OnClickOptionsMenu += () => DisplayOptionsMenu("pause");
 
         //curseur de la souris délocké et visible
         Cursor.visible = true;

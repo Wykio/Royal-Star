@@ -245,29 +245,13 @@ public class shipMotor : MonoBehaviour
         //au niveau du client, si le joueur presse ECHAP, le menu de pause s'active ou se désactive en fonction de son état
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!menuPauseAffiche)
-            {
-                AfficherMenuPause.Invoke();
-                menuPauseAffiche = true;
-            }
-            else
-            {
-                MasquerMenuPause.Invoke();
-                menuPauseAffiche = false;
-            }
+            (menuPauseAffiche ? MasquerMenuPause : AfficherMenuPause).Invoke();
+            menuPauseAffiche = !menuPauseAffiche;
         }
 
         //si le client n'est pas le masterClient, on ne fait rien
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-
-        if (!gameStarted)
-        {
-            return;
-        }
-
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient || !gameStarted) return;
+        
         UpdateGameState();
     }
 
