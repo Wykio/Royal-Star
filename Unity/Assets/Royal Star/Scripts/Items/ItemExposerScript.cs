@@ -5,9 +5,8 @@ using UnityEngine;
 public class ItemExposerScript : MonoBehaviour
 {
     [SerializeField] private Transform itemTransform;
-    private bool pose = true;
-
-    private bool ramasse = false;
+    [SerializeField] private bool pose = true;
+    [SerializeField] private bool ramasse = false;
 
     public void SetPose(bool b)
     {
@@ -35,6 +34,8 @@ public class ItemExposerScript : MonoBehaviour
     //fonction de collision entre un objet et l'item
     private void OnTriggerEnter(Collider other)
     {
+        if (ramasse) return;
+
         //si le collider est un joueur
         if(other.attachedRigidbody.gameObject.tag == "Player")
         {

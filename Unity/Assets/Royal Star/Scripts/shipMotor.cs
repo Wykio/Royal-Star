@@ -34,6 +34,10 @@ public class shipMotor : MonoBehaviour
     //booléen pour savoir si le menu est affiché ou non
     private bool menuPauseAffiche = false;
 
+    [Header("Gestion de la Map")]
+    [SerializeField] private GestionMapScript gestionnaireMap;
+    [SerializeField] private float hauteurMort;
+
     #region Events
     public event Action AfficherMenuPause;
     public event Action MasquerMenuPause;
@@ -62,6 +66,12 @@ public class shipMotor : MonoBehaviour
         {   
             var intentReceiver = activatedIntentReceivers[i];
             var vaisseau = vaisseaux[i];
+
+            //si le vaisseau tombe dans le vide et dépasse la hauteur limite, il meurt
+            if(vaisseau.ShipTransform.position.y < hauteurMort)
+            {
+                vaisseau.TakeDamage(9999);
+            }
 
             //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
             if (!vaisseau.alive && vaisseau.ShipRootGameObject.activeSelf)
@@ -374,6 +384,13 @@ public class shipMotor : MonoBehaviour
 
         ActiverIntentReceivers();
         gameStarted = true;
+
+        gestionnaireMap.SetDebutGame(Time.time);
+    }
+
+    public void UpdateHauteurMort()
+    {
+        hauteurMort = (gestionnaireMap.biomeCourant * 300) -200;
     }
 
     private void ActivationVaisseau(int id, int playerActorNumber)

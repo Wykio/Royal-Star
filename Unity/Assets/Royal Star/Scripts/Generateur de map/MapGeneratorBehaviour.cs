@@ -10,6 +10,7 @@ namespace MapGeneration
     public class MapGeneratorBehaviour : MonoBehaviour
     {
         [SerializeField] private PhotonView photonView;
+        [SerializeField] private GestionMapScript gestionnaireMap;
         [SerializeField] private GameObject[] listePrefabDecors;
         [SerializeField] private GameObject portailPrefab;
         [SerializeField] private int hauteurBiome;
@@ -246,6 +247,9 @@ namespace MapGeneration
                 //placement des portails, la donnée se présente ainsi : "positionX/positionZ/PositionDestinationX/positionDestinationZ_etc..."
                 var positionPortails = dataPortail.Split('_');
 
+                //liste pour contenir tous les portails du biomes qu'on va envoyer ensuite au script de gestion de la map
+                List<GameObject> listePortail = new List<GameObject>();
+
                 //pour chaque portail
                 for (int p = 0; p < positionPortails.Length; p++)
                 {
@@ -253,6 +257,7 @@ namespace MapGeneration
                     GameObject portail = portailPrefab;
                     portail = (GameObject)Instantiate(portail);
                     portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 10, float.Parse(extract[1]));
+                    listePortail.Add(portail);
 
                     GameObject portailDestination = portailPrefab;
                     portailDestination = (GameObject)Instantiate(portailDestination);
@@ -261,6 +266,9 @@ namespace MapGeneration
                     TeleporterController transport = portail.GetComponent<TeleporterController>();
                     transport.connectedTeleport = portailDestination;
                 }
+
+                //envoi de la liste au gestionnaire de map
+                gestionnaireMap.AddListePortailParBiome(listePortail);
             }
 
             //une fois que le biome est généré, le client envoie sa confirmation

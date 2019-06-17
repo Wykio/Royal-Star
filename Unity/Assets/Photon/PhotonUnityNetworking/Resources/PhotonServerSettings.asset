@@ -78,4 +78,7 @@ MonoBehaviour:
   - MasquerMessageInterfaceRPC
   - confirmationClientRPC
   - GenererDecorViaTableauRPC
+  - ActiverPortailDuBiomeRPC
+  - DesactiverPortailDuBiomeRPC
+  - SetDebutGameRPC
   DisableAutoOpenWizard: 1
