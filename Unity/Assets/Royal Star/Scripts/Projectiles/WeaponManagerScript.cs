@@ -16,7 +16,15 @@ public class WeaponManagerScript : MonoBehaviour
     [SerializeField]
     private Transform bulletPopPosition;
 
+    [SerializeField]
+    private float weight;
+
     private float nextPopTime = float.MinValue;
+
+    public float GetWeight()
+    {
+        return weight;
+    }
 
     private void setNextPopTime()
     {
