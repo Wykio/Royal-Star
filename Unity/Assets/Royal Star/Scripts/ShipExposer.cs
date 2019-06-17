@@ -38,6 +38,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text pv;
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
+    private float nextFieldOfView;
     private int healthPoints = 200;
     private int shieldPoints = 100;
     private float boostPoints = 200f;
@@ -49,6 +50,11 @@ public class ShipExposer : MonoBehaviour
     public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
 
     public int currentWeaponIndex = 0;
+
+    void Start()
+    {
+        nextFieldOfView = ShipCamera.fieldOfView;
+    }
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints)
     {
@@ -204,5 +210,23 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
+    }
+
+    public void SetFieldOfView(float fov)
+    {
+        nextFieldOfView = fov;
+    }
+
+    private void AdaptToCurrentFieldOfView()
+    {
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
+            return;
+        Debug.Log($"Changing Camera FOV: {ShipCamera.fieldOfView} going to {nextFieldOfView}");
+        ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.2f * Time.deltaTime);
+    }
+
+    void Update()
+    {
+        AdaptToCurrentFieldOfView();
     }
 }

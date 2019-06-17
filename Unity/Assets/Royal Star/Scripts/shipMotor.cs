@@ -107,6 +107,7 @@ public class shipMotor : MonoBehaviour
                 {
                     if(intentReceiver.BoostForward)
                     {
+                        vaisseau.SetFieldOfView(90f);
                         vaisseau.ShipRigidBody.AddForce(vaisseau.ShipTransform.forward * (speed * 1.5f), ForceMode.Force);
                         vaisseau.UtilisationBoost(utilisationBoost);
 
@@ -148,6 +149,7 @@ public class shipMotor : MonoBehaviour
                 }
                 else
                 {
+                    vaisseau.SetFieldOfView(64f);
                     //sinon on gère ces intents
                     if(intentReceiver.AirPitchUp)
                     {
@@ -178,6 +180,7 @@ public class shipMotor : MonoBehaviour
             }
             else
             {
+                vaisseau.SetFieldOfView(60f);
                 //sinon on gère ces intents 
                 var moveIntent = Vector3.zero;
 
