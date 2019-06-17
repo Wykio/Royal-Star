@@ -105,4 +105,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemTransform: {fileID: 2342933976531149084}
-  itemCollider: {fileID: 8990692910336670467}
