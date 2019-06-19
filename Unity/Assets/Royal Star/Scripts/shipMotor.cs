@@ -128,6 +128,7 @@ public class shipMotor : MonoBehaviour
 
                     if(intentReceiver.BoostForward || intentReceiver.BoostBackward)
                     {
+                        vaisseau.SetFieldOfView(90f);
                         vaisseau.ShipRigidBody.AddForce(
                             intentReceiver.BoostForward ? applicatedForce : -applicatedForce,
                             ForceMode.Force
@@ -154,6 +155,7 @@ public class shipMotor : MonoBehaviour
                     float xAngle = 0;
                     float zAngle = 0;
 
+                    vaisseau.SetFieldOfView(64f);
                     //sinon on gère ces intents
                     if(intentReceiver.AirPitchUp)
                     {
@@ -190,6 +192,7 @@ public class shipMotor : MonoBehaviour
 
                 //et on gère ces intents 
                 Vector3 moveIntent = Vector3.zero;
+                vaisseau.SetFieldOfView(60f);
 
                 if (intentReceiver.WantToGoForward)
                     moveIntent += vaisseau.ShipTransform.forward;
