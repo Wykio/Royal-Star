@@ -81,4 +81,8 @@ MonoBehaviour:
   - ActiverPortailDuBiomeRPC
   - DesactiverPortailDuBiomeRPC
   - SetDebutGameRPC
+  - Disable
+  - Enable
+  - AdaptToCurrentFieldOfViewRPC
+  - SetNextFieldOfViewRPC
   DisableAutoOpenWizard: 1

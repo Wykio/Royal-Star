@@ -33,6 +33,8 @@ public class AIntentReceiver : MonoBehaviour
 
     public bool WantToShootFirst { get; set; }
     public int ChangerArme { get; set; }
+    public int SelectedWeapon { get; set; }
+
 
     #endregion
 

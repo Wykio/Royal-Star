@@ -30,28 +30,24 @@ public class IntentSenderScript : AIntentReceiver
         if (Input.GetKeyDown(KeyCode.Z))
         {
             photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, true);
-            photonView.RPC("AirPitchDownRPC", RpcTarget.MasterClient, true);
             photonView.RPC("BoostForwardRPC", RpcTarget.MasterClient, true);
         }
 
         if (Input.GetKeyUp(KeyCode.Z))
         {
             photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, false);
-            photonView.RPC("AirPitchDownRPC", RpcTarget.MasterClient, false);
             photonView.RPC("BoostForwardRPC", RpcTarget.MasterClient, false);
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
             photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, true);
-            photonView.RPC("AirPitchUpRPC", RpcTarget.MasterClient, true);
             photonView.RPC("BoostBackwardRPC", RpcTarget.MasterClient, true);
         }
 
         if (Input.GetKeyUp(KeyCode.S))
         {
             photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, false);
-            photonView.RPC("AirPitchUpRPC", RpcTarget.MasterClient, false);
             photonView.RPC("BoostBackwardRPC", RpcTarget.MasterClient, false);
         }
 
@@ -114,6 +110,7 @@ public class IntentSenderScript : AIntentReceiver
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 1);
+            photonView.RPC("SelectedWeaponRPC", RpcTarget.MasterClient, 0);
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -125,6 +122,7 @@ public class IntentSenderScript : AIntentReceiver
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 2);
+            photonView.RPC("SelectedWeaponRPC", RpcTarget.MasterClient, 1);
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha2))
@@ -164,6 +162,14 @@ public class IntentSenderScript : AIntentReceiver
         if(PhotonNetwork.IsMasterClient)
         {
             ChangerArme = choix;
+        }
+    }
+
+    void SelectedWeaponRPC(int index)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SelectedWeapon = index;
         }
     }
 

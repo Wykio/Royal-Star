@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 18
+  lifeTime: 2
   speed: 270
   triggerExposer: {fileID: 6730916917441119360}
   targetMeshRenderer: {fileID: 123603032429473281}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using Photon.Pun.UtilityScripts;
 
 public class ShipExposer : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class ShipExposer : MonoBehaviour
     public bool Aerien;
     public Rigidbody ShipRigidBody;
     public PhotonRigidbodyView ShipRigidbodyView;
+    public PhotonView photonView;
     public Transform ShipTransform;
     public GameObject ShipRootGameObject;
     public Transform[] ShipHoverPoints;
@@ -39,6 +41,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
+    private float nextFieldOfView;
     private int healthPoints = 200;
     private int shieldPoints = 100;
     private float boostPoints = 200f;
@@ -50,6 +53,11 @@ public class ShipExposer : MonoBehaviour
     public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
 
     public int currentWeaponIndex = 0;
+
+    void Start()
+    {
+        nextFieldOfView = ShipCamera.fieldOfView;
+    }
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)
     {
@@ -91,6 +99,11 @@ public class ShipExposer : MonoBehaviour
                 alive = false;
             }
         }
+    }
+
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
     }
 
     public int getPV()
@@ -208,5 +221,51 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
+    }
+
+    public float GetFieldOfView()
+    {
+        return nextFieldOfView;
+    }
+
+    public void SetNewFieldOfView(float newFOV, int playerID)
+    {
+        if(PhotonNetwork.IsMasterClient
+            && Mathf.Abs(newFOV - nextFieldOfView) > float.Epsilon)
+        {
+            int i = 0;
+            for(; i < PlayerNumbering.SortedPlayers.Length; i++)
+            {
+                if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerID) {
+                    photonView.RPC("SetNextFieldOfViewRPC", PlayerNumbering.SortedPlayers[i], newFOV);
+                    break;
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    public void SetNextFieldOfViewRPC(float newFOV)
+    {
+        nextFieldOfView = newFOV;
+    }
+
+    private void AdaptToCurrentFieldOfView()
+    {
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
+            return;
+        Debug.Log($"Changing Camera FOV: {ShipCamera.fieldOfView} going to {nextFieldOfView}");
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.2f) {
+            ShipCamera.fieldOfView = nextFieldOfView;
+        } else if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.8f) {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.8f * Time.deltaTime);
+        } else {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
+        }
+    }
+
+    private void Update()
+    {
+        AdaptToCurrentFieldOfView();
     }
 }
