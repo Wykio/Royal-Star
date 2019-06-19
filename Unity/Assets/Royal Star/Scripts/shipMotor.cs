@@ -87,9 +87,9 @@ public class shipMotor : MonoBehaviour
             }
 
             //S'il veut tirer
-            if (intentReceiver.WantToShootFirst)
+            if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
             {
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex]?.Shoot();
+                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
                     intentReceiver.WantToShootFirst = false;
