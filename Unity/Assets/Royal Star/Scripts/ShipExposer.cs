@@ -99,6 +99,11 @@ public class ShipExposer : MonoBehaviour
         }
     }
 
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
+    }
+
     public int getPV()
     {
         return healthPoints;

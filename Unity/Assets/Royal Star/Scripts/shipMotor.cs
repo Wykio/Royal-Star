@@ -97,15 +97,23 @@ public class shipMotor : MonoBehaviour
             {
                 vaisseau.ChangerArme(intentReceiver.ChangerArme);
             }
+            Debug.Log($"INDEX ARME: {vaisseau.currentWeaponIndex}");
+
+            if (vaisseau.currentWeaponIndex != intentReceiver.SelectedWeapon) {
+                vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
+            }
 
             //S'il veut tirer
             if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
             {
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
+                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(true);
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
                     intentReceiver.WantToShootFirst = false;
                 }
+            } else {
+                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(false);
             }
 
             //si le vaisseau est en l'air on gère les intents suivants 

@@ -36,6 +36,11 @@ public class WeaponManagerScript : MonoBehaviour
         return automatic;
     }
 
+    public void SetBulletPoolManagerFiring(bool firing)
+    {
+        bulletPoolManager.SetFiring(firing);
+    }
+
     public void Shoot()
     {
         if (Time.time > nextPopTime)

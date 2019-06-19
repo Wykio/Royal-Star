@@ -110,6 +110,7 @@ public class IntentSenderScript : AIntentReceiver
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 1);
+            photonView.RPC("SelectedWeaponRPC", RpcTarget.MasterClient, 0);
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -121,6 +122,7 @@ public class IntentSenderScript : AIntentReceiver
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, 2);
+            photonView.RPC("SelectedWeaponRPC", RpcTarget.MasterClient, 1);
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha2))
@@ -160,6 +162,14 @@ public class IntentSenderScript : AIntentReceiver
         if(PhotonNetwork.IsMasterClient)
         {
             ChangerArme = choix;
+        }
+    }
+
+    void SelectedWeaponRPC(int index)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SelectedWeapon = index;
         }
     }
 

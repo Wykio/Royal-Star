@@ -77,6 +77,7 @@ MonoBehaviour:
   popInterval: 0.3
   bulletPoolManager: {fileID: 0}
   bulletPopPosition: {fileID: 2182517418093152020}
+  weight: 0.2
 --- !u!1 &5956294763354272052
 GameObject:
   m_ObjectHideFlags: 0

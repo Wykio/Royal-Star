@@ -26,6 +26,8 @@ public class BulletPoolManagerScript : MonoBehaviour
     //liste des lasers tirés
     private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(100);
 
+    private bool firing = false;
+
     //au chargement desjoueurs
     public void Awake()
     {
@@ -55,6 +57,11 @@ public class BulletPoolManagerScript : MonoBehaviour
         return raycast;
     }
 
+    public void SetFiring(bool f)
+    {
+        firing = f;
+    }
+
     //fonction pour prendre un laser dans le pooling
     public BulletExposerScript GetBullet()
     {
@@ -78,7 +85,6 @@ public class BulletPoolManagerScript : MonoBehaviour
     public void ShootWithRaycast(Transform popPosition)
     {
         RaycastHit hit;
-        Debug.Log("Firing with Raycast RAYCAST");
 
         if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, range)
             && Equals(hit.transform.gameObject.tag, "Player")) {
@@ -112,7 +118,8 @@ public class BulletPoolManagerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (raycast) return;
+        if (raycast && firing) {}
+
         //pour chaque laser tiré
         for (int i = 0; i < poppedBullets.Count; i++)
         {
