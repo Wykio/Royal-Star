@@ -81,4 +81,5 @@ MonoBehaviour:
   - Disable
   - Enable
   - AdaptToCurrentFieldOfViewRPC
+  - SetNextFieldOfViewRPC
   DisableAutoOpenWizard: 1

@@ -39,13 +39,13 @@ public class IngameInterfaceManagerScript : MonoBehaviour
                 {
                     if(ship.playerID == PlayerNumbering.SortedPlayers[i].ActorNumber)
                     {
+                        //envoi de la RPC pour le joueur avec les stats à mettre à jour
+                        photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost(), ship.getArmeActive(), nbJoueursVivants);
                         break;
                     }
                 }
 
-                //envoi de la RPC pour le joueur avec les stats à mettre à jour
-                photonView.RPC("UpdateInterfaceRPC", PlayerNumbering.SortedPlayers[i], indice, ship.getPV(), ship.getBouclier(), ship.getBoost(), ship.getArmeActive(), nbJoueursVivants);    
-
+               
                 indice++;
                 if (indice >= PlayerNumbering.SortedPlayers.Length) break;
             }
