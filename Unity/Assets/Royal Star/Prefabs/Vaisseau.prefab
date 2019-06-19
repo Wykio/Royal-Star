@@ -761,6 +761,7 @@ MonoBehaviour:
   Aerien: 0
   ShipRigidBody: {fileID: 3361519573493428609}
   ShipRigidbodyView: {fileID: 2002595383450205168}
+  photonView: {fileID: 728606294187390144}
   ShipTransform: {fileID: 3361519573493428610}
   ShipRootGameObject: {fileID: 3361519573493428623}
   ShipHoverPoints:

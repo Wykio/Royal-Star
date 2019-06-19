@@ -10,6 +10,7 @@ public class ShipExposer : MonoBehaviour
     public bool Aerien;
     public Rigidbody ShipRigidBody;
     public PhotonRigidbodyView ShipRigidbodyView;
+    public PhotonView photonView;
     public Transform ShipTransform;
     public GameObject ShipRootGameObject;
     public Transform[] ShipHoverPoints;
@@ -227,7 +228,21 @@ public class ShipExposer : MonoBehaviour
             nextFieldOfView = fov;
     }
 
-    private void AdaptToCurrentFieldOfView()
+    public float GetFieldOfView()
+    {
+        return nextFieldOfView;
+    }
+
+    public void AdaptToCurrentFieldOfView(float nextFieldOfView)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("AdaptToCurrentFieldOfViewRPC", RpcTarget.All, nextFieldOfView);
+        }
+    }
+
+    [PunRPC]
+    private void AdaptToCurrentFieldOfViewRPC(float nextFieldOfView)
     {
         if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
             return;
@@ -239,10 +254,5 @@ public class ShipExposer : MonoBehaviour
         } else {
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
         }
-    }
-
-    void Update()
-    {
-        AdaptToCurrentFieldOfView();
     }
 }

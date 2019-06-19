@@ -212,7 +212,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
 
                 //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
-                if (PlayerNumbering.SortedPlayers.Length <= 0)
+                if (PlayerNumbering.SortedPlayers.Length <= 1)
                 {
                     erreur.gameObject.SetActive(true);
                     erreur.text = "Pas assez de pilote - Partie annulée - Retour au menu";

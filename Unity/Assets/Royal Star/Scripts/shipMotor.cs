@@ -231,10 +231,10 @@ public class shipMotor : MonoBehaviour
                 }
             }
             Debug.Log(vaisseau.getBoost());
+            vaisseau.AdaptToCurrentFieldOfView(vaisseau.GetFieldOfView());
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }
-
         //s'il ne reste qu'un joueur en vie, il gagne la partie
         if (activatedAvatarsCount == 1 && gameController.waitForPlayersToPlay)
         {
