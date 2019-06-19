@@ -210,7 +210,6 @@ public class ShipExposer : MonoBehaviour
 
             case 2:
                 if (armeActive != 2 && (ArmeBleue1.activeSelf || ArmeBleue2.activeSelf)) armeActive = 2;
-                Debug.Log("SHIP EXPOSER arme active = " + armeActive);
                 break;
 
             case 3:
@@ -221,6 +220,7 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
+        Debug.Log("SHIP EXPOSER arme active = " + armeActive);
     }
 
     public float GetFieldOfView()
@@ -252,14 +252,18 @@ public class ShipExposer : MonoBehaviour
 
     private void AdaptToCurrentFieldOfView()
     {
-        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
-            return;
-        Debug.Log($"Changing Camera FOV: {ShipCamera.fieldOfView} going to {nextFieldOfView}");
-        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.2f) {
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon) return;
+
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.2f)
+        {
             ShipCamera.fieldOfView = nextFieldOfView;
-        } else if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.8f) {
+        }
+        else if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.8f)
+        {
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.8f * Time.deltaTime);
-        } else {
+        }
+        else
+        {
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
         }
     }

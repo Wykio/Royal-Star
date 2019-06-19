@@ -52,8 +52,9 @@ public class GestionMapScript : MonoBehaviour
         if(!ShipManager.getGameStarted() && PhotonNetwork.IsMasterClient)
         {
             //si le moment d'ouvrir les portails du biome courant arrive, on lance leur ouverture
-            if(Time.time > debutGame + (dureeBiome-dureeOuverturePortails) && biomeCourant < listesPortailsParBiome.Count)
+            if(Time.time - debutGame > debutGame + (dureeBiome-dureeOuverturePortails) && biomeCourant < listesPortailsParBiome.Count)
             {
+                Debug.Log("OUVERTURE PORTAILS BIOME " + biomeCourant);
                 //activer les portails du biomes
                 ActiverPortailDuBiome(biomeCourant);
 

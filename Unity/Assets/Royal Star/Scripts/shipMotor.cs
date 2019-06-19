@@ -381,7 +381,6 @@ public class shipMotor : MonoBehaviour
 
     private void ResetGame()
     {
-        Debug.Log("ShipMotor ResetGame");
         for (var i = 0; i < vaisseaux.Length; i++)
         {
             Vector3 position = new Vector3(UnityEngine.Random.Range(0, 4000), 200, UnityEngine.Random.Range(0, 4000));
@@ -420,7 +419,6 @@ public class shipMotor : MonoBehaviour
     
     void HitboxTriggerEnter(Collider other, int id)
     {
-        Debug.Log("ShipMotor HitboxTriggerEnter");
         if (Equals(other.gameObject.tag, "Bullet"))
         {
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
