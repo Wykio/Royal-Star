@@ -218,7 +218,8 @@ public class ShipExposer : MonoBehaviour
 
     public void SetFieldOfView(float fov)
     {
-        nextFieldOfView = fov;
+        if (Mathf.Abs(fov - nextFieldOfView) > float.Epsilon)
+            nextFieldOfView = fov;
     }
 
     private void AdaptToCurrentFieldOfView()
@@ -226,7 +227,13 @@ public class ShipExposer : MonoBehaviour
         if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
             return;
         Debug.Log($"Changing Camera FOV: {ShipCamera.fieldOfView} going to {nextFieldOfView}");
-        ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.2f * Time.deltaTime);
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.2f) {
+            ShipCamera.fieldOfView = nextFieldOfView;
+        } else if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.8f) {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.8f * Time.deltaTime);
+        } else {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
+        }
     }
 
     void Update()

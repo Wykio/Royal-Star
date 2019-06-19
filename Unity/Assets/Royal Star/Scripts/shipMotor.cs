@@ -143,11 +143,11 @@ public class shipMotor : MonoBehaviour
                     }
                     if(intentReceiver.AirRollLeft)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime);
+                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime / spinWeight);
                     }
                     if(intentReceiver.AirRollRight)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
+                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime / spinWeight);
                     }
                 }
                 else
@@ -171,7 +171,7 @@ public class shipMotor : MonoBehaviour
                     }
                     if(intentReceiver.AirRollRight)
                     {
-                        zAngle = speedRotate * Time.deltaTime;
+                        zAngle = -speedRotate * Time.deltaTime;
                     }
                     vaisseau.ShipTransform.Rotate(xAngle / spinWeight, 0, zAngle / spinWeight);
 
