@@ -44,6 +44,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeRougePrefab);
             ArmesRougesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesRougesLibres.Enqueue(ArmesRougesInstanciees[i]);
+            item.SetActive(false);
         }
 
         //pour les armes vertes, il y en a 25 en tout
@@ -55,6 +56,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeVertePrefab);
             ArmesVertesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesVertesLibres.Enqueue(ArmesVertesInstanciees[i]);
+            item.SetActive(false);
         }
 
         //pour les armes bleues, il y en a 30 en tout
@@ -66,6 +68,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeBleuePrefab);
             ArmesBleuesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesBleuesLibres.Enqueue(ArmesBleuesInstanciees[i]);
+            item.SetActive(false);
         }
     }
 

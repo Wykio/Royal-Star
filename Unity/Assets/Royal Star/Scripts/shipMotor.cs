@@ -240,7 +240,7 @@ public class shipMotor : MonoBehaviour
                     vaisseau.setBoostState(true);
                 }
             }
-            Debug.Log(vaisseau.getBoost());
+
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }
@@ -424,7 +424,6 @@ public class shipMotor : MonoBehaviour
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 
             vaisseaux[id].TakeDamage(damage);
-            //Debug.Log($"{vaisseaux[id].playerName} has lost {damage}hp");
         }
     }
 

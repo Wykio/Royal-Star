@@ -33,7 +33,6 @@ namespace MapGeneration
         //fonction pour établir la liste des indices des décors
         public void initialiserListeNumDecor()
         {
-            Debug.Log("debut initialiserListeNumDecor");
             listeNumDecor = new double[listePrefabDecors.Length];
 
             for (int i = 0; i < listePrefabDecors.Length; i++)
@@ -75,8 +74,6 @@ namespace MapGeneration
                 }
                 //retirer le "_" en fin de string
                 data = data.Substring(0, data.Length - 1);
-
-                Debug.Log("data générée, taille : " + tab.Length);
 
                 //envoi de la RPC aux clients
                 GenererDecor(data, generator.getTabRotation(), generator.getTabPortail());
@@ -257,6 +254,7 @@ namespace MapGeneration
                     GameObject portail = portailPrefab;
                     portail = (GameObject)Instantiate(portail);
                     portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 10, float.Parse(extract[1]));
+                    portail.SetActive(false);
                     listePortail.Add(portail);
 
                     GameObject portailDestination = portailPrefab;

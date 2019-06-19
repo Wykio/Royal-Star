@@ -212,7 +212,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    Debug.Log("Lancement génération map");
                     //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
@@ -235,8 +234,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     
     private IEnumerator SetPlayerReady()
     {
-        Debug.Log("MenuPrincipal SetPlayerReady");
-
         //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
         var i = 0;
@@ -249,8 +246,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
-        //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
     }
@@ -315,7 +310,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private IEnumerator WaitForOtherPlayerToLaunchGame()
     {
         yield return new WaitForSeconds(10f);
-        Debug.Log("Partie annulée retour au menu");
         FinDePartie?.Invoke();
         AfficherMenu();
     }

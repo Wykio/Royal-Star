@@ -49,7 +49,7 @@ public class GestionMapScript : MonoBehaviour
     private void Update()
     {
         //seul le masterclient gère les changements de biomes
-        if(!ShipManager.getGameStarted() && PhotonNetwork.IsMasterClient)
+        if(ShipManager.getGameStarted() && PhotonNetwork.IsMasterClient)
         {
             //si le moment d'ouvrir les portails du biome courant arrive, on lance leur ouverture
             if(Time.time - debutGame > debutGame + (dureeBiome-dureeOuverturePortails) && biomeCourant < listesPortailsParBiome.Count)
