@@ -5,9 +5,9 @@ using UnityEngine;
 public class ItemExposerScript : MonoBehaviour
 {
     [SerializeField] private Transform itemTransform;
-    private bool pose = true;
+    [SerializeField] private bool pose = true;
 
-    private bool ramasse = false;
+    [SerializeField] private bool ramasse = false;
 
     public void SetPose(bool b)
     {
