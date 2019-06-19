@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -102,8 +102,18 @@ public class shipMotor : MonoBehaviour
             //si le vaisseau est en l'air on gère les intents suivants 
             if(vaisseau.Aerien)
             {
-                //si le vaisseau active le boost et si son boost n'est pas en chargement on gère ces intents
-                if(intentReceiver.AirBoostActivate && vaisseau.getBoostState())
+                if (intentReceiver.BoostPitch != 0f)
+                {
+                    vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate, 0, 0);
+                    intentReceiver.BoostPitch = 0f;
+                }
+                if (intentReceiver.BoostTurn != 0f)
+                {
+                    vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate, 0);
+                    intentReceiver.BoostTurn = 0f;
+                }
+                //si le vaisseau active le boost on gère ces intents
+                if (intentReceiver.AirBoostActivate && vaisseau.getBoostState())
                 {
                     if(intentReceiver.BoostForward)
                     {
@@ -134,16 +144,6 @@ public class shipMotor : MonoBehaviour
                     if(intentReceiver.AirRollRight)
                     {
                         vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime);
-                    }
-                    if(intentReceiver.BoostPitch != 0f)
-                    {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate, 0, 0);
-                        intentReceiver.BoostPitch = 0f;
-                    }
-                    if(intentReceiver.BoostTurn != 0f)
-                    {
-                        vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate, 0);
-                        intentReceiver.BoostTurn = 0f;
                     }
                 }
                 else
