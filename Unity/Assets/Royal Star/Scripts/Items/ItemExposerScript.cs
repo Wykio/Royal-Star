@@ -35,6 +35,8 @@ public class ItemExposerScript : MonoBehaviour
     //fonction de collision entre un objet et l'item
     private void OnTriggerEnter(Collider other)
     {
+        if (ramasse) return;
+
         //si le collider est un joueur
         if(other.attachedRigidbody.gameObject.tag == "Player")
         {

@@ -80,4 +80,5 @@ MonoBehaviour:
   - GenererDecorViaTableauRPC
   - Disable
   - Enable
+  - AdaptToCurrentFieldOfViewRPC
   DisableAutoOpenWizard: 1

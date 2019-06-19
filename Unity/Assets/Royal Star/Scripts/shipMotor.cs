@@ -136,7 +136,7 @@ public class shipMotor : MonoBehaviour
 
                     if(intentReceiver.BoostForward || intentReceiver.BoostBackward)
                     {
-                        vaisseau.SetFieldOfView(90f);
+                        vaisseau.SetNewFieldOfView(90f, vaisseau.playerID);
                         vaisseau.ShipRigidBody.AddForce(
                             intentReceiver.BoostForward ? applicatedForce : -applicatedForce,
                             ForceMode.Force
@@ -163,7 +163,7 @@ public class shipMotor : MonoBehaviour
                     float xAngle = 0;
                     float zAngle = 0;
 
-                    vaisseau.SetFieldOfView(64f);
+                    vaisseau.SetNewFieldOfView(64f, vaisseau.playerID);
                     //sinon on gère ces intents
                     if(intentReceiver.AirPitchUp)
                     {
@@ -200,7 +200,7 @@ public class shipMotor : MonoBehaviour
 
                 //et on gère ces intents 
                 Vector3 moveIntent = Vector3.zero;
-                vaisseau.SetFieldOfView(60f);
+                vaisseau.SetNewFieldOfView(60f, vaisseau.playerID);
 
                 if (intentReceiver.WantToGoForward)
                     moveIntent += vaisseau.ShipTransform.forward;
@@ -231,7 +231,6 @@ public class shipMotor : MonoBehaviour
                 }
             }
             Debug.Log(vaisseau.getBoost());
-            vaisseau.AdaptToCurrentFieldOfView(vaisseau.GetFieldOfView());
             //application de l'effet de damping sur le vaisseau
             Damping(vaisseau);
         }

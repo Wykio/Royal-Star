@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using Photon.Pun.UtilityScripts;
 
 public class ShipExposer : MonoBehaviour
 {
@@ -222,27 +223,34 @@ public class ShipExposer : MonoBehaviour
         }
     }
 
-    public void SetFieldOfView(float fov)
-    {
-        if (Mathf.Abs(fov - nextFieldOfView) > float.Epsilon)
-            nextFieldOfView = fov;
-    }
-
     public float GetFieldOfView()
     {
         return nextFieldOfView;
     }
 
-    public void AdaptToCurrentFieldOfView(float nextFieldOfView)
+    public void SetNewFieldOfView(float newFOV, int playerID)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient
+            && Mathf.Abs(newFOV - nextFieldOfView) > float.Epsilon)
         {
-            photonView.RPC("AdaptToCurrentFieldOfViewRPC", RpcTarget.All, nextFieldOfView);
+            int i = 0;
+            for(; i < PlayerNumbering.SortedPlayers.Length; i++)
+            {
+                if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerID) {
+                    photonView.RPC("SetNextFieldOfViewRPC", PlayerNumbering.SortedPlayers[i], newFOV);
+                    break;
+                }
+            }
         }
     }
 
     [PunRPC]
-    private void AdaptToCurrentFieldOfViewRPC(float nextFieldOfView)
+    public void SetNextFieldOfViewRPC(float newFOV)
+    {
+        nextFieldOfView = newFOV;
+    }
+
+    private void AdaptToCurrentFieldOfView()
     {
         if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon)
             return;
@@ -254,5 +262,10 @@ public class ShipExposer : MonoBehaviour
         } else {
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
         }
+    }
+
+    private void Update()
+    {
+        AdaptToCurrentFieldOfView();
     }
 }
