@@ -20,12 +20,33 @@ public class GestionMapScript : MonoBehaviour
     public void SetDebutGame(float t)
     {
         photonView.RPC("SetDebutGameRPC", RpcTarget.All, t);
+        Debug.Log("EVOLUTION MAP NB BIOME : " + listesPortailsParBiome.Count);
     }
 
     //initialise les listes de portails
     public void AddListePortailParBiome(List<GameObject> listePortails)
     {
         listesPortailsParBiome.Add(listePortails);
+    }
+
+    //Coroutine pour gérer les fermetures et ouvertures des portails
+    public IEnumerator GestionMap()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            for (int i = 0; i < listesPortailsParBiome.Count; i++)
+            {
+                yield return new WaitForSeconds(dureeBiome - dureeOuverturePortails);
+                ActiverPortailDuBiome(biomeCourant);
+
+                yield return new WaitForSeconds(dureeOuverturePortails);
+                DesactiverPortailDuBiome(biomeCourant);
+
+                ShipManager.UpdateHauteurMort();
+
+                biomeCourant++;
+            }
+        }
     }
 
     //fonction pour activer les portails du biome passé en paramètre
@@ -44,39 +65,6 @@ public class GestionMapScript : MonoBehaviour
         {
             photonView.RPC("DesactiverPortailDuBiomeRPC", RpcTarget.All, numBiome);
         }
-    }
-
-    private void Update()
-    {
-        //seul le masterclient gère les changements de biomes
-        if(ShipManager.getGameStarted() && PhotonNetwork.IsMasterClient)
-        {
-            //si le moment d'ouvrir les portails du biome courant arrive, on lance leur ouverture
-            if(Time.time - debutGame > debutGame + (dureeBiome-dureeOuverturePortails) && biomeCourant < listesPortailsParBiome.Count)
-            {
-                Debug.Log("OUVERTURE PORTAILS BIOME " + biomeCourant);
-                //activer les portails du biomes
-                ActiverPortailDuBiome(biomeCourant);
-
-                //les fermer au bout de {dureeOuverture] secondes
-                StartCoroutine(FermeturePortail(dureeOuverturePortails, biomeCourant));
-
-                //mettre à jour le timer pour le prochain biome
-                debutGame = Time.time + dureeOuverturePortails;
-
-                //passage au biome suivant
-                biomeCourant += 1;
-            }
-        }
-    }
-
-    private IEnumerator FermeturePortail(float duree, int nbBiome)
-    {
-        //les portails se referment au bout de la duree définie
-        yield return new WaitForSeconds(duree);
-
-        DesactiverPortailDuBiome(nbBiome);
-        ShipManager.UpdateHauteurMort();
     }
 
     [PunRPC]

@@ -398,11 +398,13 @@ public class shipMotor : MonoBehaviour
         gameStarted = true;
 
         gestionnaireMap.SetDebutGame(Time.time);
+        StartCoroutine(gestionnaireMap.GestionMap());
     }
 
     public void UpdateHauteurMort()
     {
         hauteurMort = (gestionnaireMap.biomeCourant * 300) -200;
+        Debug.Log("HAUTEUR MORT : " + hauteurMort);
     }
 
     private void ActivationVaisseau(int id, int playerActorNumber)
