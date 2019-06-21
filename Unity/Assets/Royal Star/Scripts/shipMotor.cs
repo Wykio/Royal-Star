@@ -297,14 +297,17 @@ public class shipMotor : MonoBehaviour
     void DetectionDuSolOnLine(ShipExposer vaisseau)
     {
         vaisseau.Aerien = true;
-        
-        Ray scan = new Ray(vaisseau.ShipCentreGravite.position, -vaisseau.ShipCentreGravite.up);
-        RaycastHit hit;
- 
-        if (Physics.Raycast(scan, out hit, dampingHeight))
+
+        foreach (Transform point in vaisseau.ShipHoverPoints)
         {
-            vaisseau.Aerien = false;
-        } 
+            Ray scan = new Ray(point.position, -point.up);
+            RaycastHit hit;
+
+            if (Physics.Raycast(scan, out hit, dampingHeight))
+            {
+                vaisseau.Aerien = false;
+            }
+        }
     }
 
     //fonction de lévitation
