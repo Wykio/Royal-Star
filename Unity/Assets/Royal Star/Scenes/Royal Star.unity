@@ -2768,7 +2768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dureeBiome: 30
-  dureeOuverturePortails: 10
+  dureeOuverturePortails: 30
   biomeCourant: 0
   ShipManager: {fileID: 1815358701}
   photonView: {fileID: 1355495023}
@@ -4177,7 +4177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97cb150612388d4458a6b22ad08b6f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 450
+  speed: 500
   hoverForce: 1200
   hoverHeight: 3.5
   speedRotate: 100

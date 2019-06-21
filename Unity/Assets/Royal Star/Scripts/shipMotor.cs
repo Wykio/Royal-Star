@@ -406,7 +406,7 @@ public class shipMotor : MonoBehaviour
 
     public void UpdateHauteurMort()
     {
-        hauteurMort = (gestionnaireMap.biomeCourant * 300) -200;
+        hauteurMort = ((gestionnaireMap.biomeCourant+1) * 300) -200;
         Debug.Log("HAUTEUR MORT : " + hauteurMort);
     }
 
