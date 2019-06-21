@@ -90,7 +90,7 @@ namespace MapGeneration
 
                 //diminution de la taille du prochain biome et reset des confirmations
                 tailleBiome -= 1;
-                hauteurBiome += 300;
+                hauteurBiome += 5000;
                 nbConfirmationBiomeGenere = 0;
             }
 
@@ -253,14 +253,14 @@ namespace MapGeneration
                     var extract = positionPortails[p].Split('/');
                     GameObject portail = portailPrefab;
                     portail = (GameObject)Instantiate(portail);
-                    portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 10, float.Parse(extract[1]));
+                    portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 18, float.Parse(extract[1]));
                     portail.SetActive(false);
                     listePortail.Add(portail);
 
                     GameObject portailDestination = portailPrefab;
                     portailDestination = (GameObject)Instantiate(portailDestination);
                     portailDestination.name = "Portail Destination";
-                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 310, float.Parse(extract[3]));
+                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 5018, float.Parse(extract[3]));
 
                     TeleporterController transport = portail.GetComponent<TeleporterController>();
                     transport.connectedTeleport = portailDestination;

@@ -16,16 +16,16 @@ public class ItemGeneratorScript : MonoBehaviour
 
     [Header("Pooling des items")]
     private ItemExposerScript[] ArmesRougesInstanciees;
-    private Queue<ItemExposerScript> armesRougesLibres = new Queue<ItemExposerScript>(5);
-    private List<ItemExposerScript> armesRougesPlacees = new List<ItemExposerScript>(5);
+    private Queue<ItemExposerScript> armesRougesLibres = new Queue<ItemExposerScript>(8);
+    private List<ItemExposerScript> armesRougesPlacees = new List<ItemExposerScript>(8);
 
     private ItemExposerScript[] ArmesVertesInstanciees;
-    private Queue<ItemExposerScript> armesVertesLibres = new Queue<ItemExposerScript>(25);
-    private List<ItemExposerScript> armesVertesPlacees = new List<ItemExposerScript>(25);
+    private Queue<ItemExposerScript> armesVertesLibres = new Queue<ItemExposerScript>(40);
+    private List<ItemExposerScript> armesVertesPlacees = new List<ItemExposerScript>(40);
 
     private ItemExposerScript[] ArmesBleuesInstanciees;
-    private Queue<ItemExposerScript> armesBleuesLibres = new Queue<ItemExposerScript>(30);
-    private List<ItemExposerScript> armesBleuesPlacees = new List<ItemExposerScript>(30);
+    private Queue<ItemExposerScript> armesBleuesLibres = new Queue<ItemExposerScript>(50);
+    private List<ItemExposerScript> armesBleuesPlacees = new List<ItemExposerScript>(50);
 
     private bool test = false;
 
@@ -36,10 +36,10 @@ public class ItemGeneratorScript : MonoBehaviour
 
         //instancier toutes les armes possibles au cours d'une partie
         //pour les armes rouges, il n'y en a qu'une par biome donc 5 armes rouges possibles
-        ArmesRougesInstanciees = new ItemExposerScript[5];
+        ArmesRougesInstanciees = new ItemExposerScript[8];
 
         //génération des 5 armes rouges
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 8; i++)
         {
             item = (GameObject)Instantiate(armeRougePrefab);
             ArmesRougesInstanciees[i] = item.GetComponent<ItemExposerScript>();
@@ -48,10 +48,10 @@ public class ItemGeneratorScript : MonoBehaviour
         }
 
         //pour les armes vertes, il y en a 25 en tout
-        ArmesVertesInstanciees = new ItemExposerScript[25];
+        ArmesVertesInstanciees = new ItemExposerScript[40];
 
         //génération des 25 armes vertes
-        for(int i = 0; i < 25; i++)
+        for(int i = 0; i < 40; i++)
         {
             item = (GameObject)Instantiate(armeVertePrefab);
             ArmesVertesInstanciees[i] = item.GetComponent<ItemExposerScript>();
@@ -60,10 +60,10 @@ public class ItemGeneratorScript : MonoBehaviour
         }
 
         //pour les armes bleues, il y en a 30 en tout
-        ArmesBleuesInstanciees = new ItemExposerScript[30];
+        ArmesBleuesInstanciees = new ItemExposerScript[50];
 
         //génération des 30 armes bleues
-        for(int i = 0; i < 30; i++)
+        for(int i = 0; i < 50; i++)
         {
             item = (GameObject)Instantiate(armeBleuePrefab);
             ArmesBleuesInstanciees[i] = item.GetComponent<ItemExposerScript>();

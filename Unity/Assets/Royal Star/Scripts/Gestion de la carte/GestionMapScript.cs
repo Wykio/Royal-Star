@@ -13,6 +13,7 @@ public class GestionMapScript : MonoBehaviour
     [Header("Références")]
     [SerializeField] private shipMotor ShipManager;
     [SerializeField] private PhotonView photonView;
+    [SerializeField] private ItemGeneratorScript itemGenerator;
 
     private List<List<GameObject>> listesPortailsParBiome = new List<List<GameObject>>();
     private float debutGame;
@@ -46,6 +47,14 @@ public class GestionMapScript : MonoBehaviour
 
                 biomeCourant++;
             }
+        }
+    }
+
+    private void PlacerItemsSurBiome(int biomeCourant)
+    {
+        if(biomeCourant == 0)
+        {
+
         }
     }
 
