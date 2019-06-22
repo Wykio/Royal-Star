@@ -6,8 +6,8 @@ using Photon.Pun;
 public class GestionMapScript : MonoBehaviour
 {
     [Header("Timers des biomes")]
-    [SerializeField] private float dureeBiome;
-    [SerializeField] private float dureeOuverturePortails;
+    [SerializeField] private int dureeBiome;
+    [SerializeField] private int dureeOuverturePortails;
     [SerializeField] public int biomeCourant;
     [SerializeField] private int tailleBiome = 4000;
 
@@ -41,6 +41,16 @@ public class GestionMapScript : MonoBehaviour
         photonView.RPC("SetDebutGameRPC", RpcTarget.All, t);
     }
 
+    public int GetDureeBiome()
+    {
+        return dureeBiome;
+    }
+
+    public int GetDureeOuverturePortails()
+    {
+        return dureeOuverturePortails;
+    }
+
     //initialise les listes de portails
     public void AddListePortailParBiome(List<GameObject> listePortails)
     {
@@ -55,10 +65,14 @@ public class GestionMapScript : MonoBehaviour
             //placer les items du premier biome
             PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, 250, tailleBiome, tailleBiome);
 
+            //lancement des chronos pour le premier biome
+            ShipManager.LancerChronosInterfaces();
+
             for (int i = 0; i < listesPortailsParBiome.Count; i++)
             {
                 //attendre le temps de la durée du biome avant d'ouvrir les portails
                 yield return new WaitForSeconds(dureeBiome - dureeOuverturePortails);
+
                 ActiverPortailDuBiome(biomeCourant);
 
                 //activer items du prochain biome
@@ -88,7 +102,11 @@ public class GestionMapScript : MonoBehaviour
                 //désactiver items du biome courant
                 DesactiverItemsDuBiome(5000 * biomeCourant + 1000);
 
+                //augmenter la hauteur de mise à mort pour le nouveau biome
                 ShipManager.UpdateHauteurMort();
+
+                //lancement des chronos pour le nouveau biome
+                ShipManager.LancerChronosInterfaces();
 
                 biomeCourant++;
             }

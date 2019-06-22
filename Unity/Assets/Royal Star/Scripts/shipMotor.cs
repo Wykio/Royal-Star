@@ -107,7 +107,6 @@ public class shipMotor : MonoBehaviour
             {
                 vaisseau.ChangerArme(intentReceiver.ChangerArme);
             }
-            Debug.Log($"INDEX ARME: {vaisseau.currentWeaponIndex}");
 
             if (vaisseau.currentWeaponIndex != intentReceiver.SelectedWeapon) {
                 vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
@@ -404,6 +403,14 @@ public class shipMotor : MonoBehaviour
         StartCoroutine(gestionnaireMap.GestionMap());
     }
 
+    public void LancerChronosInterfaces(int dureeBiome)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("LancerChronosInterfacesRPC", RpcTarget.All, dureeBiome);
+        }
+    }
+
     public void UpdateHauteurMort()
     {
         hauteurMort = ((gestionnaireMap.biomeCourant+1) * 5000) -200;
@@ -434,6 +441,27 @@ public class shipMotor : MonoBehaviour
     public bool getGameStarted()
     {
         return gameStarted;
+    }
+
+    public void LancerChronosInterfaces()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("LancerChronosInterfacesRPC", RpcTarget.All, gestionnaireMap.GetDureeBiome(), gestionnaireMap.GetDureeOuverturePortails());
+        }
+    }
+
+    [PunRPC]
+    private void LancerChronosInterfacesRPC(int dureeBiome, int dureeOuverturePortails)
+    {
+        foreach(var vaisseau in vaisseaux)
+        {
+            if(vaisseau.playerID == PhotonNetwork.LocalPlayer.ActorNumber && vaisseau.alive)
+            {
+                StartCoroutine(vaisseau.GestionChronometre(gestionnaireMap.GetDureeBiome(), gestionnaireMap.GetDureeOuverturePortails()));
+                break;
+            }
+        }
     }
 
     [PunRPC]

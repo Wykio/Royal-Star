@@ -41,7 +41,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
-    [SerializeField] public Text ChonoBiome;
+    [SerializeField] public Text ChronoBiome;
 
     private float nextFieldOfView;
     private int healthPoints = 200;
@@ -59,6 +59,45 @@ public class ShipExposer : MonoBehaviour
     void Start()
     {
         nextFieldOfView = ShipCamera.fieldOfView;
+    }
+
+    public IEnumerator GestionChronometre(int dureeBiome, int dureeOuverturePortails)
+    {
+        int nbMin = dureeBiome / 60;
+        int nbSec = dureeBiome % 60;
+
+        ChronoBiome.text = nbMin + ":" + nbSec;
+
+        for (int i = 0; i < dureeBiome; i++)
+        {
+            yield return new WaitForSeconds(1);
+
+            if(nbSec == 0)
+            {
+                nbSec = 59;
+                nbMin--;
+            }
+            else
+            {
+                nbSec--;
+            }
+
+            if(nbSec < 10)
+            {
+                ChronoBiome.text = nbMin + ":0" + nbSec;
+            }
+            else
+            {
+                ChronoBiome.text = nbMin + ":" + nbSec;
+            }
+
+            if (i < dureeBiome - dureeOuverturePortails) ChronoBiome.color = Color.green;
+            else
+            {
+                ChronoBiome.color = Color.red;
+            }
+
+        }
     }
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)

@@ -87,4 +87,5 @@ MonoBehaviour:
   - SetNextFieldOfViewRPC
   - DesactiverItemsDuBiomeRPC
   - PlacerItemsSurBiomeRPC
+  - LancerChronosInterfacesRPC
   DisableAutoOpenWizard: 1
