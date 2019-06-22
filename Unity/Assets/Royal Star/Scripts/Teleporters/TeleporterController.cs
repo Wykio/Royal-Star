@@ -21,6 +21,7 @@ public class TeleporterController : MonoBehaviour
         {     
             Vector3 endPosition = connectedTeleport.transform.position;
             endPosition.z += distanceAfterTeleport;
+            endPosition.y -= 10;
             other.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
         }
     }

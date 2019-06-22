@@ -15,78 +15,90 @@ public class ItemGeneratorScript : MonoBehaviour
     [SerializeField] private PhotonView photonView;
 
     [Header("Pooling des items")]
+    [SerializeField] private int nbArmesBleues;
+    [SerializeField] private int nbArmesVertes;
+    [SerializeField] private int nbArmesRouges;
+
     private ItemExposerScript[] ArmesRougesInstanciees;
-    private Queue<ItemExposerScript> armesRougesLibres = new Queue<ItemExposerScript>(5);
-    private List<ItemExposerScript> armesRougesPlacees = new List<ItemExposerScript>(5);
+    private Queue<ItemExposerScript> armesRougesLibres;
+    private List<ItemExposerScript> armesRougesPlacees;
 
     private ItemExposerScript[] ArmesVertesInstanciees;
-    private Queue<ItemExposerScript> armesVertesLibres = new Queue<ItemExposerScript>(25);
-    private List<ItemExposerScript> armesVertesPlacees = new List<ItemExposerScript>(25);
+    private Queue<ItemExposerScript> armesVertesLibres;
+    private List<ItemExposerScript> armesVertesPlacees;
 
     private ItemExposerScript[] ArmesBleuesInstanciees;
-    private Queue<ItemExposerScript> armesBleuesLibres = new Queue<ItemExposerScript>(30);
-    private List<ItemExposerScript> armesBleuesPlacees = new List<ItemExposerScript>(30);
+    private Queue<ItemExposerScript> armesBleuesLibres;
+    private List<ItemExposerScript> armesBleuesPlacees;
 
     private bool test = false;
 
     //génération du pooling des items
     public void Awake()
     {
+        //Initialisation des listes et queues
+        armesRougesLibres = new Queue<ItemExposerScript>(nbArmesRouges);
+        armesRougesPlacees = new List<ItemExposerScript>(nbArmesRouges);
+
+        armesVertesLibres = new Queue<ItemExposerScript>(nbArmesVertes);
+        armesVertesPlacees = new List<ItemExposerScript>(nbArmesVertes);
+
+        armesBleuesLibres = new Queue<ItemExposerScript>(nbArmesBleues);
+        armesBleuesPlacees = new List<ItemExposerScript>(nbArmesBleues);
+
         GameObject item;
 
         //instancier toutes les armes possibles au cours d'une partie
         //pour les armes rouges, il n'y en a qu'une par biome donc 5 armes rouges possibles
-        ArmesRougesInstanciees = new ItemExposerScript[5];
+        ArmesRougesInstanciees = new ItemExposerScript[8];
 
         //génération des 5 armes rouges
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 8; i++)
         {
             item = (GameObject)Instantiate(armeRougePrefab);
             ArmesRougesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesRougesLibres.Enqueue(ArmesRougesInstanciees[i]);
+            item.SetActive(false);
         }
 
         //pour les armes vertes, il y en a 25 en tout
-        ArmesVertesInstanciees = new ItemExposerScript[25];
+        ArmesVertesInstanciees = new ItemExposerScript[40];
 
         //génération des 25 armes vertes
-        for(int i = 0; i < 25; i++)
+        for(int i = 0; i < 40; i++)
         {
             item = (GameObject)Instantiate(armeVertePrefab);
             ArmesVertesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesVertesLibres.Enqueue(ArmesVertesInstanciees[i]);
+            item.SetActive(false);
         }
 
         //pour les armes bleues, il y en a 30 en tout
-        ArmesBleuesInstanciees = new ItemExposerScript[30];
+        ArmesBleuesInstanciees = new ItemExposerScript[50];
 
         //génération des 30 armes bleues
-        for(int i = 0; i < 30; i++)
+        for(int i = 0; i < 50; i++)
         {
             item = (GameObject)Instantiate(armeBleuePrefab);
             ArmesBleuesInstanciees[i] = item.GetComponent<ItemExposerScript>();
             armesBleuesLibres.Enqueue(ArmesBleuesInstanciees[i]);
+            item.SetActive(false);
         }
     }
 
-    public void Update()
+    public List<ItemExposerScript> GetArmesBleuesPlacees()
     {
-        if(controlleurVaisseauxScript.getGameStarted() && PhotonNetwork.IsMasterClient)
-        {
-            if (!test)
-            {
-                GenererArmeBleue(new Vector3(10, 20, 10));
-                GenererArmeBleue(new Vector3(4, 3, 0));
+        return armesBleuesPlacees;
+    }
 
-                GenererArmeVerte(new Vector3(6, 3, 2));
-                GenererArmeVerte(new Vector3(2, 3, 6));
+    public List<ItemExposerScript> GetArmesVertesPlacees()
+    {
+        return armesVertesPlacees;
+    }
 
-                GenererArmeRouge(new Vector3(0, 3, 3));
-
-                test = true;
-            }
-        }
-        
+    public List<ItemExposerScript> GetArmesRougesPlacees()
+    {
+        return armesRougesPlacees;
     }
 
     private void FixedUpdate()

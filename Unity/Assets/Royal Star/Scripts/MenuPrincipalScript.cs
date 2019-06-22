@@ -56,7 +56,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Connexion à Photon et on ajoute les listeners aux boutons
     private void Awake()
     {
-        Debug.Log("MenuPrincipal Awake");
         //connexion à Photon, gestion de l'exception en cas d'absence de connexion Internet
         try
         { 
@@ -80,9 +79,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur "Créer une partie"
     private void CreerRoom()
     {
-        Debug.Log("MenuPrincipal creerRoom");
-
-        
         //création de la room
         PhotonNetwork.CreateRoom("Room1", new RoomOptions
         {
@@ -96,8 +92,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur "Rejoidre une partie"
     private void RejoindreRoom()
     {
-        Debug.Log("MenuPrincipal RejoindreRoom");
-
         //connexion à la room
         PhotonNetwork.JoinRandomRoom();
 
@@ -161,14 +155,12 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //a la déconnexion du client local
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("MenuPrincipal OnDisconnected");
         Deconnecte?.Invoke();
     }
 
     //quand un joueur quitte la room
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("MenuPrincipal OnPlayerLeftRoom");
         //si le client local n'est pas MasterClient on ne fait rien 
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -190,9 +182,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log("MenuPrincipal OnMasterClientSwitched");
         MasterclientSwitch?.Invoke();
-
     }
     
     private IEnumerator GestionLobby()
@@ -212,7 +202,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
 
                 //s'il n'y a qu'un seul joueur dans la room, on quitte et retour au menu, sinon on lance la partie
-                if (PlayerNumbering.SortedPlayers.Length <= 0)
+                if (PlayerNumbering.SortedPlayers.Length <= 1)
                 {
                     erreur.gameObject.SetActive(true);
                     erreur.text = "Pas assez de pilote - Partie annulée - Retour au menu";
@@ -222,7 +212,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    Debug.Log("Lancement génération map");
                     //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
@@ -245,8 +234,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     
     private IEnumerator SetPlayerReady()
     {
-        Debug.Log("MenuPrincipal SetPlayerReady");
-
         //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
         var i = 0;
@@ -259,8 +246,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
-        //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
     }
@@ -325,7 +310,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private IEnumerator WaitForOtherPlayerToLaunchGame()
     {
         yield return new WaitForSeconds(10f);
-        Debug.Log("Partie annulée retour au menu");
         FinDePartie?.Invoke();
         AfficherMenu();
     }

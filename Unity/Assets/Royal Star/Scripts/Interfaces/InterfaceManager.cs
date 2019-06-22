@@ -111,7 +111,6 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterJeuButton.gameObject.SetActive(false);
         quitterJeuButton.interactable = false;
         erreur.gameObject.SetActive(false);
-        background.gameObject.SetActive(false);
     }
 
     //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
@@ -307,6 +306,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         titreLobby.gameObject.SetActive(false);
         listeJoueurs.gameObject.SetActive(false);
         decompteLobby.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
         resetInterface();
     }
 

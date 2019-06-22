@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using Photon.Pun.UtilityScripts;
 
 public class ShipExposer : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class ShipExposer : MonoBehaviour
     public bool Aerien;
     public Rigidbody ShipRigidBody;
     public PhotonRigidbodyView ShipRigidbodyView;
+    public PhotonView photonView;
     public Transform ShipTransform;
     public GameObject ShipRootGameObject;
     public Transform[] ShipHoverPoints;
@@ -39,6 +41,9 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
+    [SerializeField] public Text ChronoBiome;
+
+    private float nextFieldOfView;
     private int healthPoints = 200;
     private int shieldPoints = 100;
     private float boostPoints = 200f;
@@ -50,6 +55,50 @@ public class ShipExposer : MonoBehaviour
     public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
 
     public int currentWeaponIndex = 0;
+
+    void Start()
+    {
+        nextFieldOfView = ShipCamera.fieldOfView;
+    }
+
+    public IEnumerator GestionChronometre(int dureeBiome, int dureeOuverturePortails)
+    {
+        int nbMin = dureeBiome / 60;
+        int nbSec = dureeBiome % 60;
+
+        ChronoBiome.text = nbMin + ":" + nbSec;
+
+        for (int i = 0; i < dureeBiome; i++)
+        {
+            yield return new WaitForSeconds(1);
+
+            if(nbSec == 0)
+            {
+                nbSec = 59;
+                nbMin--;
+            }
+            else
+            {
+                nbSec--;
+            }
+
+            if(nbSec < 10)
+            {
+                ChronoBiome.text = nbMin + ":0" + nbSec;
+            }
+            else
+            {
+                ChronoBiome.text = nbMin + ":" + nbSec;
+            }
+
+            if (i < dureeBiome - dureeOuverturePortails) ChronoBiome.color = Color.green;
+            else
+            {
+                ChronoBiome.color = Color.red;
+            }
+
+        }
+    }
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)
     {
@@ -91,6 +140,11 @@ public class ShipExposer : MonoBehaviour
                 alive = false;
             }
         }
+    }
+
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
     }
 
     public int getPV()
@@ -197,7 +251,6 @@ public class ShipExposer : MonoBehaviour
 
             case 2:
                 if (armeActive != 2 && (ArmeBleue1.activeSelf || ArmeBleue2.activeSelf)) armeActive = 2;
-                Debug.Log("SHIP EXPOSER arme active = " + armeActive);
                 break;
 
             case 3:
@@ -208,5 +261,58 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
+        Debug.Log("SHIP EXPOSER arme active = " + armeActive);
+    }
+
+    public float GetFieldOfView()
+    {
+        return nextFieldOfView;
+    }
+
+    public void SetNewFieldOfView(float newFOV, int playerID)
+    {
+        if(PhotonNetwork.IsMasterClient
+            && Mathf.Abs(newFOV - nextFieldOfView) > float.Epsilon)
+        {
+            int i = 0;
+
+            for(; i < PlayerNumbering.SortedPlayers.Length; i++)
+            {
+                if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerID)
+                {
+                    photonView.RPC("SetNextFieldOfViewRPC", PlayerNumbering.SortedPlayers[i], newFOV);
+                    break;
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    public void SetNextFieldOfViewRPC(float newFOV)
+    {
+        nextFieldOfView = newFOV;
+    }
+
+    private void AdaptToCurrentFieldOfView()
+    {
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < float.Epsilon) return;
+
+        if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.2f)
+        {
+            ShipCamera.fieldOfView = nextFieldOfView;
+        }
+        else if (Mathf.Abs(ShipCamera.fieldOfView - nextFieldOfView) < 0.8f)
+        {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.8f * Time.deltaTime);
+        }
+        else
+        {
+            ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
+        }
+    }
+
+    private void Update()
+    {
+        AdaptToCurrentFieldOfView();
     }
 }

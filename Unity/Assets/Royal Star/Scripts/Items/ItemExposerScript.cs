@@ -5,13 +5,22 @@ using UnityEngine;
 public class ItemExposerScript : MonoBehaviour
 {
     [SerializeField] private Transform itemTransform;
-    private bool pose = true;
-
-    private bool ramasse = false;
+    [SerializeField] private bool pose = true;
+    [SerializeField] private bool ramasse = false;
 
     public void SetPose(bool b)
     {
         pose = b;
+    }
+
+    public Transform GetItemTransform()
+    {
+        return itemTransform;
+    }
+
+    public void SetRamasse(bool b)
+    {
+        ramasse = b;
     }
 
     //activer le gameobject de l'item
@@ -35,6 +44,8 @@ public class ItemExposerScript : MonoBehaviour
     //fonction de collision entre un objet et l'item
     private void OnTriggerEnter(Collider other)
     {
+        if (ramasse) return;
+
         //si le collider est un joueur
         if(other.attachedRigidbody.gameObject.tag == "Player")
         {
@@ -75,7 +86,7 @@ public class ItemExposerScript : MonoBehaviour
     {
         if (pose) return;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y -0.2f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
         Ray chute = new Ray(transform.position, -transform.up);
         RaycastHit hit;

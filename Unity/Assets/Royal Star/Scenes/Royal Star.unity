@@ -2687,6 +2687,7 @@ GameObject:
   - component: {fileID: 1355495024}
   - component: {fileID: 1355495025}
   - component: {fileID: 1355495023}
+  - component: {fileID: 1355495026}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -2743,15 +2744,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 1355495023}
+  gestionnaireMap: {fileID: 1355495026}
   listePrefabDecors:
   - {fileID: 133520630023340895, guid: 19baa640d864ec847ba1957ab78e09a5, type: 3}
   - {fileID: 443227887195062297, guid: 613be3a4cb617404ab57a91c84e00200, type: 3}
   - {fileID: 8825049030531246158, guid: a3e54be4f736ccb48b9db1c0cc94c7ba, type: 3}
+  - {fileID: 1736776865617629399, guid: 628c26f2958e3c54d82db77fb7326fe8, type: 3}
   portailPrefab: {fileID: 6173530183464132757, guid: 3b492417f75edc04b80e70e62bbbec1f,
     type: 3}
   hauteurBiome: 0
   tailleBiome: 4
   nbBiomes: 4
+--- !u!114 &1355495026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355495022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026191ba8c5746f4e8edb4a77d538e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dureeBiome: 40
+  dureeOuverturePortails: 30
+  biomeCourant: 0
+  tailleBiome: 4000
+  nbArmesBleuesBiome1: 30
+  nbArmesVertesBiome1: 25
+  nbArmesRougesBiome1: 5
+  nbArmesBleuesBiome2: 20
+  nbArmesVertesBiome2: 15
+  nbArmesRougesBiome2: 3
+  nbArmesBleuesBiome3: 15
+  nbArmesVertesBiome3: 10
+  nbArmesRougesBiome3: 2
+  nbArmesBleuesBiome4: 10
+  nbArmesVertesBiome4: 5
+  nbArmesRougesBiome4: 1
+  ShipManager: {fileID: 1815358701}
+  photonView: {fileID: 1355495023}
+  itemGenerator: {fileID: 1829976068}
 --- !u!1 &1376070142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4120,8 +4154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitForPlayersToPlay: 0
-  DureeMatchmaking: 5
+  waitForPlayersToPlay: 1
+  DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
@@ -4157,7 +4191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97cb150612388d4458a6b22ad08b6f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 450
+  speed: 500
   hoverForce: 1200
   hoverHeight: 3.5
   speedRotate: 100
@@ -4232,6 +4266,8 @@ MonoBehaviour:
   - {fileID: 1942909334}
   gameController: {fileID: 1815358699}
   ingameInterfaceManager: {fileID: 415601860}
+  gestionnaireMap: {fileID: 1355495026}
+  hauteurMort: -200
 --- !u!114 &1815358702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4306,6 +4342,9 @@ MonoBehaviour:
     type: 3}
   controlleurVaisseauxScript: {fileID: 1815358701}
   photonView: {fileID: 1829976070}
+  nbArmesBleues: 50
+  nbArmesVertes: 45
+  nbArmesRouges: 8
 --- !u!4 &1829976069
 Transform:
   m_ObjectHideFlags: 0
@@ -5137,7 +5176,7 @@ PrefabInstance:
     - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.6999512
+      value: -3.699936
       objectReference: {fileID: 0}
     - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}

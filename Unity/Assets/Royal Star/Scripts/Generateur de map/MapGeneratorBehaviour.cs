@@ -10,6 +10,7 @@ namespace MapGeneration
     public class MapGeneratorBehaviour : MonoBehaviour
     {
         [SerializeField] private PhotonView photonView;
+        [SerializeField] private GestionMapScript gestionnaireMap;
         [SerializeField] private GameObject[] listePrefabDecors;
         [SerializeField] private GameObject portailPrefab;
         [SerializeField] private int hauteurBiome;
@@ -29,10 +30,14 @@ namespace MapGeneration
             this.nbJoueurs = nbJoueurs;
         }
 
+        public int getTailleBiome()
+        {
+            return tailleBiome;
+        }
+
         //fonction pour établir la liste des indices des décors
         public void initialiserListeNumDecor()
         {
-            Debug.Log("debut initialiserListeNumDecor");
             listeNumDecor = new double[listePrefabDecors.Length];
 
             for (int i = 0; i < listePrefabDecors.Length; i++)
@@ -75,8 +80,6 @@ namespace MapGeneration
                 //retirer le "_" en fin de string
                 data = data.Substring(0, data.Length - 1);
 
-                Debug.Log("data générée, taille : " + tab.Length);
-
                 //envoi de la RPC aux clients
                 GenererDecor(data, generator.getTabRotation(), generator.getTabPortail());
 
@@ -92,7 +95,7 @@ namespace MapGeneration
 
                 //diminution de la taille du prochain biome et reset des confirmations
                 tailleBiome -= 1;
-                hauteurBiome += 300;
+                hauteurBiome += 5000;
                 nbConfirmationBiomeGenere = 0;
             }
 
@@ -246,21 +249,30 @@ namespace MapGeneration
                 //placement des portails, la donnée se présente ainsi : "positionX/positionZ/PositionDestinationX/positionDestinationZ_etc..."
                 var positionPortails = dataPortail.Split('_');
 
+                //liste pour contenir tous les portails du biomes qu'on va envoyer ensuite au script de gestion de la map
+                List<GameObject> listePortail = new List<GameObject>();
+
                 //pour chaque portail
                 for (int p = 0; p < positionPortails.Length; p++)
                 {
                     var extract = positionPortails[p].Split('/');
                     GameObject portail = portailPrefab;
                     portail = (GameObject)Instantiate(portail);
-                    portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 10, float.Parse(extract[1]));
+                    portail.transform.position = new Vector3(float.Parse(extract[0]), hauteurBiome + 18, float.Parse(extract[1]));
+                    portail.SetActive(false);
+                    listePortail.Add(portail);
 
                     GameObject portailDestination = portailPrefab;
                     portailDestination = (GameObject)Instantiate(portailDestination);
-                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 310, float.Parse(extract[3]));
+                    portailDestination.name = "Portail Destination";
+                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 5018, float.Parse(extract[3]));
 
                     TeleporterController transport = portail.GetComponent<TeleporterController>();
                     transport.connectedTeleport = portailDestination;
                 }
+
+                //envoi de la liste au gestionnaire de map
+                gestionnaireMap.AddListePortailParBiome(listePortail);
             }
 
             //une fois que le biome est généré, le client envoie sa confirmation
