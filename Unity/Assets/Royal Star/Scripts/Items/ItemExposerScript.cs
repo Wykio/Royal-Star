@@ -13,6 +13,16 @@ public class ItemExposerScript : MonoBehaviour
         pose = b;
     }
 
+    public Transform GetItemTransform()
+    {
+        return itemTransform;
+    }
+
+    public void SetRamasse(bool b)
+    {
+        ramasse = b;
+    }
+
     //activer le gameobject de l'item
     public void ActivationItem()
     {
@@ -76,7 +86,7 @@ public class ItemExposerScript : MonoBehaviour
     {
         if (pose) return;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y -0.2f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
         Ray chute = new Ray(transform.position, -transform.up);
         RaycastHit hit;

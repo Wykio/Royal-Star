@@ -41,6 +41,8 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
+    [SerializeField] public Text ChonoBiome;
+
     private float nextFieldOfView;
     private int healthPoints = 200;
     private int shieldPoints = 100;
@@ -234,9 +236,11 @@ public class ShipExposer : MonoBehaviour
             && Mathf.Abs(newFOV - nextFieldOfView) > float.Epsilon)
         {
             int i = 0;
+
             for(; i < PlayerNumbering.SortedPlayers.Length; i++)
             {
-                if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerID) {
+                if(PlayerNumbering.SortedPlayers[i].ActorNumber == playerID)
+                {
                     photonView.RPC("SetNextFieldOfViewRPC", PlayerNumbering.SortedPlayers[i], newFOV);
                     break;
                 }

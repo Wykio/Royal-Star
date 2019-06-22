@@ -30,6 +30,11 @@ namespace MapGeneration
             this.nbJoueurs = nbJoueurs;
         }
 
+        public int getTailleBiome()
+        {
+            return tailleBiome;
+        }
+
         //fonction pour établir la liste des indices des décors
         public void initialiserListeNumDecor()
         {

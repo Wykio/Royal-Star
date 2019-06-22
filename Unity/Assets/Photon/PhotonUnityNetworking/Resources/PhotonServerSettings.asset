@@ -85,4 +85,6 @@ MonoBehaviour:
   - Enable
   - AdaptToCurrentFieldOfViewRPC
   - SetNextFieldOfViewRPC
+  - DesactiverItemsDuBiomeRPC
+  - PlacerItemsSurBiomeRPC
   DisableAutoOpenWizard: 1

@@ -27,7 +27,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 186642134742444498}
+  - {fileID: 2455816402056284385}
   - {fileID: 9117559925327760834}
   - {fileID: 6155758792029863128}
   m_Father: {fileID: 3361519573493428610}
@@ -112,8 +112,8 @@ RectTransform:
   m_Father: {fileID: 383178560305544997}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -651,11 +651,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9118695883053931854}
-  - {fileID: 1417837033669130159}
-  - {fileID: 8506701823550854890}
+  - {fileID: 5600233091179075769}
+  - {fileID: 2889284745203202556}
   - {fileID: 3361519573588220656}
-  - {fileID: 1721802772055723749}
-  - {fileID: 5732785569633497974}
+  - {fileID: 8703625506910440024}
+  - {fileID: 2351614773511747531}
   - {fileID: 5246739050065749440}
   - {fileID: 238305904280111689}
   - {fileID: 5482449445218732334}
@@ -773,16 +773,16 @@ MonoBehaviour:
   ShipCentreGravite: {fileID: 3361519573417196520}
   ShipCamera: {fileID: 3361519573588220657}
   ShipHitbox: {fileID: 9006751233132591676}
-  ArmeBleue1: {fileID: 5965650074516303622}
-  ArmeBleue1Collider: {fileID: 5508184021299262518}
-  ArmeBleue2: {fileID: 3993272693410811459}
-  ArmeBleue2Collider: {fileID: 3013413199619888499}
-  ArmeVerte1: {fileID: 7458714771378532053}
-  ArmeVerte1Collider: {fileID: 1219850898771745285}
-  ArmeVerte2: {fileID: 4605297807521125190}
-  ArmeVerte2Collider: {fileID: 5225907884271626134}
-  ArmeRouge1: {fileID: 5741970546714917341}
-  ArmeRouge1Collider: {fileID: 6832395563025691597}
+  ArmeBleue1: {fileID: 5600233091179075747}
+  ArmeBleue1Collider: {fileID: 5600233091179075780}
+  ArmeBleue2: {fileID: 2889284745203202534}
+  ArmeBleue2Collider: {fileID: 2889284745203202433}
+  ArmeVerte1: {fileID: 8703625506910440004}
+  ArmeVerte1Collider: {fileID: 8703625506910439996}
+  ArmeVerte2: {fileID: 2351614773511747543}
+  ArmeVerte2Collider: {fileID: 2351614773511747503}
+  ArmeRouge1: {fileID: 2455816402056284386}
+  ArmeRouge1Collider: {fileID: 2455816402056284319}
   playerName: Sami
   playerID: 0
   alive: 1
@@ -791,6 +791,7 @@ MonoBehaviour:
   bouclier: {fileID: 3952610318317938051}
   boost: {fileID: 2747781920458888930}
   compteurJoueurs: {fileID: 4369186586574772082}
+  ChonoBiome: {fileID: 292149298032857763}
   ShipWeapons:
   - {fileID: 4896183158657675921}
   - {fileID: 7500480008265696139}
@@ -1058,7 +1059,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1099,6 +1100,85 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!1 &5511291020417008452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 706452429622680978}
+  - component: {fileID: 5386555241215988428}
+  - component: {fileID: 292149298032857763}
+  m_Layer: 5
+  m_Name: Chrono
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &706452429622680978
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511291020417008452}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3431267169852328683}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.49050206, y: 0}
+  m_AnchorMax: {x: 1, y: 0.11219314}
+  m_AnchoredPosition: {x: -374, y: 17}
+  m_SizeDelta: {x: -591, y: -6}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5386555241215988428
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511291020417008452}
+  m_CullTransparentMesh: 0
+--- !u!114 &292149298032857763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511291020417008452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.74101985, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 495c9e2a934bcc640a8d7427b13cb680, type: 3}
+    m_FontSize: 18
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 2:00
 --- !u!1 &5751122805260795544
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3431267169852328683
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1212,6 +1292,7 @@ RectTransform:
   - {fileID: 5761875836028837353}
   - {fileID: 4252858772763551347}
   - {fileID: 8683697960644435023}
+  - {fileID: 706452429622680978}
   m_Father: {fileID: 5680930776000566225}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1550,36 +1631,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1635,23 +1686,53 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222fb97ab5477454689a4ef3d0d1c7cb, type: 3}
---- !u!65 &5225907884271626134 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 7504328097095094377, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 2351614773511747583}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4605297807521125190 stripped
+--- !u!1 &2351614773511747543 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
     type: 3}
   m_PrefabInstance: {fileID: 2351614773511747583}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &5732785569633497974 stripped
+--- !u!4 &2351614773511747531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 2351614773511747583}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2351614773511747503 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 7504328097095094377, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
     type: 3}
   m_PrefabInstance: {fileID: 2351614773511747583}
   m_PrefabAsset: {fileID: 0}
@@ -1662,51 +1743,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2342933976531149084, guid: 6f322e58bef3c6e45af986ad7c148081,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1762,21 +1798,66 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f322e58bef3c6e45af986ad7c148081, type: 3}
---- !u!1 &5741970546714917341 stripped
+--- !u!1 &2455816402056284386 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
     type: 3}
   m_PrefabInstance: {fileID: 2455816402056284366}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &186642134742444498 stripped
+--- !u!4 &2455816402056284385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2342933976531149084, guid: 6f322e58bef3c6e45af986ad7c148081,
     type: 3}
   m_PrefabInstance: {fileID: 2455816402056284366}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &6832395563025691597 stripped
+--- !u!65 &2455816402056284319 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 8990692910336670467, guid: 6f322e58bef3c6e45af986ad7c148081,
     type: 3}
@@ -1789,51 +1870,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1889,21 +1925,66 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
---- !u!4 &8506701823550854890 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2889284745203202511}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &3013413199619888499 stripped
+--- !u!65 &2889284745203202433 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 128641194809601212, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
   m_PrefabInstance: {fileID: 2889284745203202511}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3993272693410811459 stripped
+--- !u!4 &2889284745203202556 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+    type: 3}
+  m_PrefabInstance: {fileID: 2889284745203202511}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2889284745203202534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
@@ -1916,51 +1997,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
     - target: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2016,23 +2052,68 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
---- !u!65 &5508184021299262518 stripped
+--- !u!65 &5600233091179075780 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 128641194809601212, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
   m_PrefabInstance: {fileID: 5600233091179075722}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1417837033669130159 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+--- !u!1 &5600233091179075747 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
   m_PrefabInstance: {fileID: 5600233091179075722}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5965650074516303622 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+--- !u!4 &5600233091179075769 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
   m_PrefabInstance: {fileID: 5600233091179075722}
   m_PrefabAsset: {fileID: 0}
@@ -2043,16 +2124,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
-    - target: {fileID: 5956294763354272052, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
-        type: 3}
-      propertyPath: m_Name
-      value: LaserWeapon
-      objectReference: {fileID: 0}
     - target: {fileID: 1868917175024140228, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: bulletPoolManager
       value: 
       objectReference: {fileID: 2380105399905091863}
+    - target: {fileID: 5956294763354272052, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
+        type: 3}
+      propertyPath: m_Name
+      value: LaserWeapon
+      objectReference: {fileID: 0}
     - target: {fileID: 2182517418093152020, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -2150,16 +2231,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
-    - target: {fileID: 5956294763354272052, guid: e0d7b9e6977439143bddd6109e6b89b1,
-        type: 3}
-      propertyPath: m_Name
-      value: BurstWeapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 1868917175024140228, guid: e0d7b9e6977439143bddd6109e6b89b1,
-        type: 3}
-      propertyPath: bulletPoolManager
-      value: 
-      objectReference: {fileID: 280573389712650618}
     - target: {fileID: 2636033572947181719, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2215,6 +2286,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1868917175024140228, guid: e0d7b9e6977439143bddd6109e6b89b1,
+        type: 3}
+      propertyPath: bulletPoolManager
+      value: 
+      objectReference: {fileID: 280573389712650618}
+    - target: {fileID: 5956294763354272052, guid: e0d7b9e6977439143bddd6109e6b89b1,
+        type: 3}
+      propertyPath: m_Name
+      value: BurstWeapon
+      objectReference: {fileID: 0}
     - target: {fileID: 2182517418093152020, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -2229,6 +2310,11 @@ PrefabInstance:
         type: 3}
       propertyPath: pose
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 596175554749792095, guid: e0d7b9e6977439143bddd6109e6b89b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0d7b9e6977439143bddd6109e6b89b1, type: 3}
@@ -2257,51 +2343,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2357,23 +2398,68 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222fb97ab5477454689a4ef3d0d1c7cb, type: 3}
---- !u!65 &1219850898771745285 stripped
+--- !u!1 &8703625506910440004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 8703625506910440044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8703625506910439996 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 7504328097095094377, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
     type: 3}
   m_PrefabInstance: {fileID: 8703625506910440044}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1721802772055723749 stripped
+--- !u!4 &8703625506910440024 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 8703625506910440044}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7458714771378532053 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
     type: 3}
   m_PrefabInstance: {fileID: 8703625506910440044}
   m_PrefabAsset: {fileID: 0}
