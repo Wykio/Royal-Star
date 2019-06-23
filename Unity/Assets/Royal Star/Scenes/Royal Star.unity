@@ -2750,6 +2750,7 @@ MonoBehaviour:
   - {fileID: 443227887195062297, guid: 613be3a4cb617404ab57a91c84e00200, type: 3}
   - {fileID: 8825049030531246158, guid: a3e54be4f736ccb48b9db1c0cc94c7ba, type: 3}
   - {fileID: 1736776865617629399, guid: 628c26f2958e3c54d82db77fb7326fe8, type: 3}
+  - {fileID: 4538647258823444917, guid: c759e00e3019bfc40964131c610332cf, type: 3}
   portailPrefab: {fileID: 6173530183464132757, guid: 3b492417f75edc04b80e70e62bbbec1f,
     type: 3}
   hauteurBiome: 0
@@ -2767,7 +2768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026191ba8c5746f4e8edb4a77d538e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dureeBiome: 40
+  dureeBiome: 120
   dureeOuverturePortails: 30
   biomeCourant: 0
   tailleBiome: 4000
@@ -4154,7 +4155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitForPlayersToPlay: 1
+  waitForPlayersToPlay: 0
   DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
   boutonCreerRoom: {fileID: 1734441889}
