@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class DecorExposerScript : MonoBehaviour
 {
-    [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] Renderer renderer;
 
-    public void setMeshRenderer(Material m)
+    public void setRenderer(Material m)
     {
-        for(int i = 0; i < meshRenderer.sharedMaterials.Length; i++)
+        /*for(int i = 0; i < renderer.materials.Length; i++)
         {
-            meshRenderer.sharedMaterials[i] = m;
-        }
+            renderer.materials[i] = m;
+        }*/
+
+        renderer.material = m;
     }
 }

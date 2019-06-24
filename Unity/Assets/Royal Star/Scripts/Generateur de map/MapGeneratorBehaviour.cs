@@ -173,8 +173,9 @@ namespace MapGeneration
             terrain.name = "SolBiome";
 
             //application du matérial du sol en fonction du type de biome
-            DecorExposerScript decorExposer = sol.GetComponent<DecorExposerScript>();
-            decorExposer.setMeshRenderer(listeMateriauxSol[typeBiome]);
+            DecorExposerScript decorExposer = terrain.GetComponent<DecorExposerScript>();
+            Debug.Log("MATERIAL : " + listeMateriauxSol[typeBiome].name);
+            decorExposer.setRenderer(listeMateriauxSol[typeBiome]);
 
             //pour chaque valeur du tableau
             for (int i = 0; i < tailleBiome; i++)
