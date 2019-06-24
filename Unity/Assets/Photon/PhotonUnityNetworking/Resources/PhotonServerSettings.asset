@@ -88,4 +88,6 @@ MonoBehaviour:
   - DesactiverItemsDuBiomeRPC
   - PlacerItemsSurBiomeRPC
   - LancerChronosInterfacesRPC
+  - GenererBonusBouclierRPC
+  - GenererBonusSoinsRPC
   DisableAutoOpenWizard: 1

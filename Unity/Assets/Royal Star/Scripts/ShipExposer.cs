@@ -152,9 +152,21 @@ public class ShipExposer : MonoBehaviour
         return healthPoints;
     }
 
+    public void Soins(int pv)
+    {
+        healthPoints += pv;
+        if (healthPoints > 200) healthPoints = 200;
+    }
+
     public int getBouclier()
     {
         return shieldPoints;
+    }
+
+    public void RechargeBouclier(int recharge)
+    {
+        shieldPoints += recharge;
+        if (shieldPoints > 100) shieldPoints = 100;
     }
 
     public float getBoost()

@@ -2784,6 +2784,14 @@ MonoBehaviour:
   nbArmesBleuesBiome4: 10
   nbArmesVertesBiome4: 5
   nbArmesRougesBiome4: 1
+  nbBonusSoinsBiome1: 20
+  nbBonusBouclierBiome1: 20
+  nbBonusSoinsBiome2: 15
+  nbBonusBouclierBiome2: 15
+  nbBonusSoinsBiome3: 10
+  nbBonusBouclierBiome3: 10
+  nbBonusSoinsBiome4: 5
+  nbBonusBouclierBiome4: 5
   ShipManager: {fileID: 1815358701}
   photonView: {fileID: 1355495023}
   itemGenerator: {fileID: 1829976068}
@@ -4341,11 +4349,17 @@ MonoBehaviour:
     type: 3}
   armeRougePrefab: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
     type: 3}
+  bonusSoinPrefab: {fileID: 6746014155696240151, guid: 1fe023ea1531f2e4c8fe84d7847db2a6,
+    type: 3}
+  bonusBouclierPrefab: {fileID: 6698140459172845403, guid: 87b9a3d76497acf4796344487c4092ba,
+    type: 3}
   controlleurVaisseauxScript: {fileID: 1815358701}
   photonView: {fileID: 1829976070}
   nbArmesBleues: 50
   nbArmesVertes: 45
   nbArmesRouges: 8
+  nbBonusSoins: 35
+  nbBonusBouclier: 35
 --- !u!4 &1829976069
 Transform:
   m_ObjectHideFlags: 0

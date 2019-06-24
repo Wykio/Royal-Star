@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ItemExposerScript : MonoBehaviour
 {
-    [SerializeField] private Transform itemTransform;
-    [SerializeField] private bool pose = true;
-    [SerializeField] private bool ramasse = false;
+    [SerializeField] protected Transform itemTransform;
+    [SerializeField] protected bool pose = true;
+    [SerializeField] protected bool ramasse = false;
 
     public void SetPose(bool b)
     {
@@ -93,7 +93,7 @@ public class ItemExposerScript : MonoBehaviour
 
         if(Physics.Raycast(chute, out hit, 3.5f))
         {
-            pose = true;
+            SetPose(true);
         }
     }
 }
