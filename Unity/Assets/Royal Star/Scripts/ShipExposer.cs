@@ -44,8 +44,8 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text ChronoBiome;
 
     private float nextFieldOfView;
-    private int healthPoints = 200;
-    private int shieldPoints = 100;
+    [SerializeField] private int healthPoints = 200;
+    [SerializeField] private int shieldPoints = 100;
     private float boostPoints = 200f;
     private bool boostOK;
 
@@ -201,6 +201,54 @@ public class ShipExposer : MonoBehaviour
     public int getArmeActive()
     {
         return armeActive;
+    }
+
+    //fonction pour savoir si le vaisseau a des slots d'arme bleues vide
+    public bool GetSlotVideArmesBleues()
+    {
+        //si l'arme bleue 1 n'est pas active, un slot est donc dispo
+        if(!ArmeBleue1.activeSelf)
+        {
+            return true;
+        }
+        else
+        {
+            //sinon, si l'arme bleue 2 n'est pas active, un slot est dispo
+            if (!ArmeBleue2.activeSelf)
+            {
+                return true;
+            }
+            //sinon tout les slots sont occupés
+            else return false;
+        }
+    }
+
+    //fonction pour savoir si le vaisseau a des slots d'arme verte vide
+    public bool GetSlotVideArmesVertes()
+    {
+        //si l'arme verte 1 n'est pas active, un slot est donc dispo
+        if (!ArmeVerte1.activeSelf)
+        {
+            return true;
+        }
+        else
+        {
+            //sinon, si l'arme verte 2 n'est pas active, un slot est dispo
+            if (!ArmeVerte2.activeSelf)
+            {
+                return true;
+            }
+            //sinon tout les slots sont occupés
+            else return false;
+        }
+    }
+
+    //fonction pour savoir si le vaisseau a des slots d'arme verte vide
+    public bool GetSlotVideArmeRouge()
+    {
+        //si l'arme rouge est active, on return false, true dans le cas contraire
+        if (ArmeRouge1.activeSelf) return false;
+        else return true;
     }
 
     //fonction d'activation quand le vaisseau ramasse une arme rouge

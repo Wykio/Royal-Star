@@ -241,6 +241,7 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
             }
         }
 
@@ -251,6 +252,7 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
             }
         }
 
@@ -261,6 +263,7 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
             }
         }
 
@@ -271,6 +274,7 @@ public class GestionMapScript : MonoBehaviour
             if(bonus.GetItemTransform().position.y < hauteurLimite)
             {
                 bonus.SetRamasse(true);
+                bonus.DesactivationItem();
             }
         }
 
@@ -281,6 +285,7 @@ public class GestionMapScript : MonoBehaviour
             if(bonus.GetItemTransform().position.y < hauteurLimite)
             {
                 bonus.SetRamasse(true);
+                bonus.DesactivationItem();
             }
         }
     }

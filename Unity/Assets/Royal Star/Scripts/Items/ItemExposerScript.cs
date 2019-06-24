@@ -51,29 +51,49 @@ public class ItemExposerScript : MonoBehaviour
         {
             var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
             
-            if(this.gameObject.tag == "Arme Bleue")
+            if(gameObject.tag == "Arme Bleue")
             {
-                vaisseau.ActiverArmeBleue();
+                if(vaisseau.GetSlotVideArmesBleues())
+                {
+                    vaisseau.ActiverArmeBleue();
+                    ramasse = true;
+                    SetPose(true);
+                    DesactivationItem();
+                }
             }
             else
             {
-                if(this.gameObject.tag == "Arme Verte")
+                if(gameObject.tag == "Arme Verte")
                 {
-                    vaisseau.ActiverArmeVerte();
+                    if(vaisseau.GetSlotVideArmesVertes())
+                    {
+                        vaisseau.ActiverArmeVerte();
+                        ramasse = true;
+                        SetPose(true);
+                        DesactivationItem();
+                    }
                 }
                 else
                 {
-                    if(this.gameObject.tag == "Arme Rouge")
+                    if(gameObject.tag == "Arme Rouge")
                     {
-                        vaisseau.ActiverArmeRouge();
+                        if(vaisseau.GetSlotVideArmeRouge())
+                        {
+                            vaisseau.ActiverArmeRouge();
+                            ramasse = true;
+                            SetPose(true);
+                            DesactivationItem();
+                        }
                     }
                 }
             }
         }
-
-        ramasse = true;
-        SetPose(true);
-        DesactivationItem();
+        else
+        {
+            ramasse = true;
+            SetPose(true);
+            DesactivationItem();
+        }
     }
 
     //getteur pour avoir l'état de l'item, en place ou ramassé
