@@ -9,18 +9,28 @@ namespace MapGeneration
 {
     public class MapGeneratorBehaviour : MonoBehaviour
     {
-        [SerializeField] private PhotonView photonView;
-        [SerializeField] private GestionMapScript gestionnaireMap;
+        [Header("Modèles de décors")]
         [SerializeField] private GameObject[] listePrefabDecors;
         [SerializeField] private GameObject portailPrefab;
+        [SerializeField] private GameObject sol;
+
+        [Header("Matériaux")]
+        [SerializeField] private Material[] listeMateriauxSol = new Material[4];
+
+        [Header("Paramétrage")]
         [SerializeField] private int hauteurBiome;
         [SerializeField] private int tailleBiome;
         [SerializeField] private int nbBiomes;
+
+        [Header("Références")]
+        [SerializeField] private PhotonView photonView;
+        [SerializeField] private GestionMapScript gestionnaireMap;
 
         public event Action<string> majInterface;
         public event Action mapGenereePourTous;
 
         private double[] listeNumDecor;
+        private int typeBiome;  //0 = normal 1 = glace 2 = feu 3 = radiation
         private int nbJoueurs;
         private int nbConfirmationBiomeGenere = 0;
 
@@ -80,8 +90,11 @@ namespace MapGeneration
                 //retirer le "_" en fin de string
                 data = data.Substring(0, data.Length - 1);
 
+                //choix du type de biome au hasard
+                typeBiome = UnityEngine.Random.Range(0, 3);
+
                 //envoi de la RPC aux clients
-                GenererDecor(data, generator.getTabRotation(), generator.getTabPortail());
+                GenererDecor(data, generator.getTabRotation(), generator.getTabPortail(), typeBiome);
 
                 while(!ok)
                 {
@@ -103,11 +116,11 @@ namespace MapGeneration
         }
 
         //le masterclient envoie le tableau qu'il a générer pour que les clients puissent générer le décor
-        public void GenererDecor(string data, string dataRotation, string dataPortail)
+        public void GenererDecor(string data, string dataRotation, string dataPortail, int typeBiome)
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, dataRotation, dataPortail, tailleBiome, hauteurBiome);
+                photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, dataRotation, dataPortail, typeBiome, tailleBiome, hauteurBiome);
             }
         }
 
@@ -123,8 +136,10 @@ namespace MapGeneration
 
         //RPC pour générer le décor à partir du tableau reçu
         [PunRPC]
-        private void GenererDecorViaTableauRPC(string data, string dataRotation, string dataPortail, int tailleBiome, int hauteurBiome)
+        private void GenererDecorViaTableauRPC(string data, string dataRotation, string dataPortail, int typeBiome, int tailleBiome, int hauteurBiome)
         {
+            //définir le type du biome
+
             //remettre la data sous forme d'un tableau de float
             data.Replace(".", ",");
             var dataDecor = data.Split('_');
@@ -152,10 +167,14 @@ namespace MapGeneration
             if(listeNumDecor == null || listeNumDecor.Length == 0) initialiserListeNumDecor();
 
             //générer le terrain
-            GameObject terrain = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject terrain = (GameObject)Instantiate(sol);
             terrain.transform.localScale = new Vector3(1000 * tailleBiome, 3f, 1000 * tailleBiome);
             terrain.transform.position = new Vector3((1000 * tailleBiome)/2, hauteurBiome, (1000 * tailleBiome) / 2);
             terrain.name = "SolBiome";
+
+            //application du matérial du sol en fonction du type de biome
+            DecorExposerScript decorExposer = sol.GetComponent<DecorExposerScript>();
+            decorExposer.setMeshRenderer(listeMateriauxSol[typeBiome]);
 
             //pour chaque valeur du tableau
             for (int i = 0; i < tailleBiome; i++)

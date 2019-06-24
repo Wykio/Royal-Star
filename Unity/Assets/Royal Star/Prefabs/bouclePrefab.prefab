@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3274645401596392155}
   - component: {fileID: 925859848290870846}
   - component: {fileID: 5438694134549851873}
+  - component: {fileID: 6763982812632963199}
   m_Layer: 0
   m_Name: bouclePrefab
   m_TagString: Untagged
@@ -58,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f2e46c3474e28624a90a66de1e37941e, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,3 +93,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300000, guid: 458bf20383b7adb49935fa301ccc5e16, type: 3}
+--- !u!114 &6763982812632963199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443227887195062297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88d42cb5fadcab4097fd37666a53664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 925859848290870846}

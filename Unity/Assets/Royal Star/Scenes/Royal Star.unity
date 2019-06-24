@@ -2743,8 +2743,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7298d639ca6a61e40be67d585dd60c3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonView: {fileID: 1355495023}
-  gestionnaireMap: {fileID: 1355495026}
   listePrefabDecors:
   - {fileID: 133520630023340895, guid: 19baa640d864ec847ba1957ab78e09a5, type: 3}
   - {fileID: 443227887195062297, guid: 613be3a4cb617404ab57a91c84e00200, type: 3}
@@ -2753,9 +2751,17 @@ MonoBehaviour:
   - {fileID: 4538647258823444917, guid: c759e00e3019bfc40964131c610332cf, type: 3}
   portailPrefab: {fileID: 6173530183464132757, guid: 3b492417f75edc04b80e70e62bbbec1f,
     type: 3}
+  sol: {fileID: 4773751674192930086, guid: 0df1a7c827abd924ca43c56381fc18dd, type: 3}
+  listeMateriauxSol:
+  - {fileID: 2100000, guid: d9d7cbf36c3f54e4aa8808fb3d2c95e3, type: 2}
+  - {fileID: 2100000, guid: b5091a93c23ee3e479f33a27feeb943f, type: 2}
+  - {fileID: 2100000, guid: cc8535d0ddcd2154184bca3c7fc9fd20, type: 2}
+  - {fileID: 2100000, guid: 154ea24eb5280bb40a1a82d129d29463, type: 2}
   hauteurBiome: 0
   tailleBiome: 4
   nbBiomes: 4
+  photonView: {fileID: 1355495023}
+  gestionnaireMap: {fileID: 1355495026}
 --- !u!114 &1355495026
 MonoBehaviour:
   m_ObjectHideFlags: 0
