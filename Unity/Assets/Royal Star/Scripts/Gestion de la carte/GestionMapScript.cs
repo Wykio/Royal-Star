@@ -28,6 +28,19 @@ public class GestionMapScript : MonoBehaviour
     [SerializeField] private int nbArmesVertesBiome4;
     [SerializeField] private int nbArmesRougesBiome4;
 
+    [Header("Paramétrage des bonus")]
+    [SerializeField] private int nbBonusSoinsBiome1;
+    [SerializeField] private int nbBonusBouclierBiome1;
+
+    [SerializeField] private int nbBonusSoinsBiome2;
+    [SerializeField] private int nbBonusBouclierBiome2;
+
+    [SerializeField] private int nbBonusSoinsBiome3;
+    [SerializeField] private int nbBonusBouclierBiome3;
+
+    [SerializeField] private int nbBonusSoinsBiome4;
+    [SerializeField] private int nbBonusBouclierBiome4;
+
     [Header("Références")]
     [SerializeField] private shipMotor ShipManager;
     [SerializeField] private PhotonView photonView;
@@ -63,7 +76,7 @@ public class GestionMapScript : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             //placer les items du premier biome
-            PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, 250, tailleBiome, tailleBiome);
+            PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
 
             //lancement des chronos pour le premier biome
             ShipManager.LancerChronosInterfaces();
@@ -80,17 +93,17 @@ public class GestionMapScript : MonoBehaviour
                 {
                     //les items du premier biomes sont déjà placés donc on ajoute les items du biome suivant
                     case 0:
-                        PlacerItemsSurBiome(nbArmesBleuesBiome2, nbArmesVertesBiome2, nbArmesRougesBiome2, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
+                        PlacerItemsSurBiome(nbArmesBleuesBiome2, nbArmesVertesBiome2, nbArmesRougesBiome2, nbBonusSoinsBiome2, nbBonusBouclierBiome2, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
                         break;
 
                     //placer les items du 3ème biome
                     case 1:
-                        PlacerItemsSurBiome(nbArmesBleuesBiome3, nbArmesVertesBiome3, nbArmesRougesBiome3, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
+                        PlacerItemsSurBiome(nbArmesBleuesBiome3, nbArmesVertesBiome3, nbArmesRougesBiome3, nbBonusSoinsBiome3, nbBonusBouclierBiome3, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
                         break;
 
                     //placer les items du dernier biome
                     case 2:
-                        PlacerItemsSurBiome(nbArmesBleuesBiome4, nbArmesVertesBiome4, nbArmesRougesBiome4, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
+                        PlacerItemsSurBiome(nbArmesBleuesBiome4, nbArmesVertesBiome4, nbArmesRougesBiome4, nbBonusSoinsBiome4, nbBonusBouclierBiome4, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
                         break;
                     default:
                         break;
@@ -132,7 +145,7 @@ public class GestionMapScript : MonoBehaviour
     }
 
     //fonction pour ordonner aux clients de placer les items dans le biome
-    public void PlacerItemsSurBiome(int nbArmesBleues, int nbArmesVertes, int nbArmesRouges, int hauteurSpawn, int longueur, int largeur)
+    public void PlacerItemsSurBiome(int nbArmesBleues, int nbArmesVertes, int nbArmesRouges, int nbBonusSoins, int nbBonusBouclier, int hauteurSpawn, int longueur, int largeur)
     {
         string positionsArmesBleuesData = "";
 
@@ -160,9 +173,27 @@ public class GestionMapScript : MonoBehaviour
 
         positionsArmesRougesData = positionsArmesRougesData.Substring(0, positionsArmesRougesData.Length - 1);
 
+        string positionsBonusSoinsData = "";
+
+        for (int i = 0; i < nbBonusSoins; i++)
+        {
+            positionsBonusSoinsData += (Random.Range(0, longueur).ToString() + "/" + hauteurSpawn + "/" + Random.Range(0, longueur).ToString() + "_");
+        }
+
+        positionsBonusSoinsData = positionsBonusSoinsData.Substring(0, positionsBonusSoinsData.Length - 1);
+
+        string positionsBonusBouclierData = "";
+
+        for (int i = 0; i < nbBonusBouclier; i++)
+        {
+            positionsBonusBouclierData += (Random.Range(0, longueur).ToString() + "/" + hauteurSpawn + "/" + Random.Range(0, longueur).ToString() + "_");
+        }
+
+        positionsBonusBouclierData = positionsBonusBouclierData.Substring(0, positionsBonusBouclierData.Length - 1);
+
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("PlacerItemsSurBiomeRPC", RpcTarget.All, positionsArmesBleuesData, positionsArmesVertesData, positionsArmesRougesData);
+            photonView.RPC("PlacerItemsSurBiomeRPC", RpcTarget.All, positionsArmesBleuesData, positionsArmesVertesData, positionsArmesRougesData, positionsBonusSoinsData, positionsBonusBouclierData);
         }
     }
 
@@ -210,6 +241,7 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
             }
         }
 
@@ -220,6 +252,7 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
             }
         }
 
@@ -230,17 +263,42 @@ public class GestionMapScript : MonoBehaviour
             if (arme.GetItemTransform().position.y < hauteurLimite)
             {
                 arme.SetRamasse(true);
+                arme.DesactivationItem();
+            }
+        }
+
+        var bonusPlaces = itemGenerator.GetBonusSoinsPlaces();
+
+        foreach(var bonus in bonusPlaces)
+        {
+            if(bonus.GetItemTransform().position.y < hauteurLimite)
+            {
+                bonus.SetRamasse(true);
+                bonus.DesactivationItem();
+            }
+        }
+
+        bonusPlaces = itemGenerator.GetBonusBouclierPlaces();
+
+        foreach(var bonus in bonusPlaces)
+        {
+            if(bonus.GetItemTransform().position.y < hauteurLimite)
+            {
+                bonus.SetRamasse(true);
+                bonus.DesactivationItem();
             }
         }
     }
 
     [PunRPC]
-    private void PlacerItemsSurBiomeRPC(string positionsArmesBleuesData, string positionsArmesVertesData, string positionsArmesRougesData)
+    private void PlacerItemsSurBiomeRPC(string positionsArmesBleuesData, string positionsArmesVertesData, string positionsArmesRougesData, string positionsBonusSoinsData, string positionsBonusBouclierData)
     {
         //split des datas en listes pour en extraire les coordonnées
         var positionsArmesBleues = positionsArmesBleuesData.Split('_');
         var positionsArmesVertes = positionsArmesVertesData.Split('_');
         var positionsArmesRouges = positionsArmesRougesData.Split('_');
+        var positionsBonusSoins = positionsBonusSoinsData.Split('_');
+        var positionsBonusBouclier = positionsBonusBouclierData.Split('_');
 
         foreach (var position in positionsArmesBleues)
         {
@@ -267,6 +325,24 @@ public class GestionMapScript : MonoBehaviour
             Vector3 pos = new Vector3(float.Parse(extract[0]), float.Parse(extract[1]), float.Parse(extract[2]));
 
             itemGenerator.GenererArmeRouge(pos);
+        }
+
+        foreach(var position in positionsBonusSoins)
+        {
+            var extract = position.Split('/');
+
+            Vector3 pos = new Vector3(float.Parse(extract[0]), float.Parse(extract[1]), float.Parse(extract[2]));
+
+            itemGenerator.GenererBonusSoins(pos);
+        }
+
+        foreach (var position in positionsBonusBouclier)
+        {
+            var extract = position.Split('/');
+
+            Vector3 pos = new Vector3(float.Parse(extract[0]), float.Parse(extract[1]), float.Parse(extract[2]));
+
+            itemGenerator.GenererBonusBouclier(pos);
         }
     }
 }
