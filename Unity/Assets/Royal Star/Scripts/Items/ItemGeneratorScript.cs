@@ -250,6 +250,7 @@ public class ItemGeneratorScript : MonoBehaviour
         armeBleue.ActivationItem();
         armeBleue.SetPosition(position);
         armeBleue.SetPose(false);
+        armeBleue.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesBleuesPlacees.Add(armeBleue);
@@ -273,6 +274,7 @@ public class ItemGeneratorScript : MonoBehaviour
         armeVerte.ActivationItem();
         armeVerte.SetPosition(position);
         armeVerte.SetPose(false);
+        armeVerte.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesVertesPlacees.Add(armeVerte);
@@ -296,6 +298,7 @@ public class ItemGeneratorScript : MonoBehaviour
         armeRouge.ActivationItem();
         armeRouge.SetPosition(position);
         armeRouge.SetPose(false);
+        armeRouge.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesRougesPlacees.Add(armeRouge);
@@ -319,6 +322,7 @@ public class ItemGeneratorScript : MonoBehaviour
         bonus.ActivationItem();
         bonus.SetPosition(position);
         bonus.SetPose(false);
+        bonus.SetRamasse(false);
 
         //ajout du bonus dans la liste des bonus de soins placés
         bonusSoinsPlaces.Add(bonus);
@@ -342,6 +346,7 @@ public class ItemGeneratorScript : MonoBehaviour
         bonus.ActivationItem();
         bonus.SetPosition(position);
         bonus.SetPose(false);
+        bonus.SetRamasse(false);
 
         //ajout du bonus dans la liste des bonus de soins placés
         bonusBouclierPlaces.Add(bonus);
