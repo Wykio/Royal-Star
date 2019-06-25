@@ -16,6 +16,10 @@ namespace MapGeneration
 
         [Header("Matériaux")]
         [SerializeField] private Material[] listeMateriauxSol = new Material[4];
+        [SerializeField] private Material[] listeMateriauxBiomeNormal;
+        [SerializeField] private Material[] listeMateriauxBiomeGlace;
+        [SerializeField] private Material[] listeMateriauxBiomeFeu;
+        [SerializeField] private Material[] listeMateriauxBiomeRadiation;
 
         [Header("Paramétrage")]
         [SerializeField] private int hauteurBiome;
@@ -173,9 +177,8 @@ namespace MapGeneration
             terrain.name = "SolBiome";
 
             //application du matérial du sol en fonction du type de biome
-            DecorExposerScript decorExposer = terrain.GetComponent<DecorExposerScript>();
-            Debug.Log("MATERIAL : " + listeMateriauxSol[typeBiome].name);
-            decorExposer.setRenderer(listeMateriauxSol[typeBiome]);
+            DecorExposerScript solExposer = terrain.GetComponent<DecorExposerScript>();
+            solExposer.setRenderer(listeMateriauxSol[typeBiome]);
 
             //pour chaque valeur du tableau
             for (int i = 0; i < tailleBiome; i++)
@@ -197,6 +200,25 @@ namespace MapGeneration
                         int indice = int.Parse(dataNum[0]);
                         GameObject decor = listePrefabDecors[indice];
                         decor = (GameObject)Instantiate(decor);
+
+                        //attribution du matérial
+                        DecorExposerScript decorExposer = decor.GetComponent<DecorExposerScript>();
+                        
+                        switch(typeBiome)
+                        {
+                            case 0:
+                                decorExposer.setRenderer(listeMateriauxBiomeNormal[UnityEngine.Random.Range(0, listeMateriauxBiomeNormal.Length)]);
+                                break;
+                            case 1:
+                                decorExposer.setRenderer(listeMateriauxBiomeGlace[UnityEngine.Random.Range(0, listeMateriauxBiomeGlace.Length)]);
+                                break;
+                            case 2:
+                                decorExposer.setRenderer(listeMateriauxBiomeFeu[UnityEngine.Random.Range(0, listeMateriauxBiomeFeu.Length)]);
+                                break;
+                            case 3:
+                                decorExposer.setRenderer(listeMateriauxBiomeRadiation[UnityEngine.Random.Range(0, listeMateriauxBiomeRadiation.Length)]);
+                                break;
+                        }
 
                         //placement du décor
                         Vector3 position = new Vector3((i * 1000 + 500), hauteurBiome+1.5f, (j * 1000 + 500));
