@@ -90,4 +90,6 @@ MonoBehaviour:
   - LancerChronosInterfacesRPC
   - GenererBonusBouclierRPC
   - GenererBonusSoinsRPC
+  - EnvoyerTypeBiomeRPC
+  - LancerGestionLumiereRPC
   DisableAutoOpenWizard: 1

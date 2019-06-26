@@ -29,6 +29,7 @@ namespace MapGeneration
         [Header("Références")]
         [SerializeField] private PhotonView photonView;
         [SerializeField] private GestionMapScript gestionnaireMap;
+        [SerializeField] private GestionLumièreScript gestionLumieres;
 
         public event Action<string> majInterface;
         public event Action mapGenereePourTous;
@@ -94,8 +95,9 @@ namespace MapGeneration
                 //retirer le "_" en fin de string
                 data = data.Substring(0, data.Length - 1);
 
-                //choix du type de biome au hasard
+                //choix du type de biome au hasard et envoi aux autres clients pour la gestion des lumières
                 typeBiome = UnityEngine.Random.Range(0, 3);
+                EnvoyerTypeBiome(typeBiome);
 
                 //envoi de la RPC aux clients
                 GenererDecor(data, generator.getTabRotation(), generator.getTabPortail(), typeBiome);
@@ -125,6 +127,15 @@ namespace MapGeneration
             if (PhotonNetwork.IsMasterClient)
             {
                 photonView.RPC("GenererDecorViaTableauRPC", RpcTarget.All, data, dataRotation, dataPortail, typeBiome, tailleBiome, hauteurBiome);
+            }
+        }
+
+        //fonction pour envoyer le type de biome aux clients pour la gestion des lumières
+        public void EnvoyerTypeBiome(int type)
+        {
+            if(PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("EnvoyerTypeBiomeRPC", RpcTarget.All, type);
             }
         }
 
@@ -319,6 +330,12 @@ namespace MapGeneration
 
             //une fois que le biome est généré, le client envoie sa confirmation
             photonView.RPC("confirmationClientRPC", RpcTarget.MasterClient);
+        }
+
+        [PunRPC]
+        private void EnvoyerTypeBiomeRPC(int type)
+        {
+            gestionLumieres.AjouterTypeBiome(type);
         }
     }
 }
