@@ -30,6 +30,7 @@ namespace MapGeneration
         [SerializeField] private PhotonView photonView;
         [SerializeField] private GestionMapScript gestionnaireMap;
         [SerializeField] private GestionLumièreScript gestionLumieres;
+        [SerializeField] private ImpactBiomeScript gestionEffetsBiomes;
 
         public event Action<string> majInterface;
         public event Action mapGenereePourTous;
@@ -96,7 +97,7 @@ namespace MapGeneration
                 data = data.Substring(0, data.Length - 1);
 
                 //choix du type de biome au hasard et envoi aux autres clients pour la gestion des lumières
-                typeBiome = UnityEngine.Random.Range(0, 3);
+                typeBiome = UnityEngine.Random.Range(0, 4);
                 EnvoyerTypeBiome(typeBiome);
 
                 //envoi de la RPC aux clients
@@ -336,6 +337,7 @@ namespace MapGeneration
         private void EnvoyerTypeBiomeRPC(int type)
         {
             gestionLumieres.AjouterTypeBiome(type);
+            gestionEffetsBiomes.AjouterTypeBiome(type);
         }
     }
 }

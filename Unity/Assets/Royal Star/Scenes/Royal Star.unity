@@ -446,6 +446,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IndiceJoueur: 13
   photonView: {fileID: 194180253}
+--- !u!108 &236739282 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 6531911842262703576, guid: 2cac0909edfb77f49a450ad080eed238,
+    type: 3}
+  m_PrefabInstance: {fileID: 607106646}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &244978148
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +1297,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cf49af71cda5df4586a99bf7188dfba, type: 3}
+--- !u!108 &574577284 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 9000359032846513192, guid: 54dbc4fc7aa8d7249b275494eaee20de,
+    type: 3}
+  m_PrefabInstance: {fileID: 2061014328}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &574712838
 GameObject:
   m_ObjectHideFlags: 0
@@ -2694,6 +2706,7 @@ GameObject:
   - component: {fileID: 1355495023}
   - component: {fileID: 1355495026}
   - component: {fileID: 1355495027}
+  - component: {fileID: 1355495028}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -2777,6 +2790,7 @@ MonoBehaviour:
   photonView: {fileID: 1355495023}
   gestionnaireMap: {fileID: 1355495026}
   gestionLumieres: {fileID: 1355495027}
+  gestionEffetsBiomes: {fileID: 1355495028}
 --- !u!114 &1355495026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2823,16 +2837,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355495022}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7d32f3c5b553e6409ce6a150f966bd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lumieresDesBiomes:
-  - {fileID: 2652187307520474354, guid: 59317be9adf6e364fb7cfb709b105551, type: 3}
-  - {fileID: 8870487897761738416, guid: 44283b1023142db47b9d73555cdf0690, type: 3}
-  - {fileID: 9000359032846513192, guid: 54dbc4fc7aa8d7249b275494eaee20de, type: 3}
-  - {fileID: 6531911842262703576, guid: 2cac0909edfb77f49a450ad080eed238, type: 3}
+  - {fileID: 1463855845}
+  - {fileID: 1680007875}
+  - {fileID: 574577284}
+  - {fileID: 236739282}
   joueurs:
   - {fileID: 1685602666}
   - {fileID: 1410908513}
@@ -2854,6 +2868,40 @@ MonoBehaviour:
   - {fileID: 357079682}
   - {fileID: 1082048856}
   - {fileID: 1942909334}
+--- !u!114 &1355495028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355495022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b420af64bc7f743978295074ace979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vaisseaux:
+  - {fileID: 1685602666}
+  - {fileID: 1410908513}
+  - {fileID: 1683379792}
+  - {fileID: 1115189411}
+  - {fileID: 1899943747}
+  - {fileID: 1177207101}
+  - {fileID: 1055898593}
+  - {fileID: 142806262}
+  - {fileID: 55887753}
+  - {fileID: 1486859626}
+  - {fileID: 1841439952}
+  - {fileID: 899321688}
+  - {fileID: 1207565348}
+  - {fileID: 879927570}
+  - {fileID: 355726106}
+  - {fileID: 479466719}
+  - {fileID: 1063694987}
+  - {fileID: 357079682}
+  - {fileID: 1082048856}
+  - {fileID: 1942909334}
+  gameController: {fileID: 1815358701}
 --- !u!1 &1376070142
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,6 +3124,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1463855845 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 2652187307520474354, guid: 59317be9adf6e364fb7cfb709b105551,
+    type: 3}
+  m_PrefabInstance: {fileID: 2652187307139114649}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1486347988 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 744881385111415069, guid: 49f66b7044930fb43b93c1cef3a98b15,
@@ -3784,6 +3838,12 @@ MonoBehaviour:
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!108 &1680007875 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 8870487897761738416, guid: 44283b1023142db47b9d73555cdf0690,
+    type: 3}
+  m_PrefabInstance: {fileID: 1747899332}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1683379792 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5117224502530415047, guid: 9cf49af71cda5df4586a99bf7188dfba,

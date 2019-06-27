@@ -7,6 +7,8 @@ public class GestionLumièreScript : MonoBehaviour
 {
     [SerializeField] Light[] lumieresDesBiomes;
     [SerializeField] ShipExposer[] joueurs;
+
+    private Light lumiereCourante;
     private Queue<int> typesBiomesEnJeu = new Queue<int>(4);
     private int hauteurCourante = 0;
     private ShipExposer joueurLocal;
@@ -53,11 +55,12 @@ public class GestionLumièreScript : MonoBehaviour
     //activer la lumière indiquée par la
     public void ActiverLumiere()
     {
-        foreach(var lumiere in lumieresDesBiomes)
-        {
-            lumiere.gameObject.SetActive(false);
-        }
+        if (lumiereCourante != null) lumiereCourante.gameObject.SetActive(false);
 
-        lumieresDesBiomes[typesBiomesEnJeu.Dequeue()].gameObject.SetActive(true);
+        int indice = typesBiomesEnJeu.Dequeue();
+
+        lumieresDesBiomes[indice].gameObject.SetActive(true);
+
+        lumiereCourante = lumieresDesBiomes[indice];
     }
 }
