@@ -42,6 +42,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
     [SerializeField] public Text ChronoBiome;
+    [SerializeField] public GameObject bouclierFX;
 
     [Header("Stats et facteurs")]
     [SerializeField] private int healthPoints = 200;
@@ -98,6 +99,7 @@ public class ShipExposer : MonoBehaviour
             else
             {
                 if (shieldPoints > 0) shieldPoints = 0;
+                bouclierFX.SetActive(false);
             }
         }
     }
@@ -170,6 +172,7 @@ public class ShipExposer : MonoBehaviour
             {
                 healthPoints -= Mathf.CeilToInt((damage - shieldPoints) * facteurDegatsPV);
                 shieldPoints = 0;
+                bouclierFX.SetActive(false);
             }
         }
         else
@@ -209,6 +212,8 @@ public class ShipExposer : MonoBehaviour
     {
         shieldPoints += recharge;
         if (shieldPoints > 100) shieldPoints = 100;
+
+        if (!bouclierFX.activeSelf) bouclierFX.SetActive(true);
     }
 
     public float getBoost()
