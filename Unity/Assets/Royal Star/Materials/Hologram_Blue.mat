@@ -80,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Alpha: 0.35
+    - _Alpha: 0.313
     - _Brightness: 0.77
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -96,13 +96,13 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GlowSpeed: 10
-    - _GlowTiling: 0.06
+    - _GlowTiling: 0.13
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RimFallness: 0.5
-    - _RimPower: 0.5
+    - _RimPower: 1.29
     - _RimStrength: 1
     - _ScanSpeed: -1.58
     - _ScanTiling: 10
