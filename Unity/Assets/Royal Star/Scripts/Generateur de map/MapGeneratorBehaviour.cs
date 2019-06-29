@@ -319,7 +319,7 @@ namespace MapGeneration
                     GameObject portailDestination = portailPrefab;
                     portailDestination = (GameObject)Instantiate(portailDestination);
                     portailDestination.name = "Portail Destination";
-                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 5018, float.Parse(extract[3]));
+                    portailDestination.transform.position = new Vector3(float.Parse(extract[2]), hauteurBiome + 5400, float.Parse(extract[3]));
 
                     TeleporterController transport = portail.GetComponent<TeleporterController>();
                     transport.connectedTeleport = portailDestination;
