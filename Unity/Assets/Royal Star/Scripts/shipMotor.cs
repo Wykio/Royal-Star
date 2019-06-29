@@ -29,6 +29,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private IngameInterfaceManagerScript ingameInterfaceManager;
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
+    private bool lumieresLancees { get; set; }
 
     [Header("Attribut pour le client")]
     //booléen pour savoir si le menu est affiché ou non
@@ -37,6 +38,7 @@ public class shipMotor : MonoBehaviour
     [Header("Gestion de la Map")]
     [SerializeField] private GestionMapScript gestionnaireMap;
     [SerializeField] private float hauteurMort;
+    [SerializeField] private GestionLumièreScript gestionLumiere;
 
     #region Events
     public event Action AfficherMenuPause;
@@ -290,6 +292,12 @@ public class shipMotor : MonoBehaviour
             return;
         }
 
+        if(!lumieresLancees)
+        {
+            photonView.RPC("LancerGestionLumiereRPC", RpcTarget.All);
+            lumieresLancees = true;
+        }
+
         UpdateGameState();
     }
 
@@ -490,6 +498,12 @@ public class shipMotor : MonoBehaviour
     private void DesactivationVaisseauRPC(int idVaisseau, int playerActorNumber)
     {
         vaisseaux[idVaisseau].ShipRootGameObject.SetActive(false);
+    }
+
+    [PunRPC]
+    private void LancerGestionLumiereRPC()
+    {
+        gestionLumiere.enabled = true;
     }
 
     private void ChooseAndSubscribeToOnlineIntentReceivers()
