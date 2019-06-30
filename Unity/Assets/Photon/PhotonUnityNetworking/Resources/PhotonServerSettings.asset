@@ -92,4 +92,5 @@ MonoBehaviour:
   - GenererBonusSoinsRPC
   - EnvoyerTypeBiomeRPC
   - LancerGestionLumiereRPC
+  - ShootRPC
   DisableAutoOpenWizard: 1

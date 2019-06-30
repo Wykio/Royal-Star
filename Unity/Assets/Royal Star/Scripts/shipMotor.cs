@@ -117,7 +117,7 @@ public class shipMotor : MonoBehaviour
             //S'il veut tirer
             if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
             {
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
+                photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(true);
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
@@ -504,6 +504,19 @@ public class shipMotor : MonoBehaviour
     private void LancerGestionLumiereRPC()
     {
         gestionLumiere.enabled = true;
+    }
+
+    [PunRPC]
+    private void ShootRPC(int idTireur, int armeActive)
+    {
+        for(int i = 0; i < vaisseaux.Length; i++)
+        {
+            if(vaisseaux[i].playerID == idTireur)
+            {
+                vaisseaux[i].ShipWeapons[armeActive].Shoot();
+                break;
+            }
+        }
     }
 
     private void ChooseAndSubscribeToOnlineIntentReceivers()
