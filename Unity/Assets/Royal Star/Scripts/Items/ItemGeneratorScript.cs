@@ -45,8 +45,6 @@ public class ItemGeneratorScript : MonoBehaviour
     private Queue<BonusExposer> bonusBouclierLibres;
     private List<BonusExposer> bonusBouclierPlaces;
 
-    private bool test = false;
-
     //génération du pooling des items
     public void Awake()
     {

@@ -54,7 +54,6 @@ public class shipMotor : MonoBehaviour
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
-        gameController.MasterclientSwitch += FinJeu;
         gameController.FinDePartie += FinPartieRetourMenu;
     }
 
@@ -295,7 +294,7 @@ public class shipMotor : MonoBehaviour
         if(!lumieresLancees)
         {
             photonView.RPC("LancerGestionLumiereRPC", RpcTarget.All);
-            lumieresLancees = true;
+            photonView.RPC("LumieresLanceesPourTousRPC", RpcTarget.All);
         }
 
         UpdateGameState();
@@ -405,10 +404,10 @@ public class shipMotor : MonoBehaviour
         }
 
         ActiverIntentReceivers();
-        gameStarted = true;
+        photonView.RPC("GameStartPourTousRPC", RpcTarget.All);
 
+        photonView.RPC("GestionMapLanceePourTousRPC", RpcTarget.All);
         gestionnaireMap.SetDebutGame(Time.time);
-        StartCoroutine(gestionnaireMap.GestionMap());
     }
 
     public void LancerChronosInterfaces(int dureeBiome)
@@ -519,6 +518,25 @@ public class shipMotor : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    private void GameStartPourTousRPC()
+    {
+        gameStarted = true;
+    }
+
+    [PunRPC]
+    void LumieresLanceesPourTousRPC()
+    {
+        lumieresLancees = true;
+    }
+
+    [PunRPC]
+    void GestionMapLanceePourTousRPC()
+    {
+        gestionnaireMap.SetDebutGame(Time.time);
+        StartCoroutine(gestionnaireMap.GestionMap(0));
+    }
+
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
         activatedIntentReceivers = onlineIntentReceivers;
@@ -544,7 +562,7 @@ public class shipMotor : MonoBehaviour
     }
     
     //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
-    private void ActiverIntentReceivers()
+    public void ActiverIntentReceivers()
     {
         if (activatedIntentReceivers == null)
         {

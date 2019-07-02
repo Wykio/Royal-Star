@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class BulletPoolManagerScript : MonoBehaviour
 {
-    [SerializeField]
-    private bool raycast;
-
-    [SerializeField]
-    private float range;
-
-    [SerializeField]
-    private int damage;
-
+    [SerializeField] private bool raycast;
+    [SerializeField] private float range;
+    [SerializeField] private int damage;
     //prefab du laser
-    [SerializeField]
-    private GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletPrefab;
 
     //tableau de l'ensemble des laser déjà instantiés
     private BulletExposerScript[] alreadyInstanciatedBullets;
