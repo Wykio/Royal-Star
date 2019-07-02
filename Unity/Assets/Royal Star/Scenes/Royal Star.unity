@@ -4359,6 +4359,7 @@ MonoBehaviour:
   waitForPlayersToPlay: 1
   DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
+  gameController: {fileID: 1815358701}
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
   boutonQuitterJeu: {fileID: 982612780}
@@ -5533,7 +5534,7 @@ PrefabInstance:
     - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.6999397
+      value: -3.699936
       objectReference: {fileID: 0}
     - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
