@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
+using UnityEngine.AI;
 
 namespace MapGeneration
 {
@@ -156,6 +157,7 @@ namespace MapGeneration
             terrain.transform.localScale = new Vector3(1000 * tailleBiome, 3f, 1000 * tailleBiome);
             terrain.transform.position = new Vector3((1000 * tailleBiome)/2, hauteurBiome, (1000 * tailleBiome) / 2);
             terrain.name = "SolBiome";
+            terrain.AddComponent<NavMeshSurface>();
 
             //pour chaque valeur du tableau
             for (int i = 0; i < tailleBiome; i++)
