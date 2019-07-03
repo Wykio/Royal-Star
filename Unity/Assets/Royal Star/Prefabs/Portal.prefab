@@ -106,3 +106,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectedTeleport: {fileID: 0}
   distanceAfterTeleport: 25
+  sonPortail: {fileID: 8300000, guid: 117c9ea6fd4c31e498203c4127207e4c, type: 3}

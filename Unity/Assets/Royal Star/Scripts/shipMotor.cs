@@ -18,6 +18,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float dampingHeight;
     [SerializeField] private float utilisationBoost;
     [SerializeField] private float rechargeBoost;
+    [SerializeField] private AudioClip sonBoost;
 
     //composants Photon pour mise en réseau
     [Header("Composants Photon")]
@@ -113,6 +114,15 @@ public class shipMotor : MonoBehaviour
                 vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
             }
 
+            if(!intentReceiver.AirBoostActivate)
+            {
+                if(vaisseau.lecteurSon.clip == sonBoost && vaisseau.lecteurSon.isPlaying)
+                {
+                    vaisseau.lecteurSon.Stop();
+                    vaisseau.sonBoostEnCours = false;
+                }
+            }
+
             //S'il veut tirer
             if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
             {
@@ -142,6 +152,13 @@ public class shipMotor : MonoBehaviour
                 //si le vaisseau active le boost on gère ces intents
                 if (intentReceiver.AirBoostActivate && vaisseau.getBoostState())
                 {
+                    if(!vaisseau.sonBoostEnCours)
+                    {
+                        vaisseau.lecteurSon.clip = sonBoost;
+                        vaisseau.sonBoostEnCours = true;
+                        vaisseau.lecteurSon.Play();
+                    }
+                    
                     Vector3 applicatedForce = vaisseau.ShipTransform.forward * (speed * 1.5f) / weight;
 
                     if(intentReceiver.BoostForward || intentReceiver.BoostBackward)

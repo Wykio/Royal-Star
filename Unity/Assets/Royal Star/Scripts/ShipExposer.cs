@@ -17,6 +17,7 @@ public class ShipExposer : MonoBehaviour
     public Transform[] ShipHoverPoints;
     public Transform ShipCentreGravite;
     public Camera ShipCamera;
+    public AudioSource lecteurSon;
     public HitboxExposerScript ShipHitbox;
 
     [Header ("Slots d'armes")]
@@ -56,6 +57,7 @@ public class ShipExposer : MonoBehaviour
     private float nextFieldOfView; 
     
     private bool boostOK;
+    public bool sonBoostEnCours = false;
 
     public void SetFacteurs(float factPV, float factBouclier, float factUtilBoost, float factRechargeBouclier)
     {

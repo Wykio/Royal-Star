@@ -105,3 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemTransform: {fileID: 8010900120487265417}
+  pose: 1
+  ramasse: 0
+  sonArmeRamasse: {fileID: 8300000, guid: 401563ede53377a4c8223f9afdfdb04a, type: 3}
