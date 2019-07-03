@@ -1,38 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    // Portée de vue de l'IA
-    [SerializeField] float lookRadius = 10f;
+    private GameObject target;
 
-    private Transform target;
-    private NavMeshAgent agent;
+    [SerializeField] private float lookRange = 400.0f;
+    [SerializeField] private float targetDistance;
+    [SerializeField] private float followSpeed = 0.02f;
+    private RaycastHit shot;
     
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        target = PlayerManager.instance.player.transform;
+        target = EnemyManager.instance.AiTargets;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        float distance = Vector3.Distance(target.position, transform.position);
-
-        if (distance <= lookRadius)
+        transform.LookAt(target.transform);
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out shot))
         {
-            agent.SetDestination(target.position);
+            targetDistance = shot.distance;
+            if (targetDistance <= lookRange)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, followSpeed);
+            }
         }
     }
 
-    //affiche les sphéres de portée de vue
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lookRadius);
+        Gizmos.DrawWireSphere(transform.position, lookRange);
     }
 }
