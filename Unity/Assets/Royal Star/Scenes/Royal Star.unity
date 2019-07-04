@@ -2879,6 +2879,7 @@ MonoBehaviour:
   gestionnaireMap: {fileID: 1355495026}
   gestionLumieres: {fileID: 1355495027}
   gestionEffetsBiomes: {fileID: 1355495028}
+  gestionSon: {fileID: 124621611}
 --- !u!114 &1355495026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4651,6 +4652,7 @@ MonoBehaviour:
     type: 3}
   controlleurVaisseauxScript: {fileID: 1815358701}
   photonView: {fileID: 1829976070}
+  gestionSon: {fileID: 124621611}
   nbArmesBleues: 50
   nbArmesVertes: 45
   nbArmesRouges: 8

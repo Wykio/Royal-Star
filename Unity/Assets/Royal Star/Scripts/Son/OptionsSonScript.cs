@@ -25,15 +25,28 @@ public class OptionsSonScript : MonoBehaviour
         boutonRetour.onClick.AddListener(SauvegarderParametres);
     }
 
+    public float GetParametreBruitages()
+    {
+        return parametreSonBruitages;
+    }
+
+    public float GetParametreMusiques()
+    {
+        return parametreSonMusiques;
+    }
+
     //fonction pour afficher le menu d'option
     public void AfficherMenuOptions()
     {
         sliderBruitages.gameObject.SetActive(true);
+        sliderBruitages.value = parametreSonBruitages;
         sliderMusiques.gameObject.SetActive(true);
+        sliderMusiques.value = parametreSonMusiques;
         texteBruitages.gameObject.SetActive(true);
         texteMusiques.gameObject.SetActive(true);
         boutonRetour.interactable = true;
         boutonRetour.gameObject.SetActive(true);
+
     }
 
     //fonction pour masquer le menu d'option

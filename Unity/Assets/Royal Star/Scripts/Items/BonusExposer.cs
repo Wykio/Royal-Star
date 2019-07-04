@@ -23,6 +23,7 @@ public class BonusExposer : ItemExposerScript
                 if(vaisseau.getPV() < 200)
                 {
                     vaisseau.lecteurSon.clip = sonBonusRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
                     vaisseau.lecteurSon.Play();
                     vaisseau.Soins(montantBonus);
                     ramasse = true;
@@ -35,6 +36,7 @@ public class BonusExposer : ItemExposerScript
                 if (vaisseau.getBouclier() < 100)
                 {
                     vaisseau.lecteurSon.clip = sonBonusRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
                     vaisseau.lecteurSon.Play();
                     vaisseau.RechargeBouclier(montantBonus);
                     ramasse = true;

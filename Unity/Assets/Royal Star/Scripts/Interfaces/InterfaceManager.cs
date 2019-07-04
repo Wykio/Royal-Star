@@ -193,12 +193,16 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterMenuPause.interactable = true;
         reprendreMenuPause.gameObject.SetActive(true);
         reprendreMenuPause.interactable = true;
+        OptionButton.interactable = true;
+        OptionButton.gameObject.SetActive(true);
+        background.gameObject.SetActive(true);
 
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
         ActiverInterface();
+        
     }
 
     //masquer les boutons du menu pause
@@ -208,6 +212,9 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterMenuPause.interactable = false;
         reprendreMenuPause.gameObject.SetActive(false);
         reprendreMenuPause.interactable = false;
+        OptionButton.interactable = false;
+        OptionButton.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
 
         setInterfaceJeu();
     }

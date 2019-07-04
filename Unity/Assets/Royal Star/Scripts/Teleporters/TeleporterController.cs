@@ -7,6 +7,7 @@ using Photon.Pun;
 public class TeleporterController : MonoBehaviour
 {
     public GameObject connectedTeleport;
+    public OptionsSonScript gestionSon;
     public float distanceAfterTeleport = 1.0f;
     public AudioClip sonPortail;
 
@@ -24,6 +25,7 @@ public class TeleporterController : MonoBehaviour
                 if(vaisseau.playerID == PhotonNetwork.LocalPlayer.ActorNumber)
                 {
                     vaisseau.lecteurSon.clip = sonPortail;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
                     vaisseau.lecteurSon.Play();
                 }
 
