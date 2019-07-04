@@ -7,6 +7,8 @@ public class ItemExposerScript : MonoBehaviour
     [SerializeField] protected Transform itemTransform;
     [SerializeField] protected bool pose = true;
     [SerializeField] protected bool ramasse = false;
+    [SerializeField] private AudioClip sonArmeRamasse;
+    [SerializeField] protected OptionsSonScript gestionSon;
 
     public void SetPose(bool b)
     {
@@ -16,6 +18,16 @@ public class ItemExposerScript : MonoBehaviour
     public Transform GetItemTransform()
     {
         return itemTransform;
+    }
+
+    public OptionsSonScript getGestionSon()
+    {
+        return gestionSon;
+    }
+
+    public void SetGestionSon(OptionsSonScript o)
+    {
+        gestionSon = o;
     }
 
     public void SetRamasse(bool b)
@@ -55,6 +67,9 @@ public class ItemExposerScript : MonoBehaviour
             {
                 if(vaisseau.GetSlotVideArmesBleues())
                 {
+                    vaisseau.lecteurSon.clip = sonArmeRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                    vaisseau.lecteurSon.Play();
                     vaisseau.ActiverArmeBleue();
                     ramasse = true;
                     SetPose(true);
@@ -67,6 +82,9 @@ public class ItemExposerScript : MonoBehaviour
                 {
                     if(vaisseau.GetSlotVideArmesVertes())
                     {
+                        vaisseau.lecteurSon.clip = sonArmeRamasse;
+                        vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                        vaisseau.lecteurSon.Play();
                         vaisseau.ActiverArmeVerte();
                         ramasse = true;
                         SetPose(true);
@@ -79,6 +97,9 @@ public class ItemExposerScript : MonoBehaviour
                     {
                         if(vaisseau.GetSlotVideArmeRouge())
                         {
+                            vaisseau.lecteurSon.clip = sonArmeRamasse;
+                            vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                            vaisseau.lecteurSon.Play();
                             vaisseau.ActiverArmeRouge();
                             ramasse = true;
                             SetPose(true);

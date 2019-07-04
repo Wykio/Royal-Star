@@ -18,6 +18,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float dampingHeight;
     [SerializeField] private float utilisationBoost;
     [SerializeField] private float rechargeBoost;
+    [SerializeField] private AudioClip sonBoost;
 
     //composants Photon pour mise en réseau
     [Header("Composants Photon")]
@@ -54,7 +55,6 @@ public class shipMotor : MonoBehaviour
         gameController.OnlinePret += ChooseAndSubscribeToOnlineIntentReceivers;
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
-        gameController.MasterclientSwitch += FinJeu;
         gameController.FinDePartie += FinPartieRetourMenu;
     }
 
@@ -114,10 +114,19 @@ public class shipMotor : MonoBehaviour
                 vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
             }
 
+            if(!intentReceiver.AirBoostActivate)
+            {
+                if(vaisseau.lecteurSon.clip == sonBoost && vaisseau.lecteurSon.isPlaying)
+                {
+                    vaisseau.lecteurSon.Stop();
+                    vaisseau.sonBoostEnCours = false;
+                }
+            }
+
             //S'il veut tirer
             if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
             {
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
+                photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(true);
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
@@ -143,6 +152,13 @@ public class shipMotor : MonoBehaviour
                 //si le vaisseau active le boost on gère ces intents
                 if (intentReceiver.AirBoostActivate && vaisseau.getBoostState())
                 {
+                    if(!vaisseau.sonBoostEnCours)
+                    {
+                        vaisseau.lecteurSon.clip = sonBoost;
+                        vaisseau.sonBoostEnCours = true;
+                        vaisseau.lecteurSon.Play();
+                    }
+                    
                     Vector3 applicatedForce = vaisseau.ShipTransform.forward * (speed * 1.5f) / weight;
 
                     if(intentReceiver.BoostForward || intentReceiver.BoostBackward)
@@ -295,7 +311,7 @@ public class shipMotor : MonoBehaviour
         if(!lumieresLancees)
         {
             photonView.RPC("LancerGestionLumiereRPC", RpcTarget.All);
-            lumieresLancees = true;
+            photonView.RPC("LumieresLanceesPourTousRPC", RpcTarget.All);
         }
 
         UpdateGameState();
@@ -405,10 +421,10 @@ public class shipMotor : MonoBehaviour
         }
 
         ActiverIntentReceivers();
-        gameStarted = true;
+        photonView.RPC("GameStartPourTousRPC", RpcTarget.All);
 
+        photonView.RPC("GestionMapLanceePourTousRPC", RpcTarget.All);
         gestionnaireMap.SetDebutGame(Time.time);
-        StartCoroutine(gestionnaireMap.GestionMap());
     }
 
     public void LancerChronosInterfaces(int dureeBiome)
@@ -506,6 +522,38 @@ public class shipMotor : MonoBehaviour
         gestionLumiere.enabled = true;
     }
 
+    [PunRPC]
+    private void ShootRPC(int idTireur, int armeActive)
+    {
+        for(int i = 0; i < vaisseaux.Length; i++)
+        {
+            if(vaisseaux[i].playerID == idTireur)
+            {
+                vaisseaux[i].ShipWeapons[armeActive].Shoot();
+                break;
+            }
+        }
+    }
+
+    [PunRPC]
+    private void GameStartPourTousRPC()
+    {
+        gameStarted = true;
+    }
+
+    [PunRPC]
+    void LumieresLanceesPourTousRPC()
+    {
+        lumieresLancees = true;
+    }
+
+    [PunRPC]
+    void GestionMapLanceePourTousRPC()
+    {
+        gestionnaireMap.SetDebutGame(Time.time);
+        StartCoroutine(gestionnaireMap.GestionMap(0));
+    }
+
     private void ChooseAndSubscribeToOnlineIntentReceivers()
     {
         activatedIntentReceivers = onlineIntentReceivers;
@@ -531,7 +579,7 @@ public class shipMotor : MonoBehaviour
     }
     
     //activer l'ensemble des IntentReceivers de chaque vaisseau de la room
-    private void ActiverIntentReceivers()
+    public void ActiverIntentReceivers()
     {
         if (activatedIntentReceivers == null)
         {

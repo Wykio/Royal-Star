@@ -16,6 +16,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [SerializeField] public bool waitForPlayersToPlay = false;
     [SerializeField] public int DureeMatchmaking = 30;
     [SerializeField] MapGeneratorBehaviour mapGenerator;
+    [SerializeField] shipMotor gameController;
     #endregion
 
     #region Interface
@@ -45,7 +46,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action<int, int> JoueurARejoint;
     public event Action<int, int> JoueurAQuitte;
     public event Action Deconnecte;
-    public event Action MasterclientSwitch;
     public event Action FinDePartie;
     public event Action decompteMatchmaking;
     public event Action masquerMenuPause;
@@ -103,25 +103,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         //indiquer au masterclient que le client va quitter la room
         photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
-
-        //si le joueur souhaitant quitter est le masterclient, on donne ce role à un autre joueur
-        //if(PhotonNetwork.LocalPlayer.IsMasterClient)
-        //{
-        //    Debug.Log("SWITCH MASTERCLIENT --- Recherche de joueur");
-        //    //récupération d'un joueur dans la liste
-        //    int i = 0;
-        //    for(; i < PhotonNetwork.PlayerListOthers.Length; i++)
-        //    {
-        //        //si ce joueur existe on le met en masterclient
-        //        if(PhotonNetwork.PlayerListOthers[i] != null)
-        //        {
-        //            Debug.Log("SWITCH MASTERCLIENT --- nouveau masterclient trouvé");
-        //            break;
-        //        }
-        //    }
-
-        //    PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerListOthers[i]);
-        //}
 
         //quitter la room
         PhotonNetwork.LeaveRoom();
@@ -182,7 +163,11 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        MasterclientSwitch?.Invoke();
+        if(newMasterClient == PhotonNetwork.LocalPlayer)
+        {
+            Debug.Log("NOUVEAU MASTERCLIENT : " + newMasterClient.ActorNumber + " Ce joueur est : " + PhotonNetwork.LocalPlayer.ActorNumber);
+            //gameController.ActiverIntentReceivers();
+        }
     }
     
     private IEnumerator GestionLobby()
@@ -304,14 +289,4 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
         JoueurAQuitte?.Invoke(i, playerActorNumber);
     }
-    
-    /*
-    // coroutine pour faire revenir le joueur au menu si personne rejoins la room
-    private IEnumerator WaitForOtherPlayerToLaunchGame()
-    {
-        yield return new WaitForSeconds(10f);
-        FinDePartie?.Invoke();
-        AfficherMenu();
-    }
-    */
 }

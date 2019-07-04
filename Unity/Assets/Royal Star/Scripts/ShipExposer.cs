@@ -17,6 +17,7 @@ public class ShipExposer : MonoBehaviour
     public Transform[] ShipHoverPoints;
     public Transform ShipCentreGravite;
     public Camera ShipCamera;
+    public AudioSource lecteurSon;
     public HitboxExposerScript ShipHitbox;
 
     [Header ("Slots d'armes")]
@@ -56,6 +57,7 @@ public class ShipExposer : MonoBehaviour
     private float nextFieldOfView; 
     
     private bool boostOK;
+    public bool sonBoostEnCours = false;
 
     public void SetFacteurs(float factPV, float factBouclier, float factUtilBoost, float factRechargeBouclier)
     {
@@ -77,6 +79,7 @@ public class ShipExposer : MonoBehaviour
         nextFieldOfView = ShipCamera.fieldOfView;
     }
 
+    #region effets des biomes
     public void EffetRadiation(int degat)
     {
         if(PhotonNetwork.IsMasterClient)
@@ -103,6 +106,7 @@ public class ShipExposer : MonoBehaviour
             }
         }
     }
+    #endregion
 
     public IEnumerator GestionChronometre(int dureeBiome, int dureeOuverturePortails)
     {
@@ -187,11 +191,6 @@ public class ShipExposer : MonoBehaviour
         }
     }
 
-    public void ChangeWeapon(int index)
-    {
-        currentWeaponIndex = index;
-    }
-
     public int getPV()
     {
         return healthPoints;
@@ -245,9 +244,15 @@ public class ShipExposer : MonoBehaviour
         boostOK = b;
     }
 
+    #region gestion des armes
     public int getArmeActive()
     {
         return armeActive;
+    }
+
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
     }
 
     //fonction pour savoir si le vaisseau a des slots d'arme bleues vide
@@ -370,7 +375,9 @@ public class ShipExposer : MonoBehaviour
         }
         Debug.Log("SHIP EXPOSER arme active = " + armeActive);
     }
+    #endregion
 
+    #region gestion du field of view
     public float GetFieldOfView()
     {
         return nextFieldOfView;
@@ -417,6 +424,7 @@ public class ShipExposer : MonoBehaviour
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
         }
     }
+    #endregion
 
     private void Update()
     {

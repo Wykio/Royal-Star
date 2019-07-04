@@ -48,6 +48,7 @@ public class GestionMapScript : MonoBehaviour
 
     private List<List<GameObject>> listesPortailsParBiome = new List<List<GameObject>>();
     private float debutGame;
+    private bool partieEnCours = false;
 
     public void SetDebutGame(float t)
     {
@@ -71,17 +72,22 @@ public class GestionMapScript : MonoBehaviour
     }
 
     //Coroutine pour gérer les fermetures et ouvertures des portails ainsi que les apparitions des items
-    public IEnumerator GestionMap()
+    public IEnumerator GestionMap(int indicePartieEnCours)
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            //placer les items du premier biome
-            PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
+            if(!partieEnCours)
+            {
+                //placer les items du premier biome
+                PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
 
-            //lancement des chronos pour le premier biome
-            ShipManager.LancerChronosInterfaces();
+                //lancement des chronos pour le premier biome
+                ShipManager.LancerChronosInterfaces();
 
-            for (int i = 0; i < listesPortailsParBiome.Count; i++)
+                photonView.RPC("PartieEnCoursPourTousRPC", RpcTarget.All);
+            }
+
+            for (int i = indicePartieEnCours; i < listesPortailsParBiome.Count; i++)
             {
                 //attendre le temps de la durée du biome avant d'ouvrir les portails
                 yield return new WaitForSeconds(dureeBiome - dureeOuverturePortails);
@@ -121,7 +127,7 @@ public class GestionMapScript : MonoBehaviour
                 //lancement des chronos pour le nouveau biome
                 ShipManager.LancerChronosInterfaces();
 
-                biomeCourant++;
+                photonView.RPC("PassageBiomePourTousRPC", RpcTarget.All);
             }
         }
     }
@@ -344,5 +350,17 @@ public class GestionMapScript : MonoBehaviour
 
             itemGenerator.GenererBonusBouclier(pos);
         }
+    }
+
+    [PunRPC]
+    private void PartieEnCoursPourTousRPC()
+    {
+        partieEnCours = true;
+    }
+
+    [PunRPC]
+    private void PassageBiomePourTousRPC()
+    {
+        biomeCourant++;
     }
 }

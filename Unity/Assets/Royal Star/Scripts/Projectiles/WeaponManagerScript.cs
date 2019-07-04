@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class WeaponManagerScript : MonoBehaviour
 {
-    [SerializeField]
-    private bool automatic;
-    
-    [SerializeField]
-    private float popInterval;
-
-    [SerializeField]
-    private BulletPoolManagerScript bulletPoolManager;
-
-    [SerializeField]
-    private Transform bulletPopPosition;
-
-    [SerializeField]
-    private float weight;
+    [SerializeField] private bool automatic;
+    [SerializeField] private float popInterval;
+    [SerializeField] private BulletPoolManagerScript bulletPoolManager;
+    [SerializeField] private Transform bulletPopPosition;
+    [SerializeField] private float weight;
 
     private float nextPopTime = float.MinValue;
 

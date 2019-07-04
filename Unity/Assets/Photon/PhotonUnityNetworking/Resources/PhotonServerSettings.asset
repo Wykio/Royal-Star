@@ -92,4 +92,10 @@ MonoBehaviour:
   - GenererBonusSoinsRPC
   - EnvoyerTypeBiomeRPC
   - LancerGestionLumiereRPC
+  - ShootRPC
+  - GameStartPourTousRPC
+  - LumieresLanceesPourTousRPC
+  - GestionMapLanceePourTousRPC
+  - PartieEnCoursPourTousRPC
+  - PassageBiomePourTousRPC
   DisableAutoOpenWizard: 1

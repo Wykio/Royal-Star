@@ -6,6 +6,7 @@ public class BonusExposer : ItemExposerScript
 {
     [SerializeField] private bool soinOuBouclier;
     [SerializeField] private int montantBonus;
+    [SerializeField] private AudioClip sonBonusRamasse;
 
     void OnTriggerEnter(Collider other)
     {
@@ -21,6 +22,9 @@ public class BonusExposer : ItemExposerScript
             {
                 if(vaisseau.getPV() < 200)
                 {
+                    vaisseau.lecteurSon.clip = sonBonusRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                    vaisseau.lecteurSon.Play();
                     vaisseau.Soins(montantBonus);
                     ramasse = true;
                     SetPose(true);
@@ -31,6 +35,9 @@ public class BonusExposer : ItemExposerScript
             {
                 if (vaisseau.getBouclier() < 100)
                 {
+                    vaisseau.lecteurSon.clip = sonBonusRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                    vaisseau.lecteurSon.Play();
                     vaisseau.RechargeBouclier(montantBonus);
                     ramasse = true;
                     SetPose(true);
