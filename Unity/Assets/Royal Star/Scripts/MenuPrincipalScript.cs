@@ -219,7 +219,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     
     private IEnumerator SetPlayerReady()
     {
-        //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
         var i = 0;
 

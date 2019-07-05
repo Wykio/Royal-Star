@@ -28,6 +28,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private ShipExposer[] vaisseaux;
     [SerializeField] private MenuPrincipalScript gameController;
     [SerializeField] private IngameInterfaceManagerScript ingameInterfaceManager;
+    [SerializeField] private bool prediction;
     private AIntentReceiver[] activatedIntentReceivers;
     private bool gameStarted { get; set; }
     private bool lumieresLancees { get; set; }
@@ -298,7 +299,7 @@ public class shipMotor : MonoBehaviour
         }
 
         //si le client n'est pas le masterClient, on ne fait rien
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient && !prediction)
         {
             return;
         }
@@ -308,7 +309,7 @@ public class shipMotor : MonoBehaviour
             return;
         }
 
-        if(!lumieresLancees)
+        if(!lumieresLancees && PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("LancerGestionLumiereRPC", RpcTarget.All);
             photonView.RPC("LumieresLanceesPourTousRPC", RpcTarget.All);
