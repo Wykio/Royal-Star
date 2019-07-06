@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +7,10 @@ public class EnemyController : MonoBehaviour
 {
     private GameObject target;
 
-    [SerializeField] private float lookRange = 400.0f;
+    [SerializeField] private float lookRange = 1000.0f;
+    [SerializeField] private float maxSpeed = 1.0f;
     [SerializeField] private float targetDistance;
-    [SerializeField] private float followSpeed = 0.02f;
+    [SerializeField] private float followSpeed;
     private RaycastHit shot;
     
     private void Start()
@@ -18,13 +20,14 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        transform.LookAt(target.transform);
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out shot))
+        targetDistance = getDistanceBetween(target.transform.position, transform.position);
+        if (targetDistance <= lookRange)
         {
-            targetDistance = shot.distance;
-            if (targetDistance <= lookRange)
+            transform.LookAt(target.transform);
+            if (targetDistance >= 20)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, followSpeed);
+                transform.position = Vector3.MoveTowards(transform.position,
+                    target.transform.position, maxSpeed * (targetDistance/lookRange));
             }
         }
     }
@@ -33,5 +36,11 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, lookRange);
+    }
+
+    private float getDistanceBetween(Vector3 a, Vector3 b)
+    {
+        float res = (float)Math.Sqrt(Math.Pow(b.x - a.x,2)+Math.Pow(b.y - a.y,2)+Math.Pow(b.z - a.z,2));
+        return res;
     }
 }
