@@ -13,7 +13,7 @@ public class IntentSenderScript : AIntentReceiver
 
     [SerializeField] PhotonView photonView;
 
-    public void FixedUpdate()
+    public void Update()
     {
         
         //si le joueur n'est pas dans la liste des joueurs ou que son numéro ne correspond pas au numéro de son indice
