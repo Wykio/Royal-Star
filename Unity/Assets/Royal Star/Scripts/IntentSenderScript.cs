@@ -31,103 +31,159 @@ public class IntentSenderScript : AIntentReceiver
         if (Input.GetKeyDown(KeyCode.Z))
         {
             photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, true);
-            WantToGoForwardRPC(true);
             photonView.RPC("BoostForwardRPC", RpcTarget.MasterClient, true);
-            BoostForwardRPC(true);
+
+            if(!PhotonNetwork.IsMasterClient)
+            {
+                WantToGoForwardRPC(true);
+                BoostForwardRPC(true);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Z))
         {
             photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, false);
-            WantToGoForwardRPC(false);
             photonView.RPC("BoostForwardRPC", RpcTarget.MasterClient, false);
-            BoostForwardRPC(false);
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                BoostForwardRPC(false);
+                WantToGoForwardRPC(false);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
             photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, true);
-            WantToGoBackwardRPC(true);
             photonView.RPC("BoostBackwardRPC", RpcTarget.MasterClient, true);
-            BoostBackwardRPC(true);
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToGoBackwardRPC(true);
+                BoostBackwardRPC(true);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.S))
         {
             photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, false);
-            WantToGoBackwardRPC(false);
-            photonView.RPC("BoostBackwardRPC", RpcTarget.MasterClient, false);
-            BoostBackwardRPC(false);
+            photonView.RPC("BoostBackwardRPC", RpcTarget.MasterClient, false);   
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToGoBackwardRPC(false);
+                BoostBackwardRPC(false);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, true);
-            WantToStrafeLeftRPC(true);
             photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, true);
-            AirRollLeftRPC(true);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToStrafeLeftRPC(true);
+                AirRollLeftRPC(true);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
             photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, false);
-            WantToStrafeLeftRPC(false);
             photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, false);
-            AirRollLeftRPC(false);
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToStrafeLeftRPC(false);
+                AirRollLeftRPC(false);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.D))
         {
             photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, true);
-            WantToStrafeRightRPC(true);
             photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, true);
-            AirRollRightRPC(true);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToStrafeRightRPC(true);
+                AirRollRightRPC(true);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.D))
         {
             photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, false);
-            WantToStrafeRightRPC(false);
             photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, false);
-            AirRollRightRPC(false);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToStrafeRightRPC(false);
+                AirRollRightRPC(false);
+            }
         }
 
         if (sourisHorizontale != 0f)
         {
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, sourisHorizontale);
-            WantToTurnRPC(sourisHorizontale);
             photonView.RPC("BoostTurnRPC", RpcTarget.MasterClient, sourisHorizontale);
-            BoostTurnRPC(sourisHorizontale);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToTurnRPC(sourisHorizontale);
+                BoostTurnRPC(sourisHorizontale);
+            }
         }
 
         if (sourisVerticale != 0f)
         {
             photonView.RPC("BoostPitchRPC", RpcTarget.MasterClient, sourisVerticale);
-            BoostPitchRPC(sourisVerticale);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                BoostPitchRPC(sourisVerticale);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, true);
-            AirBoostActivateRPC(true);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                AirBoostActivateRPC(true);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
-            AirBoostActivateRPC(false);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                AirBoostActivateRPC(false);
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
         {
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, true);
-            WantToShootFirstRPC(true);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToShootFirstRPC(true);
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, false);
-            WantToShootFirstRPC(false);
+            
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                WantToShootFirstRPC(false);
+            }
         }
 
         //choisir l'arme de base

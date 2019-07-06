@@ -19,6 +19,7 @@ public class shipMotor : MonoBehaviour
     [SerializeField] private float utilisationBoost;
     [SerializeField] private float rechargeBoost;
     [SerializeField] private AudioClip sonBoost;
+    [SerializeField] private OptionsSonScript gestionSon;
 
     //composants Photon pour mise en réseau
     [Header("Composants Photon")]
@@ -149,11 +150,14 @@ public class shipMotor : MonoBehaviour
             {
                 photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(true);
+
                 if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
                 {
                     intentReceiver.WantToShootFirst = false;
                 }
-            } else {
+            }
+            else
+            {
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetBulletPoolManagerFiring(false);
             }
 
@@ -170,6 +174,7 @@ public class shipMotor : MonoBehaviour
                     vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.BoostTurn * speedRotate, 0);
                     intentReceiver.BoostTurn = 0f;
                 }
+
                 //si le vaisseau active le boost on gère ces intents
                 if (intentReceiver.AirBoostActivate && vaisseau.getBoostState())
                 {
@@ -177,6 +182,7 @@ public class shipMotor : MonoBehaviour
                     {
                         vaisseau.lecteurSon.clip = sonBoost;
                         vaisseau.sonBoostEnCours = true;
+                        vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
                         vaisseau.lecteurSon.Play();
                     }
                     
@@ -185,6 +191,7 @@ public class shipMotor : MonoBehaviour
                     if(intentReceiver.BoostForward || intentReceiver.BoostBackward)
                     {
                         vaisseau.SetNewFieldOfView(90f, vaisseau.playerID);
+
                         vaisseau.ShipRigidBody.AddForce(
                             intentReceiver.BoostForward ? applicatedForce : -applicatedForce,
                             ForceMode.Force
@@ -251,13 +258,25 @@ public class shipMotor : MonoBehaviour
                 vaisseau.SetNewFieldOfView(60f, vaisseau.playerID);
 
                 if (intentReceiver.WantToGoForward)
+                {
                     moveIntent += vaisseau.ShipTransform.forward;
+                }
+
                 if (intentReceiver.WantToGoBackward)
+                {
                     moveIntent += -vaisseau.ShipTransform.forward;
+                }
+
                 if (intentReceiver.WantToStrafeRight)
+                {
                     moveIntent += vaisseau.ShipTransform.right;
+                }
+
                 if (intentReceiver.WantToStrafeLeft)
+                {
                     moveIntent += -vaisseau.ShipTransform.right;
+                }
+
                 if(intentReceiver.WantToTurn != 0f)
                 {
                     vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * speedRotate / spinWeight, 0);
@@ -450,7 +469,8 @@ public class shipMotor : MonoBehaviour
         ActiverIntentReceivers();
         photonView.RPC("GameStartPourTousRPC", RpcTarget.All);
 
-        photonView.RPC("GestionMapLanceePourTousRPC", RpcTarget.All);
+        StartCoroutine(gestionnaireMap.GestionMap(0));
+
         gestionnaireMap.SetDebutGame(Time.time);
     }
 
@@ -575,13 +595,6 @@ public class shipMotor : MonoBehaviour
     }
 
     [PunRPC]
-    void GestionMapLanceePourTousRPC()
-    {
-        gestionnaireMap.SetDebutGame(Time.time);
-        StartCoroutine(gestionnaireMap.GestionMap(0));
-    }
-
-    [PunRPC]
     private void PredictionRPC(Vector3 position, Quaternion rotation, Vector3 velocite, int idJoueur)
     {
         if(PhotonNetwork.LocalPlayer.ActorNumber == idJoueur)
@@ -604,7 +617,7 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void EnvoyerLatenceRPC(int idJoueur, PhotonMessageInfo info)
     {
-        Debug.Log("latence client : " + idJoueur + " " + Convert.ToSingle(PhotonNetwork.Time - info.timestamp));
+        //Debug.Log("latence client : " + idJoueur + " " + Convert.ToSingle(PhotonNetwork.Time - info.timestamp));
         dicoLatence[idJoueur] = Convert.ToSingle(PhotonNetwork.Time - info.timestamp);
     }
 

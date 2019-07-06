@@ -2906,7 +2906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dureeBiome: 120
-  dureeOuverturePortails: 115
+  dureeOuverturePortails: 110
   biomeCourant: 0
   tailleBiome: 4000
   nbArmesBleuesBiome1: 30
@@ -4477,7 +4477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitForPlayersToPlay: 1
+  waitForPlayersToPlay: 0
   DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
   gameController: {fileID: 1815358701}
@@ -4525,6 +4525,7 @@ MonoBehaviour:
   utilisationBoost: 0.75
   rechargeBoost: 0.5
   sonBoost: {fileID: 8300000, guid: 9673b9c43a29ea34ca60417a98612368, type: 3}
+  gestionSon: {fileID: 124621611}
   photonView: {fileID: 1815358703}
   positionsDepart:
   - {fileID: 1376070143}
