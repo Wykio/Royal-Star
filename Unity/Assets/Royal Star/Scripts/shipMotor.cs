@@ -50,6 +50,7 @@ public class shipMotor : MonoBehaviour
 
     private float propulsionAvantAppliquee;
     private float forceLevitationAppliquee;
+    private Dictionary<int, float> dicoLatence;
 
     void Awake()
     {
@@ -57,6 +58,25 @@ public class shipMotor : MonoBehaviour
         gameController.JoueurARejoint += ActivationVaisseau;
         gameController.JoueurAQuitte += DesactivationVaisseau;
         gameController.FinDePartie += FinPartieRetourMenu;
+    }
+
+    private void SetDictionnaireLatence()
+    {
+        dicoLatence = new Dictionary<int, float>();
+
+        foreach(var joueur in PlayerNumbering.SortedPlayers)
+        {
+            dicoLatence.Add(joueur.ActorNumber, 0f);
+        }
+    }
+
+    private IEnumerator EnvoyerLatence()
+    {
+        while(gameStarted)
+        {
+            photonView.RPC("EnvoyerLatenceRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+            yield return new WaitForSeconds(2f);
+        }
     }
 
     //fonction du masterclient pour update l'ensemble des vaisseaux en fonction des inputs envoyés par leurs clients respectifs
@@ -179,11 +199,11 @@ public class shipMotor : MonoBehaviour
                     }
                     if(intentReceiver.AirRollLeft)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, speedRotate * Time.deltaTime / spinWeight);
+                        vaisseau.ShipRigidBody.MoveRotation(Quaternion.Euler(0, 0, speedRotate * Time.deltaTime / spinWeight));
                     }
                     if(intentReceiver.AirRollRight)
                     {
-                        vaisseau.ShipTransform.Rotate(0, 0, -speedRotate * Time.deltaTime / spinWeight);
+                        vaisseau.ShipRigidBody.MoveRotation(Quaternion.Euler(0, 0, -speedRotate * Time.deltaTime / spinWeight));
                     }
                 }
                 else
@@ -298,6 +318,11 @@ public class shipMotor : MonoBehaviour
             }
         }
 
+        if(PhotonNetwork.IsMasterClient && dicoLatence == null)
+        {
+            SetDictionnaireLatence();
+        }
+
         //si le client n'est pas le masterClient, on ne fait rien
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient && !prediction)
         {
@@ -313,6 +338,7 @@ public class shipMotor : MonoBehaviour
         {
             photonView.RPC("LancerGestionLumiereRPC", RpcTarget.All);
             photonView.RPC("LumieresLanceesPourTousRPC", RpcTarget.All);
+            photonView.RPC("LancerCoroutinePredictionRPC", RpcTarget.All);
         }
 
         UpdateGameState();
@@ -553,6 +579,39 @@ public class shipMotor : MonoBehaviour
     {
         gestionnaireMap.SetDebutGame(Time.time);
         StartCoroutine(gestionnaireMap.GestionMap(0));
+    }
+
+    [PunRPC]
+    private void PredictionRPC(Vector3 position, Quaternion rotation, Vector3 velocite, int idJoueur)
+    {
+        if(PhotonNetwork.LocalPlayer.ActorNumber == idJoueur)
+        {
+            for(int i = 0; i < vaisseaux.Length; i++)
+            {
+                if(vaisseaux[i].playerID == PhotonNetwork.LocalPlayer.ActorNumber)
+                {
+                    if(Vector3.Distance(position, vaisseaux[i].ShipRigidBody.position) >= 3f)
+                    {
+                        vaisseaux[i].ShipRigidBody.position = position;
+                        vaisseaux[i].ShipRigidBody.rotation = rotation;
+                        vaisseaux[i].ShipRigidBody.velocity = velocite;
+                    }
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    private void EnvoyerLatenceRPC(int idJoueur, PhotonMessageInfo info)
+    {
+        Debug.Log("latence client : " + idJoueur + " " + Convert.ToSingle(PhotonNetwork.Time - info.timestamp));
+        dicoLatence[idJoueur] = Convert.ToSingle(PhotonNetwork.Time - info.timestamp);
+    }
+
+    [PunRPC]
+    private void LancerCoroutinePredictionRPC()
+    {
+        StartCoroutine(EnvoyerLatence());
     }
 
     private void ChooseAndSubscribeToOnlineIntentReceivers()
