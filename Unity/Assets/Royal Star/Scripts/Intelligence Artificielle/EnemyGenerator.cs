@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class EnemyGenerator : MonoBehaviour
 {
-    
+    [SerializeField] private GameObject botPrefab;
 }
