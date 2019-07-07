@@ -306,6 +306,8 @@ public class GestionMapScript : MonoBehaviour
         var positionsBonusSoins = positionsBonusSoinsData.Split('_');
         var positionsBonusBouclier = positionsBonusBouclierData.Split('_');
 
+        Debug.Log("On place sur ce biome : " + positionsArmesBleues.Length + " armes bleues, " + positionsArmesVertes.Length + " armes vertes et " + positionsArmesRouges.Length + " armes rouges");
+
         foreach (var position in positionsArmesBleues)
         {
             var extract = position.Split('/');

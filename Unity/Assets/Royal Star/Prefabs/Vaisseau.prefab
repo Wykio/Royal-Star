@@ -803,6 +803,7 @@ MonoBehaviour:
   facteurDegatsBouclier: 1
   facteurUtilisationBoost: 1
   facteurRechargeBoost: 1
+  sonBoostEnCours: 0
   ShipWeapons:
   - {fileID: 4896183158657675921}
   - {fileID: 7500480008265696139}
@@ -1541,8 +1542,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7111682281931639083}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.77}
-  m_LocalScale: {x: 15.71, y: 5, z: 13.8}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0.77}
+  m_LocalScale: {x: 15.71, y: 5.16, z: 13.8}
   m_Children: []
   m_Father: {fileID: 3361519573493428610}
   m_RootOrder: 10
@@ -1681,8 +1682,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 13.469787, y: 2.3558722, z: 21.416904}
-  m_Center: {x: 0.10611105, y: -0.24871302, z: 4.1130033}
+  m_Size: {x: 15.47616, y: 2.3558722, z: 25.431267}
+  m_Center: {x: -0.05228734, y: -0.24871302, z: 2.1058216}
 --- !u!114 &9006751233132591676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2350,22 +2351,22 @@ PrefabInstance:
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.5
+      value: 5.91
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
@@ -2437,12 +2438,12 @@ PrefabInstance:
     - target: {fileID: 2636033572947181719, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.85
+      value: 1.87
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.48
+      value: -1.32
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
