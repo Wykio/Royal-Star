@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
     private GameObject target;
 
     [SerializeField] private float lookRange = 1000.0f;
-    [SerializeField] private float maxSpeed = 1.0f;
+    [SerializeField] private float maxSpeed = 5.0f;
     [SerializeField] private float targetDistance;
     [SerializeField] private float followSpeed;
     private RaycastHit shot;

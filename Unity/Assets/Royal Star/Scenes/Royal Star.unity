@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -214,6 +214,8 @@ GameObject:
   m_Component:
   - component: {fileID: 113222811}
   - component: {fileID: 113222810}
+  - component: {fileID: 113222813}
+  - component: {fileID: 113222812}
   m_Layer: 0
   m_Name: BotsTarget Manager
   m_TagString: Untagged
@@ -248,6 +250,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &113222812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113222809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 46
+  InstantiationId: 46
+  isRuntimeInstantiated: 0
+--- !u!114 &113222813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113222809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360e8fc2d4205ed4f819599c56ce3b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  botPrefab: {fileID: 4456537392492825807, guid: 1db8594e7749af24eab43ad28533e820,
+    type: 3}
+  photonView: {fileID: 0}
+  nbBots: 1
 --- !u!1001 &116435811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2822,6 +2862,10 @@ MonoBehaviour:
   dureeOuverturePortails: 30
   biomeCourant: 0
   tailleBiome: 4000
+  nbBotsBiome1: 10
+  nbBotsBiome2: 7
+  nbBotsBiome3: 5
+  nbBotsBiome4: 2
   nbArmesBleuesBiome1: 30
   nbArmesVertesBiome1: 25
   nbArmesRougesBiome1: 5

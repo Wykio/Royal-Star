@@ -10,7 +10,13 @@ public class GestionMapScript : MonoBehaviour
     [SerializeField] private int dureeOuverturePortails;
     [SerializeField] public int biomeCourant;
     [SerializeField] private int tailleBiome = 4000;
-
+    
+    [Header("Paramétrage des bots")]
+    [SerializeField] private int nbBotsBiome1;
+    [SerializeField] private int nbBotsBiome2;
+    [SerializeField] private int nbBotsBiome3;
+    [SerializeField] private int nbBotsBiome4;
+    
     [Header("Paramétrage des items")]
     [SerializeField] private int nbArmesBleuesBiome1;
     [SerializeField] private int nbArmesVertesBiome1;
@@ -45,6 +51,7 @@ public class GestionMapScript : MonoBehaviour
     [SerializeField] private shipMotor ShipManager;
     [SerializeField] private PhotonView photonView;
     [SerializeField] private ItemGeneratorScript itemGenerator;
+    [SerializeField] private EnemyGenerator enemyGenerator;
 
     private List<List<GameObject>> listesPortailsParBiome = new List<List<GameObject>>();
     private float debutGame;
@@ -143,7 +150,8 @@ public class GestionMapScript : MonoBehaviour
             photonView.RPC("ActiverPortailDuBiomeRPC", RpcTarget.All, numBiome);
         }
     }
-
+    
+    
     //fonction pour ordonner aux clients de placer les items dans le biome
     public void PlacerItemsSurBiome(int nbArmesBleues, int nbArmesVertes, int nbArmesRouges, int nbBonusSoins, int nbBonusBouclier, int hauteurSpawn, int longueur, int largeur)
     {

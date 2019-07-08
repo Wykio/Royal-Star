@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4456537392492825803}
-  - component: {fileID: 2081992217207851518}
   - component: {fileID: 5300782464085513327}
+  - component: {fileID: 2081992217207851518}
+  - component: {fileID: 8772189947994966861}
   m_Layer: 0
   m_Name: BotsPrefab
   m_TagString: Untagged
@@ -33,22 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2081992217207851518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4456537392492825807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6cac245026ae10498500f407d4c03b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookRange: 1000
-  maxSpeed: 1
-  targetDistance: 0
-  followSpeed: 0.3
 --- !u!65 &5300782464085513327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -62,6 +47,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.4236748, y: 0.28510293, z: 1.6732746}
   m_Center: {x: 0.00048332216, y: 0.14987913, z: -0.16475128}
+--- !u!114 &2081992217207851518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4456537392492825807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cac245026ae10498500f407d4c03b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookRange: 1000
+  maxSpeed: 5
+  targetDistance: 0
+  followSpeed: 0.3
+--- !u!114 &8772189947994966861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4456537392492825807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 451671696a4100e45b1c90bd84680920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  botTransform: {fileID: 4456537392492825803}
 --- !u!1001 &6969790430125391413
 PrefabInstance:
   m_ObjectHideFlags: 0
