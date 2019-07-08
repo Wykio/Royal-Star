@@ -101,4 +101,6 @@ MonoBehaviour:
   - PredictionRPC
   - EnvoyerLatenceRPC
   - LancerCoroutinePredictionRPC
+  - DesactiverBouclierFX
+  - SelectedWeaponRPC
   DisableAutoOpenWizard: 1

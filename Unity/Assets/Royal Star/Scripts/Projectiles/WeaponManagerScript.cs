@@ -40,4 +40,9 @@ public class WeaponManagerScript : MonoBehaviour
             setNextPopTime();
         }
     }
+
+    public float GetNextPopTime()
+    {
+        return nextPopTime;
+    }
 }

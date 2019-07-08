@@ -245,6 +245,7 @@ public class IntentSenderScript : AIntentReceiver
         }
     }
 
+    [PunRPC]
     void SelectedWeaponRPC(int index)
     {
         if (PhotonNetwork.IsMasterClient || prediction)

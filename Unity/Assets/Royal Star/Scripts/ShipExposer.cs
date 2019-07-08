@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Pun.UtilityScripts;
@@ -19,6 +20,7 @@ public class ShipExposer : MonoBehaviour
     public Camera ShipCamera;
     public AudioSource lecteurSon;
     public HitboxExposerScript ShipHitbox;
+    public bool vaisseauActif = false;
 
     [Header ("Slots d'armes")]
     public GameObject ArmeBleue1;
@@ -54,18 +56,13 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] private float facteurUtilisationBoost = 1;
     [SerializeField] private float facteurRechargeBoost = 1;
 
+    [Header("Collecte de données")]
+    [SerializeField] public DataCollectorScript dataCollector;
+
     private float nextFieldOfView; 
     
     private bool boostOK;
     public bool sonBoostEnCours = false;
-
-    public void SetFacteurs(float factPV, float factBouclier, float factUtilBoost, float factRechargeBouclier)
-    {
-        facteurDegatsPV = factPV;
-        facteurDegatsBouclier = factBouclier;
-        facteurUtilisationBoost = factUtilBoost;
-        facteurRechargeBoost = factRechargeBouclier;
-    }
 
     // 0 pour le laser de base, 1 pour les armes bleues, 2 pour les armes vertes et 3 pour l'arme rouge
     private int armeActive = 0;
@@ -86,7 +83,7 @@ public class ShipExposer : MonoBehaviour
         {
             if (shieldPoints == 0)
             {
-                TakeDamage(degat);
+                healthPoints -= degat;
             }
         }
     }
@@ -106,7 +103,6 @@ public class ShipExposer : MonoBehaviour
             }
         }
     }
-    #endregion
 
     public IEnumerator GestionChronometre(int dureeBiome, int dureeOuverturePortails)
     {
@@ -119,7 +115,7 @@ public class ShipExposer : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
 
-            if(nbSec == 0)
+            if (nbSec == 0)
             {
                 nbSec = 59;
                 nbMin--;
@@ -129,7 +125,7 @@ public class ShipExposer : MonoBehaviour
                 nbSec--;
             }
 
-            if(nbSec < 10)
+            if (nbSec < 10)
             {
                 ChronoBiome.text = nbMin + ":0" + nbSec;
             }
@@ -146,6 +142,17 @@ public class ShipExposer : MonoBehaviour
 
         }
     }
+
+    public void SetFacteurs(float factPV, float factBouclier, float factUtilBoost, float factRechargeBouclier)
+    {
+        facteurDegatsPV = factPV;
+        facteurDegatsBouclier = factBouclier;
+        facteurUtilisationBoost = factUtilBoost;
+        facteurRechargeBoost = factRechargeBouclier;
+    }
+    #endregion
+
+    #region Gestion des stats
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)
     {
@@ -187,6 +194,11 @@ public class ShipExposer : MonoBehaviour
             {
                 healthPoints = 0;
                 alive = false;
+                
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    dataCollector.MortParTir();
+                }
             }
         }
     }
@@ -243,6 +255,17 @@ public class ShipExposer : MonoBehaviour
     {
         boostOK = b;
     }
+
+    [PunRPC]
+    private void DesactiverBouclierFX(int idJoueur)
+    {
+        if(playerID == idJoueur)
+        {
+
+        }
+    }
+
+    #endregion
 
     #region gestion des armes
     public int getArmeActive()
@@ -373,7 +396,6 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
-        Debug.Log("SHIP EXPOSER arme active = " + armeActive);
     }
     #endregion
 
