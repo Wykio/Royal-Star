@@ -17,6 +17,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [SerializeField] public int DureeMatchmaking = 30;
     [SerializeField] MapGeneratorBehaviour mapGenerator;
     [SerializeField] shipMotor gameController;
+    [SerializeField] DataCollectorScript dataCollector;
     #endregion
 
     #region Interface
@@ -80,7 +81,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private void CreerRoom()
     {
         //création de la room
-        PhotonNetwork.CreateRoom("Room1", new RoomOptions
+        PhotonNetwork.CreateRoom("Room" + UnityEngine.Random.Range(0, 9999).ToString(), new RoomOptions
         {
             MaxPlayers = 20,
             PlayerTtl = 10000
@@ -104,6 +105,12 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //indiquer au masterclient que le client va quitter la room
         photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
 
+        //traitement des données du dataCollector
+        if(PhotonNetwork.IsMasterClient)
+        {
+            dataCollector.AfficherDico();
+        }
+
         //quitter la room
         PhotonNetwork.LeaveRoom();
 
@@ -121,6 +128,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     private void ReprendrePartie()
     {
         masquerMenuPause.Invoke();
+
+        gameController.EtatPauseJoueur(PhotonNetwork.LocalPlayer.ActorNumber, false);
 
         //curseur de la souris locké et non visible
         Cursor.visible = false;
