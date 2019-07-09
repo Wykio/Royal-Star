@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using Photon.Pun;
 using UnityEngine.UI;
 using Photon.Pun.UtilityScripts;
@@ -17,7 +18,10 @@ public class ShipExposer : MonoBehaviour
     public Transform[] ShipHoverPoints;
     public Transform ShipCentreGravite;
     public Camera ShipCamera;
+    public AudioSource lecteurSon;
     public HitboxExposerScript ShipHitbox;
+    public bool vaisseauActif = false;
+    public bool enPause = false;
 
     [Header ("Slots d'armes")]
     public GameObject ArmeBleue1;
@@ -42,12 +46,24 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
     [SerializeField] public Text ChronoBiome;
+    [SerializeField] public GameObject bouclierFX;
 
-    private float nextFieldOfView;
+    [Header("Stats et facteurs")]
     [SerializeField] private int healthPoints = 200;
     [SerializeField] private int shieldPoints = 100;
-    private float boostPoints = 200f;
+    [SerializeField] private float boostPoints = 200f;
+    [SerializeField] private float facteurDegatsPV = 1;
+    [SerializeField] private float facteurDegatsBouclier = 1;
+    [SerializeField] private float facteurUtilisationBoost = 1;
+    [SerializeField] private float facteurRechargeBoost = 1;
+
+    [Header("Collecte de données")]
+    [SerializeField] public DataCollectorScript dataCollector;
+
+    private float nextFieldOfView; 
+    
     private bool boostOK;
+    public bool sonBoostEnCours = false;
 
     // 0 pour le laser de base, 1 pour les armes bleues, 2 pour les armes vertes et 3 pour l'arme rouge
     private int armeActive = 0;
@@ -61,6 +77,34 @@ public class ShipExposer : MonoBehaviour
         nextFieldOfView = ShipCamera.fieldOfView;
     }
 
+    #region effets des biomes
+    public void EffetRadiation(int degat)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            if (shieldPoints == 0)
+            {
+                healthPoints -= degat;
+            }
+        }
+    }
+
+    public void EffetFeu(int degat)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            if(shieldPoints > degat)
+            {
+                shieldPoints -= degat;
+            }
+            else
+            {
+                if (shieldPoints > 0) shieldPoints = 0;
+                bouclierFX.SetActive(false);
+            }
+        }
+    }
+
     public IEnumerator GestionChronometre(int dureeBiome, int dureeOuverturePortails)
     {
         int nbMin = dureeBiome / 60;
@@ -72,7 +116,7 @@ public class ShipExposer : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
 
-            if(nbSec == 0)
+            if (nbSec == 0)
             {
                 nbSec = 59;
                 nbMin--;
@@ -82,7 +126,7 @@ public class ShipExposer : MonoBehaviour
                 nbSec--;
             }
 
-            if(nbSec < 10)
+            if (nbSec < 10)
             {
                 ChronoBiome.text = nbMin + ":0" + nbSec;
             }
@@ -99,6 +143,17 @@ public class ShipExposer : MonoBehaviour
 
         }
     }
+
+    public void SetFacteurs(float factPV, float factBouclier, float factUtilBoost, float factRechargeBouclier)
+    {
+        facteurDegatsPV = factPV;
+        facteurDegatsBouclier = factBouclier;
+        facteurUtilisationBoost = factUtilBoost;
+        facteurRechargeBoost = factRechargeBouclier;
+    }
+    #endregion
+
+    #region Gestion des stats
 
     public void MiseAJourStats(int healthPoints, int shieldPoints, float boostPoints, int nbJoueursVivants)
     {
@@ -122,29 +177,31 @@ public class ShipExposer : MonoBehaviour
         {
             if(shieldPoints >= damage)
             {
-                shieldPoints -= damage;
+                int trueDamage = Mathf.CeilToInt(damage * facteurDegatsBouclier);
+                shieldPoints -= trueDamage;
             }
             else
             {
-                healthPoints -= (damage - shieldPoints);
+                healthPoints -= Mathf.CeilToInt((damage - shieldPoints) * facteurDegatsPV);
                 shieldPoints = 0;
+                bouclierFX.SetActive(false);
             }
         }
         else
         {
             //sinon c'est directement sur les pv
-            healthPoints -= damage;
+            healthPoints -= Mathf.CeilToInt(damage * facteurDegatsPV);
             if (healthPoints <= 0)
             {
                 healthPoints = 0;
                 alive = false;
+                
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    dataCollector.MortParTir();
+                }
             }
         }
-    }
-
-    public void ChangeWeapon(int index)
-    {
-        currentWeaponIndex = index;
     }
 
     public int getPV()
@@ -167,6 +224,8 @@ public class ShipExposer : MonoBehaviour
     {
         shieldPoints += recharge;
         if (shieldPoints > 100) shieldPoints = 100;
+
+        if (!bouclierFX.activeSelf) bouclierFX.SetActive(true);
     }
 
     public float getBoost()
@@ -176,14 +235,14 @@ public class ShipExposer : MonoBehaviour
 
     public void UtilisationBoost(float points)
     {
-        boostPoints -= points;
+        boostPoints -= Mathf.CeilToInt(points * facteurUtilisationBoost);
 
         if (boostPoints < 0.0f) boostPoints = 0.0f;
     }
 
     public void RechargeBoost(float points)
     {
-        boostPoints += points;
+        boostPoints += Mathf.CeilToInt(points * facteurRechargeBoost);
 
         if (boostPoints > 200f) boostPoints = 200f;
     }
@@ -198,9 +257,26 @@ public class ShipExposer : MonoBehaviour
         boostOK = b;
     }
 
+    [PunRPC]
+    private void DesactiverBouclierFX(int idJoueur)
+    {
+        if(playerID == idJoueur)
+        {
+
+        }
+    }
+
+    #endregion
+
+    #region gestion des armes
     public int getArmeActive()
     {
         return armeActive;
+    }
+
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
     }
 
     //fonction pour savoir si le vaisseau a des slots d'arme bleues vide
@@ -321,9 +397,10 @@ public class ShipExposer : MonoBehaviour
                 if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
                 break;
         }
-        Debug.Log("SHIP EXPOSER arme active = " + armeActive);
     }
+    #endregion
 
+    #region gestion du field of view
     public float GetFieldOfView()
     {
         return nextFieldOfView;
@@ -370,6 +447,7 @@ public class ShipExposer : MonoBehaviour
             ShipCamera.fieldOfView = Mathf.Lerp(ShipCamera.fieldOfView, nextFieldOfView, 1.3f * Time.deltaTime);
         }
     }
+    #endregion
 
     private void Update()
     {

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1411340566374784850}
   - component: {fileID: 4500367420043852278}
   - component: {fileID: 3852668723791446201}
+  - component: {fileID: 5676914568079713282}
   m_Layer: 0
   m_Name: colinesPrefab
   m_TagString: Untagged
@@ -58,8 +59,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6835aaa2f2b410a4485809d0c1425e00, type: 2}
-  - {fileID: 2100000, guid: f2e46c3474e28624a90a66de1e37941e, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,3 +94,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300002, guid: e14009914f968e54ca4d5a5568e2873a, type: 3}
+--- !u!114 &5676914568079713282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133520630023340895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88d42cb5fadcab4097fd37666a53664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderer: {fileID: 4500367420043852278}

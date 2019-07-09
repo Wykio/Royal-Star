@@ -15,6 +15,7 @@ public class ItemGeneratorScript : MonoBehaviour
     [SerializeField] private GameObject bonusBouclierPrefab;
     [SerializeField] private shipMotor controlleurVaisseauxScript;
     [SerializeField] private PhotonView photonView;
+    [SerializeField] private OptionsSonScript gestionSon;
 
     [Header("Pooling des items")]
     [SerializeField] private int nbArmesBleues;
@@ -44,8 +45,6 @@ public class ItemGeneratorScript : MonoBehaviour
     private BonusExposer[] BonusBouclierInstancies;
     private Queue<BonusExposer> bonusBouclierLibres;
     private List<BonusExposer> bonusBouclierPlaces;
-
-    private bool test = false;
 
     //génération du pooling des items
     public void Awake()
@@ -78,6 +77,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeRougePrefab);
             item.SetActive(false);
             ArmesRougesInstanciees[i] = item.GetComponent<ItemExposerScript>();
+            ArmesRougesInstanciees[i].SetGestionSon(gestionSon);
             armesRougesLibres.Enqueue(ArmesRougesInstanciees[i]); 
         }
 
@@ -90,6 +90,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeVertePrefab);
             item.SetActive(false);
             ArmesVertesInstanciees[i] = item.GetComponent<ItemExposerScript>();
+            ArmesVertesInstanciees[i].SetGestionSon(gestionSon);
             armesVertesLibres.Enqueue(ArmesVertesInstanciees[i]);
         }
 
@@ -102,6 +103,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(armeBleuePrefab);
             item.SetActive(false);
             ArmesBleuesInstanciees[i] = item.GetComponent<ItemExposerScript>();
+            ArmesBleuesInstanciees[i].SetGestionSon(gestionSon);
             armesBleuesLibres.Enqueue(ArmesBleuesInstanciees[i]);
         }
 
@@ -114,6 +116,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(bonusSoinPrefab);
             item.SetActive(false);
             BonusSoinsInstancies[i] = item.GetComponent<BonusExposer>();
+            BonusSoinsInstancies[i].SetGestionSon(gestionSon);
             bonusSoinsLibres.Enqueue(BonusSoinsInstancies[i]);
         }
 
@@ -126,6 +129,7 @@ public class ItemGeneratorScript : MonoBehaviour
             item = (GameObject)Instantiate(bonusBouclierPrefab);
             item.SetActive(false);
             BonusBouclierInstancies[i] = item.GetComponent<BonusExposer>();
+            BonusBouclierInstancies[i].SetGestionSon(gestionSon);
             bonusBouclierLibres.Enqueue(BonusBouclierInstancies[i]);
         }
     }

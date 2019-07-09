@@ -107,5 +107,7 @@ MonoBehaviour:
   itemTransform: {fileID: 337950272546027616}
   pose: 1
   ramasse: 0
+  sonArmeRamasse: {fileID: 0}
   soinOuBouclier: 1
   montantBonus: 30
+  sonBonusRamasse: {fileID: 8300000, guid: 697460457121ab244b24bc90d40732eb, type: 3}

@@ -94,4 +94,18 @@ MonoBehaviour:
   - placerBotsSurBiome
   - desactiverbotsDuBiomeRPC
   - placerBotsSurBiomeRPC
+  - EnvoyerTypeBiomeRPC
+  - LancerGestionLumiereRPC
+  - ShootRPC
+  - GameStartPourTousRPC
+  - LumieresLanceesPourTousRPC
+  - GestionMapLanceePourTousRPC
+  - PartieEnCoursPourTousRPC
+  - PassageBiomePourTousRPC
+  - PredictionRPC
+  - EnvoyerLatenceRPC
+  - LancerCoroutinePredictionRPC
+  - DesactiverBouclierFX
+  - SelectedWeaponRPC
+  - EtatPauseJoueurRPC
   DisableAutoOpenWizard: 1
