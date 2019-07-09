@@ -90,6 +90,10 @@ MonoBehaviour:
   - LancerChronosInterfacesRPC
   - GenererBonusBouclierRPC
   - GenererBonusSoinsRPC
+  - GenererBotRPC
+  - placerBotsSurBiome
+  - desactiverbotsDuBiomeRPC
+  - placerBotsSurBiomeRPC
   - EnvoyerTypeBiomeRPC
   - LancerGestionLumiereRPC
   - ShootRPC
