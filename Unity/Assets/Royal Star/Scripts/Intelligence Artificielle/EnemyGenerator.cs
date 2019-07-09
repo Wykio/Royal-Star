@@ -38,12 +38,18 @@ public class EnemyGenerator : MonoBehaviour
         }
     }
     
+    public List<EnemyExposer> getBotsPlacees()
+    {
+        return botsPlacees;
+    }
+    
     public void GenererBot(Vector3 position)
     {
         //seul le masterClient peut donner l'ordre de générer des bots aux clients
         if(PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("GenererBotRPC", RpcTarget.All, position);
+            Debug.Log("generating bot");
         }
     }
 

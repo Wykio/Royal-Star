@@ -91,4 +91,7 @@ MonoBehaviour:
   - GenererBonusBouclierRPC
   - GenererBonusSoinsRPC
   - GenererBotRPC
+  - placerBotsSurBiome
+  - desactiverbotsDuBiomeRPC
+  - placerBotsSurBiomeRPC
   DisableAutoOpenWizard: 1

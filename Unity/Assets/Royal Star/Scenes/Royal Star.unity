@@ -286,8 +286,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   botPrefab: {fileID: 4456537392492825807, guid: 1db8594e7749af24eab43ad28533e820,
     type: 3}
-  photonView: {fileID: 0}
-  nbBots: 1
+  photonView: {fileID: 113222812}
+  nbBots: 30
 --- !u!1001 &116435811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2889,6 +2889,7 @@ MonoBehaviour:
   ShipManager: {fileID: 1815358701}
   photonView: {fileID: 1355495023}
   itemGenerator: {fileID: 1829976068}
+  enemyGenerator: {fileID: 113222813}
 --- !u!1 &1376070142
 GameObject:
   m_ObjectHideFlags: 0
