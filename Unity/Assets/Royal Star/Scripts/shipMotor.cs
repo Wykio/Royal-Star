@@ -160,7 +160,7 @@ public class shipMotor : MonoBehaviour
             }
 
             //S'il veut tirer
-            if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex])
+            if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex] && !vaisseau.enPause)
             {
                 photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
 
@@ -427,11 +427,13 @@ public class shipMotor : MonoBehaviour
             {
                 AfficherMenuPause.Invoke();
                 menuPauseAffiche = true;
+                photonView.RPC("EtatPauseJoueurRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber, true);
             }
             else
             {
                 MasquerMenuPause.Invoke();
                 menuPauseAffiche = false;
+                photonView.RPC("EtatPauseJoueurRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber, false);
             }
         }
 
@@ -618,6 +620,24 @@ public class shipMotor : MonoBehaviour
         if(PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("LancerChronosInterfacesRPC", RpcTarget.All, gestionnaireMap.GetDureeBiome(), gestionnaireMap.GetDureeOuverturePortails());
+        }
+    }
+
+    public void EtatPauseJoueur(int joueurID, bool etat)
+    {
+        photonView.RPC("EtatPauseJoueurRPC", RpcTarget.MasterClient, joueurID, etat);
+    }
+
+    [PunRPC]
+    private void EtatPauseJoueurRPC(int joueurID, bool etat)
+    {
+        foreach(var vaisseau in vaisseaux)
+        {
+            if(vaisseau.playerID == joueurID)
+            {
+                vaisseau.enPause = etat;
+                break;
+            }
         }
     }
 

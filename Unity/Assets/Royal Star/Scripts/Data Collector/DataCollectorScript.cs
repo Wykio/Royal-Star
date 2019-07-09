@@ -113,7 +113,7 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //Le joueur idJoueur passe un portail, son compteur est incrémenté
-    private void PortailPasse(int idJoueur)
+    public void PortailPasse(int idJoueur)
     {
         portailsPassesParJoueur[idJoueur] += 1;
     }
@@ -145,9 +145,34 @@ public class DataCollectorScript : MonoBehaviour
     //afficher pour test
     public void AfficherDico()
     {
-        foreach(var data in tirsLaserBasiqueParJoueur)
+        foreach (var data in tirsLaserBasiqueParJoueur)
         {
-            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré au laser de base " + (data.Value - 1) + " fois");
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois au laser de base");
+        }
+
+        foreach (var data in tirsArmesBleuesParJoueur)
+        {
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois aux armes bleues");
+        }
+
+        foreach (var data in tirsArmesVertesParJoueur)
+        {
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois aux armes vertes");
+        }
+
+        foreach (var data in tirsArmesRougesParJoueur)
+        {
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois aux armes rouges");
+        }
+
+        foreach (var data in portailsPassesParJoueur)
+        {
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a atteint le  " + (data.Value + 1) + " biome");
+        }
+
+        foreach (var data in tempsPasseEnLAirParJoueur)
+        {
+            Debug.Log("DATA COLLECTED : joueur " + data.Key + " a passé " + data.Value + " secondes en l'air");
         }
     }
 }

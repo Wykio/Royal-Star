@@ -129,6 +129,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         masquerMenuPause.Invoke();
 
+        gameController.EtatPauseJoueur(PhotonNetwork.LocalPlayer.ActorNumber, false);
+
         //curseur de la souris locké et non visible
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

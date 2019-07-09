@@ -32,6 +32,7 @@ namespace MapGeneration
         [SerializeField] private GestionLumièreScript gestionLumieres;
         [SerializeField] private ImpactBiomeScript gestionEffetsBiomes;
         [SerializeField] private OptionsSonScript gestionSon;
+        [SerializeField] private DataCollectorScript dataCollector;
 
         public event Action<string> majInterface;
         public event Action mapGenereePourTous;
@@ -325,6 +326,7 @@ namespace MapGeneration
                     TeleporterController transport = portail.GetComponent<TeleporterController>();
                     transport.connectedTeleport = portailDestination;
                     transport.gestionSon = gestionSon;
+                    transport.dataCollector = dataCollector;
                 }
 
                 //envoi de la liste au gestionnaire de map

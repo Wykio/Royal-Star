@@ -2958,6 +2958,7 @@ MonoBehaviour:
   gestionLumieres: {fileID: 1355495027}
   gestionEffetsBiomes: {fileID: 1355495028}
   gestionSon: {fileID: 124621611}
+  dataCollector: {fileID: 436233521}
 --- !u!114 &1355495026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5750,7 +5751,7 @@ PrefabInstance:
     - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.6999283
+      value: -3.699936
       objectReference: {fileID: 0}
     - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}

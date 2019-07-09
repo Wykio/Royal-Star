@@ -21,6 +21,7 @@ public class ShipExposer : MonoBehaviour
     public AudioSource lecteurSon;
     public HitboxExposerScript ShipHitbox;
     public bool vaisseauActif = false;
+    public bool enPause = false;
 
     [Header ("Slots d'armes")]
     public GameObject ArmeBleue1;

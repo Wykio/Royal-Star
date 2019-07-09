@@ -10,6 +10,7 @@ public class TeleporterController : MonoBehaviour
     public OptionsSonScript gestionSon;
     public float distanceAfterTeleport = 1.0f;
     public AudioClip sonPortail;
+    public DataCollectorScript dataCollector;
 
     void OnCollisionEnter(Collision other)
     {
@@ -35,6 +36,11 @@ public class TeleporterController : MonoBehaviour
                 endPosition.z += distanceAfterTeleport;
                 endPosition.y -= 10;
                 other.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
+
+                if(PhotonNetwork.IsMasterClient)
+                {
+                    dataCollector.PortailPasse(vaisseau.playerID);
+                }
             } 
         }
     }
