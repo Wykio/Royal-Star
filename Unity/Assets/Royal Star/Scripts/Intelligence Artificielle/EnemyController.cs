@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour
         if (targetDistance <= lookRange)
         {
             transform.LookAt(target.transform);
-            if (targetDistance >= 20)
+            if (targetDistance >= 30)
             {
                 transform.position = Vector3.MoveTowards(transform.position,
                     target.transform.position, maxSpeed * (targetDistance/lookRange));

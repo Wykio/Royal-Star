@@ -87,15 +87,10 @@ public class GestionMapScript : MonoBehaviour
             {
                 //placer les items du premier biome
                 PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
-
+                placerBotsSurBiome(nbBotsBiome1, tailleBiome, 250);
+                
                 //lancement des chronos pour le premier biome
                 ShipManager.LancerChronosInterfaces();
-            //placer les items du premier biome
-            PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
-            placerBotsSurBiome(nbBotsBiome1, tailleBiome, 250);
-                
-            //lancement des chronos pour le premier biome
-            ShipManager.LancerChronosInterfaces();
 
                 photonView.RPC("PartieEnCoursPourTousRPC", RpcTarget.All);
             }
