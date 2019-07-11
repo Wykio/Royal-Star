@@ -198,7 +198,7 @@ public class ShipExposer : MonoBehaviour
                 
                 if(PhotonNetwork.IsMasterClient)
                 {
-                    dataCollector.MortParTir();
+                    dataCollector.MortParTir(ShipTransform.position);
                 }
             }
         }

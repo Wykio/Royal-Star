@@ -19,6 +19,12 @@ public class DataCollectorScript : MonoBehaviour
     private Dictionary<int, int> tempsPasseEnLAirParJoueur;
     private Dictionary<int, int> killParJoueur;
     private Dictionary<int, int> killAerienParJoueur;
+    private List<Vector3> positionsTirsBasique = new List<Vector3>();
+    private List<Vector3> positionsTirsArmeBleue = new List<Vector3>();
+    private List<Vector3> positionsTirsArmeVerte = new List<Vector3>();
+    private List<Vector3> positionsTirsArmeRouge = new List<Vector3>();
+    private List<Vector3> positionsMort = new List<Vector3>();
+    private List<Vector3> positionsKill = new List<Vector3>();
     private int mortParTir = 0;
     private int mortParBiome = 0;
 
@@ -89,27 +95,31 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //le joueur idJoueur tire avec le laser de base, son compteur est incrémenté
-    private void TirBasiqueJoueur(int idJoueur)
+    private void TirBasiqueJoueur(int idJoueur, Vector3 pos)
     {
         tirsLaserBasiqueParJoueur[idJoueur] += 1;
+        positionsTirsBasique.Add(pos);
     }
 
     //le joueur idJoueur tire avec ses armes bleues, son compteur est incrémenté
-    private void TirArmesBleues(int idJoueur)
+    private void TirArmesBleues(int idJoueur, Vector3 pos)
     {
         tirsArmesBleuesParJoueur[idJoueur] += 1;
+        positionsTirsArmeBleue.Add(pos);
     }
 
     //le joueur idJoueur tire avec ses armes vertes, son compteur est incrémenté
-    private void TirArmesVertes(int idJoueur)
+    private void TirArmesVertes(int idJoueur, Vector3 pos)
     {
         tirsArmesVertesParJoueur[idJoueur] += 1;
+        positionsTirsArmeVerte.Add(pos);
     }
 
     //le joueur idJoueur tire avec ses armes rouges, son compteur est incrémenté
-    private void TirArmesRouges(int idJoueur)
+    private void TirArmesRouges(int idJoueur, Vector3 pos)
     {
         tirsArmesRougesParJoueur[idJoueur] += 1;
+        positionsTirsArmeRouge.Add(pos);
     }
 
     //Le joueur idJoueur passe un portail, son compteur est incrémenté
@@ -119,9 +129,10 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //Lors qu'un joueur meurt par tir, le compteur est incrémenté
-    public void MortParTir()
+    public void MortParTir(Vector3 pos)
     {
         mortParTir++;
+        positionsMort.Add(pos);
     }
 
     //lors qu'un joueur meurt par fermeture des portails ou condition environnementales, le compteur est incrémenté
@@ -131,15 +142,17 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //quand un joueur fait un kill, son compteur est incrémenté
-    private void KillParJoueur(int idJoueur)
+    private void KillParJoueur(int idJoueur, Vector3 pos)
     {
         killParJoueur[idJoueur] += 1;
+        positionsKill.Add(pos);
     }
 
     //quand un joueur fait un kill en étant en l'air, son compteur est incrémenté
-    private void KillAerienParJoueur(int idJoueur)
+    private void KillAerienParJoueur(int idJoueur, Vector3 pos)
     {
         killAerienParJoueur[idJoueur] += 1;
+        positionsKill.Add(pos);
     }
 
     //afficher pour test

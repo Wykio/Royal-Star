@@ -53,10 +53,10 @@ public class shipMotor : MonoBehaviour
     #endregion
 
     #region Event de Data Collector
-    public event Action<int> tirLaserBasique;
-    public event Action<int> tirArmeBleue;
-    public event Action<int> tirArmeVerte;
-    public event Action<int> tirArmeRouge;
+    public event Action<int, Vector3> tirLaserBasique;
+    public event Action<int, Vector3> tirArmeBleue;
+    public event Action<int, Vector3> tirArmeVerte;
+    public event Action<int, Vector3> tirArmeRouge;
     public event Action mortParBiomeDeLaPartie;
     #endregion
 
@@ -704,19 +704,19 @@ public class shipMotor : MonoBehaviour
                         switch (armeActive)
                         {
                             case 0:
-                                tirLaserBasique.Invoke(idTireur);
+                                tirLaserBasique.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
                                 break;
 
                             case 1:
-                                tirArmeBleue.Invoke(idTireur);
+                                tirArmeBleue.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
                                 break;
 
                             case 2:
-                                tirArmeVerte.Invoke(idTireur);
+                                tirArmeVerte.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
                                 break;
 
                             case 3:
-                                tirArmeRouge.Invoke(idTireur);
+                                tirArmeRouge.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
                                 break;
                         }
                     }
