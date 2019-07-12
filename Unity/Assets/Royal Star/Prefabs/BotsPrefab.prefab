@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8909066732379287181}
   m_Layer: 0
   m_Name: BotsPrefab
-  m_TagString: Untagged
+  m_TagString: Bot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

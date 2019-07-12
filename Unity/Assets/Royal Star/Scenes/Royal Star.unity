@@ -1198,6 +1198,7 @@ MonoBehaviour:
   - {fileID: 357079682}
   - {fileID: 1082048856}
   - {fileID: 1942909334}
+  cheminFichierData: C:\Projet Annuel\Royal-Star\Data_collectees\data.txt
   gameController: {fileID: 1815358701}
 --- !u!4 &436233522
 Transform:
@@ -3061,8 +3062,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026191ba8c5746f4e8edb4a77d538e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dureeBiome: 120
-  dureeOuverturePortails: 110
+  dureeBiome: 60
+  dureeOuverturePortails: 50
   biomeCourant: 0
   tailleBiome: 4000
   nbBotsBiome1: 10
@@ -5846,7 +5847,7 @@ PrefabInstance:
     - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.699936
+      value: -3.6999283
       objectReference: {fileID: 0}
     - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}

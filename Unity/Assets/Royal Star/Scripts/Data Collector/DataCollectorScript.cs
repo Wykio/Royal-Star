@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 public class DataCollectorScript : MonoBehaviour
 {
     [Header("Données")]
     [SerializeField] ShipExposer[] joueurs = new ShipExposer[20];
+    [SerializeField] string cheminFichierData;
 
     [Header("Références")]
     [SerializeField] shipMotor gameController;
@@ -158,6 +161,17 @@ public class DataCollectorScript : MonoBehaviour
     //afficher pour test
     public void AfficherDico()
     {
+        List<string> dataToFile;
+        try
+        {
+            string[] dataFromFile = File.ReadAllLines(cheminFichierData);
+            dataToFile = new List<string>(dataFromFile);
+        }
+        catch(Exception e)
+        {
+            dataToFile = new List<string>();
+        }
+
         foreach (var data in tirsLaserBasiqueParJoueur)
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois au laser de base");
@@ -187,5 +201,48 @@ public class DataCollectorScript : MonoBehaviour
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a passé " + data.Value + " secondes en l'air");
         }
+
+        //nouvelle game, on le précise dans le fichier de data
+        dataToFile.Add("NEWGAME");
+
+        //écriture des positions des tirs basiques
+        foreach (var positionData in positionsTirsBasique)
+        {
+            dataToFile.Add("basic_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+       
+        //écriture des positions des tirs d'armes bleues
+        foreach (var positionData in positionsTirsArmeBleue)
+        {
+            dataToFile.Add("bleue_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        //écriture des positions des tirs d'armes vertes
+        foreach (var positionData in positionsTirsArmeVerte)
+        {
+            dataToFile.Add("verte_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        //écriture des positions des tirs d'armes bleues
+        foreach (var positionData in positionsTirsArmeRouge)
+        {
+            dataToFile.Add("rouge_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+
+        //écriture des positions des joueurs au moment où ils font un kill
+        foreach (var positionData in positionsKill)
+        {
+            dataToFile.Add("kill_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        //écriture des positions des joueurs au moment de leur mort
+        foreach (var positionData in positionsMort)
+        {
+            dataToFile.Add("mort_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        File.WriteAllLines(@cheminFichierData, dataToFile);
+        dataToFile.Clear();
     }
 }
