@@ -139,9 +139,10 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //lors qu'un joueur meurt par fermeture des portails ou condition environnementales, le compteur est incrémenté
-    private void MortParBiome()
+    public void MortParBiome(Vector3 pos)
     {
         mortParBiome++;
+        positionsMort.Add(pos);
     }
 
     //quand un joueur fait un kill, son compteur est incrémenté
