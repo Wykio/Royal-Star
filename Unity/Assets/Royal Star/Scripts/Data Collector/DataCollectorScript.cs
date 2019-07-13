@@ -22,10 +22,10 @@ public class DataCollectorScript : MonoBehaviour
     private Dictionary<int, int> tempsPasseEnLAirParJoueur;
     private Dictionary<int, int> killParJoueur;
     private Dictionary<int, int> killAerienParJoueur;
-    private List<Vector3> positionsTirsBasique = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeBleue = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeVerte = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeRouge = new List<Vector3>();
+    private Dictionary<Vector3, Quaternion> positionsTirsBasique = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeBleue = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeVerte = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeRouge = new Dictionary<Vector3, Quaternion>();
     private List<Vector3> positionsMort = new List<Vector3>();
     private List<Vector3> positionsKill = new List<Vector3>();
     private int mortParTir = 0;
@@ -98,31 +98,31 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //le joueur idJoueur tire avec le laser de base, son compteur est incrémenté
-    private void TirBasiqueJoueur(int idJoueur, Vector3 pos)
+    private void TirBasiqueJoueur(int idJoueur, Vector3 pos, Quaternion rot)
     {
         tirsLaserBasiqueParJoueur[idJoueur] += 1;
-        positionsTirsBasique.Add(pos);
+        positionsTirsBasique.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes bleues, son compteur est incrémenté
-    private void TirArmesBleues(int idJoueur, Vector3 pos)
+    private void TirArmesBleues(int idJoueur, Vector3 pos, Quaternion rot)
     {
         tirsArmesBleuesParJoueur[idJoueur] += 1;
-        positionsTirsArmeBleue.Add(pos);
+        positionsTirsArmeBleue.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes vertes, son compteur est incrémenté
-    private void TirArmesVertes(int idJoueur, Vector3 pos)
+    private void TirArmesVertes(int idJoueur, Vector3 pos, Quaternion rot)
     {
         tirsArmesVertesParJoueur[idJoueur] += 1;
-        positionsTirsArmeVerte.Add(pos);
+        positionsTirsArmeVerte.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes rouges, son compteur est incrémenté
-    private void TirArmesRouges(int idJoueur, Vector3 pos)
+    private void TirArmesRouges(int idJoueur, Vector3 pos, Quaternion rot)
     {
         tirsArmesRougesParJoueur[idJoueur] += 1;
-        positionsTirsArmeRouge.Add(pos);
+        positionsTirsArmeRouge.Add(pos, rot);
     }
 
     //Le joueur idJoueur passe un portail, son compteur est incrémenté
@@ -208,25 +208,25 @@ public class DataCollectorScript : MonoBehaviour
         //écriture des positions des tirs basiques
         foreach (var positionData in positionsTirsBasique)
         {
-            dataToFile.Add("basic_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+            dataToFile.Add("basic_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
         }
        
         //écriture des positions des tirs d'armes bleues
         foreach (var positionData in positionsTirsArmeBleue)
         {
-            dataToFile.Add("bleue_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+            dataToFile.Add("bleue_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
         }
 
         //écriture des positions des tirs d'armes vertes
         foreach (var positionData in positionsTirsArmeVerte)
         {
-            dataToFile.Add("verte_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+            dataToFile.Add("verte_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
         }
 
-        //écriture des positions des tirs d'armes bleues
+        //écriture des positions des tirs d'armes rouges
         foreach (var positionData in positionsTirsArmeRouge)
         {
-            dataToFile.Add("rouge_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+            dataToFile.Add("rouge_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
         }
 
 
