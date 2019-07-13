@@ -200,6 +200,11 @@ public class DataVisualizerScript : MonoBehaviour
         float sourisHorizontale = Input.GetAxis("Mouse X");
         float sourisVerticale = Input.GetAxis("Mouse Y");
 
+        if(Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (Input.GetKey(KeyCode.Z))
         {
             cam.transform.Translate(Vector3.forward * camSpeed * Time.deltaTime);
