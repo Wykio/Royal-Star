@@ -14,5 +14,5 @@ public class EnemyManager : MonoBehaviour
     
     #endregion
 
-    public GameObject AiTargets;
+    public GameObject[] AiTargets;
 }
