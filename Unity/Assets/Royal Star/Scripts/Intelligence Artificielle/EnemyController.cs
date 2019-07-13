@@ -5,31 +5,56 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    private GameObject target;
+    private GameObject[] targets;
 
     [SerializeField] private float lookRange = 1000.0f;
     [SerializeField] private float maxSpeed = 5.0f;
     [SerializeField] private float targetDistance;
-    [SerializeField] private float followSpeed;
     private RaycastHit shot;
     
     private void Start()
     {
-        target = EnemyManager.instance.AiTargets;
+        targets = EnemyManager.instance.AiTargets;
+        //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
-        targetDistance = getDistanceBetween(target.transform.position, transform.position);
+        int idTargetLocked = getClosestTargetId(targets);
+        Debug.Log("Id target :" + idTargetLocked);
+        targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
         if (targetDistance <= lookRange)
         {
-            transform.LookAt(target.transform);
+            transform.LookAt(targets[idTargetLocked].transform);
             if (targetDistance >= 30)
             {
                 transform.position = Vector3.MoveTowards(transform.position,
-                    target.transform.position, maxSpeed * (targetDistance/lookRange));
+                    targets[idTargetLocked].transform.position, maxSpeed * (targetDistance/lookRange));
             }
         }
+    }
+
+    private int getClosestTargetId(GameObject[] myTargets)
+    {
+        int i = 0;
+        float targetDistance = 0.0f;
+        float targetDistanceMin = 10000.0f;//besoin d'un nombre tres grand
+        int idTargetDistanceMin = 0;
+
+
+        for (i = 0; i < 20; i++) //20 c'est le nombre de joueur
+        {
+            if (targets[i].activeSelf == true)
+            {
+                targetDistance = getDistanceBetween(targets[i].transform.position, transform.position);
+                if (targetDistance < targetDistanceMin)
+                {
+                    targetDistanceMin = targetDistance;
+                    idTargetDistanceMin = i;
+                }
+            }
+        }
+        return idTargetDistanceMin;
     }
 
     private void OnDrawGizmosSelected()
