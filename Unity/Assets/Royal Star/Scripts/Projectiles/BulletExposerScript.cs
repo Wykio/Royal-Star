@@ -7,15 +7,14 @@ public class BulletExposerScript : MonoBehaviour
 {
 	[SerializeField] private int damage;
     [SerializeField] private float lifeTime;
-	[SerializeField] private float speed;
     [SerializeField] private HitboxExposerScript triggerExposer;
 	[SerializeField] private MeshRenderer targetMeshRenderer;
 	[SerializeField] private Rigidbody targetRigidBody;
 	[SerializeField] private Transform targetTransform;
 	[SerializeField] private Collider targetCollider;
-
 	private bool destroy = false;
 	private float popTime = 0.0f;
+	private Vector3 lastPosition;
 
 	void MyOnTriggerEnter(Collider other)
 	{
@@ -35,6 +34,7 @@ public class BulletExposerScript : MonoBehaviour
         targetRigidBody.isKinematic = false;
         targetMeshRenderer.enabled = true;
 		triggerExposer.Subscribe(MyOnTriggerEnter);
+		lastPosition = transform.position;
 		destroy = false;
 		popTime = Time.time;
 	}
@@ -46,13 +46,14 @@ public class BulletExposerScript : MonoBehaviour
         targetRigidBody.isKinematic = true;
         targetMeshRenderer.enabled = false;
 		triggerExposer.UnSubscribe();
+		lastPosition = Vector3.zero;
 		destroy = false;
 	}
 
 	public void SetParentReference(Vector3 position, Vector3 velocity, Quaternion rotation)
 	{
 		targetTransform.position = position;
-		targetRigidBody.velocity = velocity * speed;
+		targetRigidBody.velocity = velocity;
 		targetTransform.rotation = rotation;
 		targetTransform.Rotate(new Vector3(-90, -90, -90));
 	}
@@ -77,11 +78,22 @@ public class BulletExposerScript : MonoBehaviour
 	{
 		RaycastHit hit;
 	
-		if (Physics.Raycast(transform.forward, transform.forward, out hit, speed * Time.deltaTime)
+		if (Physics.Raycast(transform.forward, transform.forward, out hit, CalculateDeltaDistance())
 			&& hit.transform.CompareTag("Player")) {
 			destroy = true;
 			hit.transform.gameObject.GetComponent<ShipExposer>()?.TakeDamage(damage);
 		}
+	}
+
+	private void SetLastPosition()
+	{
+		if (targetCollider.enabled)
+			lastPosition = transform.position;
+	}
+
+	private float CalculateDeltaDistance()
+	{
+		return lastPosition != Vector3.zero ? (transform.position - lastPosition).magnitude : 0;
 	}
 
 	public int GetDamage()
@@ -97,6 +109,7 @@ public class BulletExposerScript : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		SetLastPosition();
 		PredictCollision();
 	}
 

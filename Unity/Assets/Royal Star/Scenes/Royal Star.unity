@@ -4121,7 +4121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitForPlayersToPlay: 0
-  DureeMatchmaking: 5
+  DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
   boutonCreerRoom: {fileID: 1734441889}
   boutonRejoindre: {fileID: 1010809659}
@@ -4165,7 +4165,9 @@ MonoBehaviour:
   dampingSpeed: 0.95
   dampingHeight: 4
   utilisationBoost: 0.75
+  gravityBoost: 0.95
   rechargeBoost: 0.5
+  boostDelay: 0.8
   photonView: {fileID: 1815358703}
   positionsDepart:
   - {fileID: 1376070143}

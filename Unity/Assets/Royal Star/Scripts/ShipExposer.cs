@@ -39,6 +39,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Canvas interfaceJoueur;
     [SerializeField] public Text pv;
     [SerializeField] public Text bouclier;
+    [SerializeField] public Text physicalStatus;
     [SerializeField] public Slider boost;
     [SerializeField] public Text compteurJoueurs;
     private float nextFieldOfView;
@@ -46,6 +47,7 @@ public class ShipExposer : MonoBehaviour
     private int shieldPoints = 100;
     private float boostPoints = 200f;
     private bool boostOK;
+    private float lastBoostUse = 0f;
 
     // 0 pour le laser de base, 1 pour les armes bleues, 2 pour les armes vertes et 3 pour l'arme rouge
     private int armeActive = 0;
@@ -119,6 +121,16 @@ public class ShipExposer : MonoBehaviour
     public float getBoost()
     {
         return boostPoints;
+    }
+
+    public float GetLastBoostUse()
+    {
+        return lastBoostUse;
+    }
+
+    public void SetLastBoostUse(float time)
+    {
+        lastBoostUse = time;
     }
 
     public void UtilisationBoost(float points)
