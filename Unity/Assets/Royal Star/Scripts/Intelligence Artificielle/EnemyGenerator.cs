@@ -49,7 +49,7 @@ public class EnemyGenerator : MonoBehaviour
         if(PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("GenererBotRPC", RpcTarget.All, position);
-            Debug.Log("generating bot");
+            // Debug.Log("generating bot");
         }
     }
 

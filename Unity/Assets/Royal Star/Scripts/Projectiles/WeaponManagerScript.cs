@@ -8,16 +8,21 @@ public class WeaponManagerScript : MonoBehaviour
     [SerializeField] private float popInterval;
     [SerializeField] private BulletPoolManagerScript bulletPoolManager;
     [SerializeField] private Transform bulletPopPosition;
+    [SerializeField] private float speed;
     [SerializeField] private float weight;
-
+    [SerializeField] private bool raycast;
+    [SerializeField] private float raycastRange;
+    [SerializeField] private int raycastDamage;
+    [SerializeField] private MeshRenderer raycastMesh;
     private float nextPopTime = float.MinValue;
+    private bool firing = false;
 
     public float GetWeight()
     {
         return weight;
     }
 
-    private void setNextPopTime()
+    private void SetNextPopTime()
     {
         nextPopTime = Time.time + popInterval;
     }
@@ -27,17 +32,39 @@ public class WeaponManagerScript : MonoBehaviour
         return automatic;
     }
 
-    public void SetBulletPoolManagerFiring(bool firing)
+    public bool IsRaycast()
     {
-        bulletPoolManager.SetFiring(firing);
+        return raycast;
+    }
+
+    public void SetFiring(bool isFiring)
+    {
+        firing = isFiring;
+        raycastMesh.enabled = isFiring;
     }
 
     public void Shoot()
     {
         if (Time.time > nextPopTime)
         {
-            bulletPoolManager.Shoot(bulletPopPosition);
-            setNextPopTime();
+            if (raycast)
+                ShootWithRaycast();
+            else
+                bulletPoolManager.Shoot(bulletPopPosition, speed);
+            SetNextPopTime();
+        }
+    }
+
+    public void ShootWithRaycast()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(bulletPopPosition.position, bulletPopPosition.forward, out hit, raycastRange)
+            && hit.transform.gameObject.CompareTag("Player")) {
+            ShipExposer target = hit.transform.GetComponent<ShipExposer>();
+
+            if (target != null)
+                target.TakeDamage(raycastDamage);
         }
     }
 
