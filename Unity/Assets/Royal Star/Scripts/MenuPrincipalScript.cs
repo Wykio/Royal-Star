@@ -16,6 +16,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     [SerializeField] public bool waitForPlayersToPlay = false;
     [SerializeField] public int DureeMatchmaking = 30;
     [SerializeField] MapGeneratorBehaviour mapGenerator;
+    [SerializeField] shipMotor gameController;
+    [SerializeField] DataCollectorScript dataCollector;
     #endregion
 
     #region Interface
@@ -45,7 +47,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     public event Action<int, int> JoueurARejoint;
     public event Action<int, int> JoueurAQuitte;
     public event Action Deconnecte;
-    public event Action MasterclientSwitch;
     public event Action FinDePartie;
     public event Action decompteMatchmaking;
     public event Action masquerMenuPause;
@@ -56,7 +57,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Connexion à Photon et on ajoute les listeners aux boutons
     private void Awake()
     {
-        Debug.Log("MenuPrincipal Awake");
         //connexion à Photon, gestion de l'exception en cas d'absence de connexion Internet
         try
         { 
@@ -80,11 +80,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur "Créer une partie"
     private void CreerRoom()
     {
-        Debug.Log("MenuPrincipal creerRoom");
-
-        
         //création de la room
-        PhotonNetwork.CreateRoom("Room1", new RoomOptions
+        PhotonNetwork.CreateRoom("Room" + UnityEngine.Random.Range(0, 9999).ToString(), new RoomOptions
         {
             MaxPlayers = 20,
             PlayerTtl = 10000
@@ -96,8 +93,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //Quand on clique sur "Rejoidre une partie"
     private void RejoindreRoom()
     {
-        Debug.Log("MenuPrincipal RejoindreRoom");
-
         //connexion à la room
         PhotonNetwork.JoinRandomRoom();
 
@@ -110,24 +105,11 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         //indiquer au masterclient que le client va quitter la room
         photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
 
-        //si le joueur souhaitant quitter est le masterclient, on donne ce role à un autre joueur
-        //if(PhotonNetwork.LocalPlayer.IsMasterClient)
-        //{
-        //    Debug.Log("SWITCH MASTERCLIENT --- Recherche de joueur");
-        //    //récupération d'un joueur dans la liste
-        //    int i = 0;
-        //    for(; i < PhotonNetwork.PlayerListOthers.Length; i++)
-        //    {
-        //        //si ce joueur existe on le met en masterclient
-        //        if(PhotonNetwork.PlayerListOthers[i] != null)
-        //        {
-        //            Debug.Log("SWITCH MASTERCLIENT --- nouveau masterclient trouvé");
-        //            break;
-        //        }
-        //    }
-
-        //    PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerListOthers[i]);
-        //}
+        //traitement des données du dataCollector
+        if(PhotonNetwork.IsMasterClient)
+        {
+            dataCollector.AfficherDico();
+        }
 
         //quitter la room
         PhotonNetwork.LeaveRoom();
@@ -147,6 +129,8 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         masquerMenuPause.Invoke();
 
+        gameController.EtatPauseJoueur(PhotonNetwork.LocalPlayer.ActorNumber, false);
+
         //curseur de la souris locké et non visible
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -161,14 +145,12 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     //a la déconnexion du client local
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("MenuPrincipal OnDisconnected");
         Deconnecte?.Invoke();
     }
 
     //quand un joueur quitte la room
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("MenuPrincipal OnPlayerLeftRoom");
         //si le client local n'est pas MasterClient on ne fait rien 
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -190,9 +172,11 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log("MenuPrincipal OnMasterClientSwitched");
-        MasterclientSwitch?.Invoke();
-
+        if(newMasterClient == PhotonNetwork.LocalPlayer)
+        {
+            Debug.Log("NOUVEAU MASTERCLIENT : " + newMasterClient.ActorNumber + " Ce joueur est : " + PhotonNetwork.LocalPlayer.ActorNumber);
+            //gameController.ActiverIntentReceivers();
+        }
     }
     
     private IEnumerator GestionLobby()
@@ -222,7 +206,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    Debug.Log("Lancement génération map");
                     //quand la partie est lancée, la room est fermée pour éviter que d'autres joueurs rejoignent en cours
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
@@ -245,9 +228,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     
     private IEnumerator SetPlayerReady()
     {
-        Debug.Log("MenuPrincipal SetPlayerReady");
-
-        //Debug.Log($"Nombre de joueur : {PlayerNumbering.SortedPlayers.Length}");
         yield return new WaitForSeconds(2f);
         var i = 0;
 
@@ -259,8 +239,6 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
-        //Debug.Log( $"You are Actor : {PhotonNetwork.LocalPlayer.ActorNumber}\n " + $"You are controlling Avatar {i}, Let's Play !");
 
         OnlinePret?.Invoke();
     }
@@ -319,15 +297,4 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
 
         JoueurAQuitte?.Invoke(i, playerActorNumber);
     }
-    
-    /*
-    // coroutine pour faire revenir le joueur au menu si personne rejoins la room
-    private IEnumerator WaitForOtherPlayerToLaunchGame()
-    {
-        yield return new WaitForSeconds(10f);
-        Debug.Log("Partie annulée retour au menu");
-        FinDePartie?.Invoke();
-        AfficherMenu();
-    }
-    */
 }

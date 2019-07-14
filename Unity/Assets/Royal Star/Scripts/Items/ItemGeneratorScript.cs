@@ -11,82 +11,152 @@ public class ItemGeneratorScript : MonoBehaviour
     [SerializeField] private GameObject armeBleuePrefab;
     [SerializeField] private GameObject armeVertePrefab;
     [SerializeField] private GameObject armeRougePrefab;
+    [SerializeField] private GameObject bonusSoinPrefab;
+    [SerializeField] private GameObject bonusBouclierPrefab;
     [SerializeField] private shipMotor controlleurVaisseauxScript;
     [SerializeField] private PhotonView photonView;
+    [SerializeField] private OptionsSonScript gestionSon;
 
     [Header("Pooling des items")]
+    [SerializeField] private int nbArmesBleues;
+    [SerializeField] private int nbArmesVertes;
+    [SerializeField] private int nbArmesRouges;
+
+    [Header("Pooling des bonus")]
+    [SerializeField] private int nbBonusSoins;
+    [SerializeField] private int nbBonusBouclier;
+
     private ItemExposerScript[] ArmesRougesInstanciees;
-    private Queue<ItemExposerScript> armesRougesLibres = new Queue<ItemExposerScript>(5);
-    private List<ItemExposerScript> armesRougesPlacees = new List<ItemExposerScript>(5);
+    private Queue<ItemExposerScript> armesRougesLibres;
+    private List<ItemExposerScript> armesRougesPlacees;
 
     private ItemExposerScript[] ArmesVertesInstanciees;
-    private Queue<ItemExposerScript> armesVertesLibres = new Queue<ItemExposerScript>(25);
-    private List<ItemExposerScript> armesVertesPlacees = new List<ItemExposerScript>(25);
+    private Queue<ItemExposerScript> armesVertesLibres;
+    private List<ItemExposerScript> armesVertesPlacees;
 
     private ItemExposerScript[] ArmesBleuesInstanciees;
-    private Queue<ItemExposerScript> armesBleuesLibres = new Queue<ItemExposerScript>(30);
-    private List<ItemExposerScript> armesBleuesPlacees = new List<ItemExposerScript>(30);
+    private Queue<ItemExposerScript> armesBleuesLibres;
+    private List<ItemExposerScript> armesBleuesPlacees;
 
-    private bool test = false;
+    private BonusExposer[] BonusSoinsInstancies;
+    private Queue<BonusExposer> bonusSoinsLibres;
+    private List<BonusExposer> bonusSoinsPlaces;
+
+    private BonusExposer[] BonusBouclierInstancies;
+    private Queue<BonusExposer> bonusBouclierLibres;
+    private List<BonusExposer> bonusBouclierPlaces;
 
     //génération du pooling des items
     public void Awake()
     {
+        //Initialisation des listes et queues
+        armesRougesLibres = new Queue<ItemExposerScript>(nbArmesRouges);
+        armesRougesPlacees = new List<ItemExposerScript>(nbArmesRouges);
+
+        armesVertesLibres = new Queue<ItemExposerScript>(nbArmesVertes);
+        armesVertesPlacees = new List<ItemExposerScript>(nbArmesVertes);
+
+        armesBleuesLibres = new Queue<ItemExposerScript>(nbArmesBleues);
+        armesBleuesPlacees = new List<ItemExposerScript>(nbArmesBleues);
+
+        bonusSoinsLibres = new Queue<BonusExposer>(nbBonusSoins);
+        bonusSoinsPlaces = new List<BonusExposer>(nbBonusSoins);
+
+        bonusBouclierLibres = new Queue<BonusExposer>(nbBonusBouclier);
+        bonusBouclierPlaces = new List<BonusExposer>(nbBonusBouclier);
+
         GameObject item;
 
         //instancier toutes les armes possibles au cours d'une partie
-        //pour les armes rouges, il n'y en a qu'une par biome donc 5 armes rouges possibles
-        ArmesRougesInstanciees = new ItemExposerScript[5];
+        //pour les armes rouges
+        ArmesRougesInstanciees = new ItemExposerScript[nbArmesRouges];
 
-        //génération des 5 armes rouges
-        for(int i = 0; i < 5; i++)
+        //génération des armes rouges
+        for(int i = 0; i < 8; i++)
         {
             item = (GameObject)Instantiate(armeRougePrefab);
+            item.SetActive(false);
             ArmesRougesInstanciees[i] = item.GetComponent<ItemExposerScript>();
-            armesRougesLibres.Enqueue(ArmesRougesInstanciees[i]);
+            ArmesRougesInstanciees[i].SetGestionSon(gestionSon);
+            armesRougesLibres.Enqueue(ArmesRougesInstanciees[i]); 
         }
 
-        //pour les armes vertes, il y en a 25 en tout
-        ArmesVertesInstanciees = new ItemExposerScript[25];
+        //pour les armes vertes,
+        ArmesVertesInstanciees = new ItemExposerScript[nbArmesVertes];
 
-        //génération des 25 armes vertes
-        for(int i = 0; i < 25; i++)
+        //génération des armes vertes
+        for(int i = 0; i < 40; i++)
         {
             item = (GameObject)Instantiate(armeVertePrefab);
+            item.SetActive(false);
             ArmesVertesInstanciees[i] = item.GetComponent<ItemExposerScript>();
+            ArmesVertesInstanciees[i].SetGestionSon(gestionSon);
             armesVertesLibres.Enqueue(ArmesVertesInstanciees[i]);
         }
 
-        //pour les armes bleues, il y en a 30 en tout
-        ArmesBleuesInstanciees = new ItemExposerScript[30];
+        //pour les armes bleues
+        ArmesBleuesInstanciees = new ItemExposerScript[nbArmesBleues];
 
-        //génération des 30 armes bleues
-        for(int i = 0; i < 30; i++)
+        //génération des armes bleues
+        for(int i = 0; i < 50; i++)
         {
             item = (GameObject)Instantiate(armeBleuePrefab);
+            item.SetActive(false);
             ArmesBleuesInstanciees[i] = item.GetComponent<ItemExposerScript>();
+            ArmesBleuesInstanciees[i].SetGestionSon(gestionSon);
             armesBleuesLibres.Enqueue(ArmesBleuesInstanciees[i]);
+        }
+
+        //pour les bonus de soins
+        BonusSoinsInstancies = new BonusExposer[nbBonusSoins];
+
+        //génération des bonus de soin
+        for(int i = 0; i < nbBonusSoins; i++)
+        {
+            item = (GameObject)Instantiate(bonusSoinPrefab);
+            item.SetActive(false);
+            BonusSoinsInstancies[i] = item.GetComponent<BonusExposer>();
+            BonusSoinsInstancies[i].SetGestionSon(gestionSon);
+            bonusSoinsLibres.Enqueue(BonusSoinsInstancies[i]);
+        }
+
+        //pour les bonus de bouclier
+        BonusBouclierInstancies = new BonusExposer[nbBonusBouclier];
+
+        //génération des bonus de bouclier
+        for (int i = 0; i < nbBonusBouclier; i++)
+        {
+            item = (GameObject)Instantiate(bonusBouclierPrefab);
+            item.SetActive(false);
+            BonusBouclierInstancies[i] = item.GetComponent<BonusExposer>();
+            BonusBouclierInstancies[i].SetGestionSon(gestionSon);
+            bonusBouclierLibres.Enqueue(BonusBouclierInstancies[i]);
         }
     }
 
-    public void Update()
+    public List<ItemExposerScript> GetArmesBleuesPlacees()
     {
-        if(controlleurVaisseauxScript.getGameStarted() && PhotonNetwork.IsMasterClient)
-        {
-            if (!test)
-            {
-                GenererArmeBleue(new Vector3(10, 20, 10));
-                GenererArmeBleue(new Vector3(4, 3, 0));
+        return armesBleuesPlacees;
+    }
 
-                GenererArmeVerte(new Vector3(6, 3, 2));
-                GenererArmeVerte(new Vector3(2, 3, 6));
+    public List<ItemExposerScript> GetArmesVertesPlacees()
+    {
+        return armesVertesPlacees;
+    }
 
-                GenererArmeRouge(new Vector3(0, 3, 3));
+    public List<ItemExposerScript> GetArmesRougesPlacees()
+    {
+        return armesRougesPlacees;
+    }
 
-                test = true;
-            }
-        }
-        
+    public List<BonusExposer> GetBonusSoinsPlaces()
+    {
+        return bonusSoinsPlaces;
+    }
+
+    public List<BonusExposer> GetBonusBouclierPlaces()
+    {
+        return bonusBouclierPlaces;
     }
 
     private void FixedUpdate()
@@ -134,6 +204,34 @@ public class ItemGeneratorScript : MonoBehaviour
                     armesRougesPlacees.Remove(armesRougesPlacees[i]);
                 }
             }
+
+            //vérification du pooling des bonus de soins
+            for (int i = 0; i < bonusSoinsPlaces.Count; i++)
+            {
+                //si un des bonus de soins a été ramassé, on le remet dans le pooling
+                if (bonusSoinsPlaces[i].getRamasse())
+                {
+                    //remise du bonus dans la queue des armes libres
+                    bonusSoinsLibres.Enqueue(bonusSoinsPlaces[i]);
+
+                    //retrait du bonus de la liste des armes placées
+                    bonusSoinsPlaces.Remove(bonusSoinsPlaces[i]);
+                }
+            }
+
+            //vérification du pooling des bonus de bouclier
+            for (int i = 0; i < bonusBouclierPlaces.Count; i++)
+            {
+                //si un des bonus de soins a été ramassé, on le remet dans le pooling
+                if (bonusBouclierPlaces[i].getRamasse())
+                {
+                    //remise du bonus dans la queue des armes libres
+                    bonusBouclierLibres.Enqueue(bonusBouclierPlaces[i]);
+
+                    //retrait du bonus de la liste des armes placées
+                    bonusBouclierPlaces.Remove(bonusBouclierPlaces[i]);
+                }
+            }
         }
     }
 
@@ -156,6 +254,7 @@ public class ItemGeneratorScript : MonoBehaviour
         armeBleue.ActivationItem();
         armeBleue.SetPosition(position);
         armeBleue.SetPose(false);
+        armeBleue.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesBleuesPlacees.Add(armeBleue);
@@ -179,6 +278,7 @@ public class ItemGeneratorScript : MonoBehaviour
         armeVerte.ActivationItem();
         armeVerte.SetPosition(position);
         armeVerte.SetPose(false);
+        armeVerte.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesVertesPlacees.Add(armeVerte);
@@ -202,8 +302,57 @@ public class ItemGeneratorScript : MonoBehaviour
         armeRouge.ActivationItem();
         armeRouge.SetPosition(position);
         armeRouge.SetPose(false);
+        armeRouge.SetRamasse(false);
 
         //ajout de l'item dans la liste des items placés
         armesRougesPlacees.Add(armeRouge);
+    }
+
+    public void GenererBonusSoins(Vector3 position)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GenererBonusSoinsRPC", RpcTarget.All, position);
+        }
+    }
+
+    [PunRPC]
+    private void GenererBonusSoinsRPC(Vector3 position)
+    {
+        //faire spawn un bonus de soin
+        var bonus = bonusSoinsLibres.Dequeue();
+
+        //activation du bonus
+        bonus.ActivationItem();
+        bonus.SetPosition(position);
+        bonus.SetPose(false);
+        bonus.SetRamasse(false);
+
+        //ajout du bonus dans la liste des bonus de soins placés
+        bonusSoinsPlaces.Add(bonus);
+    }
+
+    public void GenererBonusBouclier(Vector3 position)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GenererBonusBouclierRPC", RpcTarget.All, position);
+        }
+    }
+
+    [PunRPC]
+    private void GenererBonusBouclierRPC(Vector3 position)
+    {
+        //faire spawn un bonus de soin
+        var bonus = bonusBouclierLibres.Dequeue();
+
+        //activation du bonus
+        bonus.ActivationItem();
+        bonus.SetPosition(position);
+        bonus.SetPose(false);
+        bonus.SetRamasse(false);
+
+        //ajout du bonus dans la liste des bonus de soins placés
+        bonusBouclierPlaces.Add(bonus);
     }
 }

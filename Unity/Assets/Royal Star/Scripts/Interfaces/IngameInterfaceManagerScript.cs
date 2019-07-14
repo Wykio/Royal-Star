@@ -45,7 +45,6 @@ public class IngameInterfaceManagerScript : MonoBehaviour
                     }
                 }
 
-               
                 indice++;
                 if (indice >= PlayerNumbering.SortedPlayers.Length) break;
             }

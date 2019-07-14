@@ -4,14 +4,35 @@ using UnityEngine;
 
 public class ItemExposerScript : MonoBehaviour
 {
-    [SerializeField] private Transform itemTransform;
-    [SerializeField] private bool pose = true;
-
-    [SerializeField] private bool ramasse = false;
+    [SerializeField] protected Transform itemTransform;
+    [SerializeField] protected bool pose = true;
+    [SerializeField] protected bool ramasse = false;
+    [SerializeField] private AudioClip sonArmeRamasse;
+    [SerializeField] protected OptionsSonScript gestionSon;
 
     public void SetPose(bool b)
     {
         pose = b;
+    }
+
+    public Transform GetItemTransform()
+    {
+        return itemTransform;
+    }
+
+    public OptionsSonScript getGestionSon()
+    {
+        return gestionSon;
+    }
+
+    public void SetGestionSon(OptionsSonScript o)
+    {
+        gestionSon = o;
+    }
+
+    public void SetRamasse(bool b)
+    {
+        ramasse = b;
     }
 
     //activer le gameobject de l'item
@@ -42,29 +63,58 @@ public class ItemExposerScript : MonoBehaviour
         {
             var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
             
-            if(this.gameObject.tag == "Arme Bleue")
+            if(gameObject.tag == "Arme Bleue")
             {
-                vaisseau.ActiverArmeBleue();
+                if(vaisseau.GetSlotVideArmesBleues())
+                {
+                    vaisseau.lecteurSon.clip = sonArmeRamasse;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                    vaisseau.lecteurSon.Play();
+                    vaisseau.ActiverArmeBleue();
+                    ramasse = true;
+                    SetPose(true);
+                    DesactivationItem();
+                }
             }
             else
             {
-                if(this.gameObject.tag == "Arme Verte")
+                if(gameObject.tag == "Arme Verte")
                 {
-                    vaisseau.ActiverArmeVerte();
+                    if(vaisseau.GetSlotVideArmesVertes())
+                    {
+                        vaisseau.lecteurSon.clip = sonArmeRamasse;
+                        vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                        vaisseau.lecteurSon.Play();
+                        vaisseau.ActiverArmeVerte();
+                        ramasse = true;
+                        SetPose(true);
+                        DesactivationItem();
+                    }
                 }
                 else
                 {
-                    if(this.gameObject.tag == "Arme Rouge")
+                    if(gameObject.tag == "Arme Rouge")
                     {
-                        vaisseau.ActiverArmeRouge();
+                        if(vaisseau.GetSlotVideArmeRouge())
+                        {
+                            vaisseau.lecteurSon.clip = sonArmeRamasse;
+                            vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                            vaisseau.lecteurSon.Play();
+                            vaisseau.ActiverArmeRouge();
+                            ramasse = true;
+                            SetPose(true);
+                            DesactivationItem();
+                        }
                     }
                 }
             }
         }
-
-        ramasse = true;
-        SetPose(true);
-        DesactivationItem();
+        else
+        {
+            ramasse = true;
+            SetPose(true);
+            DesactivationItem();
+        }
     }
 
     //getteur pour avoir l'état de l'item, en place ou ramassé
@@ -77,14 +127,14 @@ public class ItemExposerScript : MonoBehaviour
     {
         if (pose) return;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y -0.2f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
         Ray chute = new Ray(transform.position, -transform.up);
         RaycastHit hit;
 
         if(Physics.Raycast(chute, out hit, 3.5f))
         {
-            pose = true;
+            SetPose(true);
         }
     }
 }

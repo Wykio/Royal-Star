@@ -128,8 +128,6 @@ namespace MapGeneration
 
             //retirer le "_" en fin de string
             tabPortail = tabPortail.Substring(0, tabPortail.Length - 1);
-
-            if (numBiome == 0) Debug.Log("DATA PORTAIL : " + tabPortail);
         }
 
         //Générer le tableau des rotations des objets du décor

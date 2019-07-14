@@ -9,6 +9,7 @@ public class IntentSenderScript : AIntentReceiver
 {
     [FormerlySerializedAs("PlayerActorId")]
     [SerializeField] private int IndiceJoueur;
+    [SerializeField] private bool prediction = true;
 
     [SerializeField] PhotonView photonView;
 
@@ -43,39 +44,42 @@ public class IntentSenderScript : AIntentReceiver
 
     public void Update()
     {
-        
+        //récupération des axes de souris
+        float sourisVerticale = -Input.GetAxis("Mouse Y");
+        float sourisHorizontale = Input.GetAxis("Mouse X");
+   
         //si le joueur n'est pas dans la liste des joueurs ou que son numéro ne correspond pas au numéro de son indice
         if (PlayerNumbering.SortedPlayers.Length <= IndiceJoueur ||
-                PlayerNumbering.SortedPlayers[IndiceJoueur].ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            PlayerNumbering.SortedPlayers[IndiceJoueur].ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
         {
             return;
         }
 
         #region Inputs
+
         for (int i = 0; i < actionKeys.Length; i++)
         {
             if (Input.GetKeyDown(actionKeys[i]))
+            {
                 photonView.RPC(rpcNames[i], RpcTarget.MasterClient, true);
+                GetType().GetMethod(rpcNames[i])?.Invoke(this, new object[] { true });
+            }
             if (Input.GetKeyUp(actionKeys[i]))
+            {
                 photonView.RPC(rpcNames[i], RpcTarget.MasterClient, false);
+                GetType().GetMethod(rpcNames[i])?.Invoke(this, new object[] { true });
+            }
         }
-
-        //récupération des axes de souris
-        var sourisVerticale = -Input.GetAxis("Mouse Y");
-        var sourisHorizontale = Input.GetAxis("Mouse X");
+        //choisir l'arme de base
+        for (int i = 0; i < weaponKeys.Length; i++)
+            if (Input.GetKeyDown(weaponKeys[i]))
+                photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, weaponKeys[i] - KeyCode.Alpha0);
 
         if (sourisHorizontale != 0f)
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, sourisHorizontale);
-
         if (sourisVerticale != 0f)
             photonView.RPC("BoostPitchRPC", RpcTarget.MasterClient, sourisVerticale);
 
-        //choisir l'arme de base
-        for (int i = 0; i < weaponKeys.Length; i++)
-        {
-            if (Input.GetKeyDown(weaponKeys[i]))
-                photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, weaponKeys[i] - KeyCode.Alpha0);
-        }
         #endregion
     }
 
@@ -84,15 +88,16 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void ChangerArmeRPC(int choix)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             ChangerArme = choix;
         }
     }
 
+    [PunRPC]
     void SelectedWeaponRPC(int index)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient || prediction)
         {
             SelectedWeapon = index;
         }
@@ -101,7 +106,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void WantToGoForwardRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             WantToGoForward = intent;
         }
@@ -110,7 +115,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void WantToGoBackwardRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             WantToGoBackward = intent;
         }
@@ -119,7 +124,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void WantToStrafeLeftRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             WantToStrafeLeft = intent;
         }
@@ -128,7 +133,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void WantToStrafeRightRPC(bool intent)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient || prediction)
         {
             WantToStrafeRight = intent;
         }
@@ -137,7 +142,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void WantToTurnRPC(float intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             WantToTurn = intent;
         }
@@ -146,7 +151,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void AirRollRightRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             AirRollRight = intent;
         }
@@ -155,7 +160,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void AirRollLeftRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             AirRollLeft = intent;
         }
@@ -164,7 +169,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void AirBoostActivateRPC(bool intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             AirBoostActivate = intent;
         }
@@ -173,7 +178,7 @@ public class IntentSenderScript : AIntentReceiver
     [PunRPC]
     void BoostPitchRPC(float intent)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if(PhotonNetwork.IsMasterClient || prediction)
         {
             BoostPitch = intent;
         }

@@ -26,7 +26,6 @@ public class BulletExposerScript : MonoBehaviour
 		return destroy;
 	}
 
-	[PunRPC]
 	public void Enable()
 	{
 		targetRigidBody.velocity = Vector3.zero;
@@ -39,7 +38,6 @@ public class BulletExposerScript : MonoBehaviour
 		popTime = Time.time;
 	}
 
-	[PunRPC]
 	public void Disable()
 	{
 		targetCollider.enabled = false;

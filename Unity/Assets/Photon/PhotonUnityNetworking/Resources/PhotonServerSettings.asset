@@ -78,8 +78,34 @@ MonoBehaviour:
   - MasquerMessageInterfaceRPC
   - confirmationClientRPC
   - GenererDecorViaTableauRPC
+  - ActiverPortailDuBiomeRPC
+  - DesactiverPortailDuBiomeRPC
+  - SetDebutGameRPC
   - Disable
   - Enable
   - AdaptToCurrentFieldOfViewRPC
   - SetNextFieldOfViewRPC
+  - DesactiverItemsDuBiomeRPC
+  - PlacerItemsSurBiomeRPC
+  - LancerChronosInterfacesRPC
+  - GenererBonusBouclierRPC
+  - GenererBonusSoinsRPC
+  - GenererBotRPC
+  - placerBotsSurBiome
+  - desactiverbotsDuBiomeRPC
+  - placerBotsSurBiomeRPC
+  - EnvoyerTypeBiomeRPC
+  - LancerGestionLumiereRPC
+  - ShootRPC
+  - GameStartPourTousRPC
+  - LumieresLanceesPourTousRPC
+  - GestionMapLanceePourTousRPC
+  - PartieEnCoursPourTousRPC
+  - PassageBiomePourTousRPC
+  - PredictionRPC
+  - EnvoyerLatenceRPC
+  - LancerCoroutinePredictionRPC
+  - DesactiverBouclierFX
+  - SelectedWeaponRPC
+  - EtatPauseJoueurRPC
   DisableAutoOpenWizard: 1

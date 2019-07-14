@@ -67,4 +67,9 @@ public class WeaponManagerScript : MonoBehaviour
                 target.TakeDamage(raycastDamage);
         }
     }
+
+    public float GetNextPopTime()
+    {
+        return nextPopTime;
+    }
 }

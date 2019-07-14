@@ -15,6 +15,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button creerRoomButton;
     [SerializeField] private Button joinRoomButton;
     [SerializeField] private Button quitterJeuButton;
+    [SerializeField] private Button OptionButton;
     [SerializeField] private Text titreLobby;
     [SerializeField] private Text decompteLobby;
     [SerializeField] private Text listeJoueurs;
@@ -26,6 +27,9 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Canvas Ui;
     [SerializeField] private Text finDePartie;
     [SerializeField] private Image background;
+
+    [Header("Références")]
+    [SerializeField] private OptionsSonScript gestionMenuOptions;
 
     #region Events
     public event Action OnlinePret;
@@ -58,6 +62,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         //les boutons sont désactivés au démarrage
         creerRoomButton.gameObject.SetActive(false);
         joinRoomButton.gameObject.SetActive(false);
+        OptionButton.onClick.AddListener(AfficherMenuOptions);
 
         //on active le message d'erreur (vide) pour le menu principal
         erreur.gameObject.SetActive(true);
@@ -110,8 +115,9 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         joinRoomButton.interactable = false;
         quitterJeuButton.gameObject.SetActive(false);
         quitterJeuButton.interactable = false;
+        OptionButton.interactable = false;
+        OptionButton.gameObject.SetActive(false);
         erreur.gameObject.SetActive(false);
-        background.gameObject.SetActive(false);
     }
 
     //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
@@ -128,6 +134,8 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         joinRoomButton.interactable = true;
         quitterJeuButton.gameObject.SetActive(true);
         quitterJeuButton.interactable = true;
+        OptionButton.interactable = true;
+        OptionButton.gameObject.SetActive(true);
         erreur.text = "";
         background.gameObject.SetActive(true);
 
@@ -185,12 +193,16 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterMenuPause.interactable = true;
         reprendreMenuPause.gameObject.SetActive(true);
         reprendreMenuPause.interactable = true;
+        OptionButton.interactable = true;
+        OptionButton.gameObject.SetActive(true);
+        background.gameObject.SetActive(true);
 
         //curseur de la souris délocké et visible
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
         ActiverInterface();
+        
     }
 
     //masquer les boutons du menu pause
@@ -200,8 +212,19 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         quitterMenuPause.interactable = false;
         reprendreMenuPause.gameObject.SetActive(false);
         reprendreMenuPause.interactable = false;
+        OptionButton.interactable = false;
+        OptionButton.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
 
         setInterfaceJeu();
+    }
+
+    public void AfficherMenuOptions()
+    {
+        masquerMenuPrincipal();
+        gestionMenuOptions.AfficherMenuOptions();
+        OptionButton.interactable = false;
+        OptionButton.gameObject.SetActive(false);
     }
 
     //fonction pour afficher une information sur l'interface des joueurs
@@ -307,6 +330,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         titreLobby.gameObject.SetActive(false);
         listeJoueurs.gameObject.SetActive(false);
         decompteLobby.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
         resetInterface();
     }
 
