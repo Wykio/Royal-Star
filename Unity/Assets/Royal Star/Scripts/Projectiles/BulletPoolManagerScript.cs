@@ -86,6 +86,12 @@ public class BulletPoolManagerScript : MonoBehaviour
             if (target != null)
                 target.TakeDamage(damage);
         }
+        else if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, range)
+            && Equals(hit.transform.gameObject.tag, "Bot")) {
+            EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();
+            if (target != null)
+                target.TakeDamage(damage);
+        }
     }
 
     //fonction pour pop un laser à la position indiquée

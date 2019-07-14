@@ -57,9 +57,13 @@ public class ItemExposerScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (ramasse) return;
-
+        
+        Debug.Log(other);
+        Debug.Log(other.attachedRigidbody);
+        Debug.Log(other.attachedRigidbody.gameObject);
+        
         //si le collider est un joueur
-        if(other.attachedRigidbody.gameObject.tag == "Player")
+        if(other.gameObject.CompareTag("Player")) //other.attachedRigidbody.gameObject.tag == "Player"
         {
             var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
             

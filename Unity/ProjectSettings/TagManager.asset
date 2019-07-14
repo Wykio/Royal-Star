@@ -10,6 +10,7 @@ TagManager:
   - Arme Bleue
   - Arme Verte
   - Arme Rouge
+  - Bot
   layers:
   - Default
   - TransparentFX
