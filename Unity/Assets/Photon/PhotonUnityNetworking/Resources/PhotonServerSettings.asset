@@ -108,4 +108,5 @@ MonoBehaviour:
   - DesactiverBouclierFX
   - SelectedWeaponRPC
   - EtatPauseJoueurRPC
+  - AirPitchRPC
   DisableAutoOpenWizard: 1
