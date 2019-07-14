@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 public class DataCollectorScript : MonoBehaviour
 {
     [Header("Données")]
     [SerializeField] ShipExposer[] joueurs = new ShipExposer[20];
+    [SerializeField] string cheminFichierData;
 
     [Header("Références")]
     [SerializeField] shipMotor gameController;
@@ -19,10 +22,10 @@ public class DataCollectorScript : MonoBehaviour
     private Dictionary<int, int> tempsPasseEnLAirParJoueur;
     private Dictionary<int, int> killParJoueur;
     private Dictionary<int, int> killAerienParJoueur;
-    private List<Vector3> positionsTirsBasique = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeBleue = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeVerte = new List<Vector3>();
-    private List<Vector3> positionsTirsArmeRouge = new List<Vector3>();
+    private Dictionary<Vector3, Quaternion> positionsTirsBasique = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeBleue = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeVerte = new Dictionary<Vector3, Quaternion>();
+    private Dictionary<Vector3, Quaternion> positionsTirsArmeRouge = new Dictionary<Vector3, Quaternion>();
     private List<Vector3> positionsMort = new List<Vector3>();
     private List<Vector3> positionsKill = new List<Vector3>();
     private int mortParTir = 0;
@@ -86,7 +89,7 @@ public class DataCollectorScript : MonoBehaviour
             {
                 if(joueur.isActiveAndEnabled && joueur.Aerien)
                 {
-                    tempsPasseEnLAirParJoueur[joueur.playerID] += 1;
+                    tempsPasseEnLAirParJoueur[joueur.playerID]++;
                 }
             }
 
@@ -95,37 +98,37 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //le joueur idJoueur tire avec le laser de base, son compteur est incrémenté
-    private void TirBasiqueJoueur(int idJoueur, Vector3 pos)
+    private void TirBasiqueJoueur(int idJoueur, Vector3 pos, Quaternion rot)
     {
-        tirsLaserBasiqueParJoueur[idJoueur] += 1;
-        positionsTirsBasique.Add(pos);
+        tirsLaserBasiqueParJoueur[idJoueur]++;
+        positionsTirsBasique.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes bleues, son compteur est incrémenté
-    private void TirArmesBleues(int idJoueur, Vector3 pos)
+    private void TirArmesBleues(int idJoueur, Vector3 pos, Quaternion rot)
     {
-        tirsArmesBleuesParJoueur[idJoueur] += 1;
-        positionsTirsArmeBleue.Add(pos);
+        tirsArmesBleuesParJoueur[idJoueur]++;
+        positionsTirsArmeBleue.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes vertes, son compteur est incrémenté
-    private void TirArmesVertes(int idJoueur, Vector3 pos)
+    private void TirArmesVertes(int idJoueur, Vector3 pos, Quaternion rot)
     {
-        tirsArmesVertesParJoueur[idJoueur] += 1;
-        positionsTirsArmeVerte.Add(pos);
+        tirsArmesVertesParJoueur[idJoueur]++;
+        positionsTirsArmeVerte.Add(pos, rot);
     }
 
     //le joueur idJoueur tire avec ses armes rouges, son compteur est incrémenté
-    private void TirArmesRouges(int idJoueur, Vector3 pos)
+    private void TirArmesRouges(int idJoueur, Vector3 pos, Quaternion rot)
     {
-        tirsArmesRougesParJoueur[idJoueur] += 1;
-        positionsTirsArmeRouge.Add(pos);
+        tirsArmesRougesParJoueur[idJoueur]++;
+        positionsTirsArmeRouge.Add(pos, rot);
     }
 
     //Le joueur idJoueur passe un portail, son compteur est incrémenté
     public void PortailPasse(int idJoueur)
     {
-        portailsPassesParJoueur[idJoueur] += 1;
+        portailsPassesParJoueur[idJoueur]++;
     }
 
     //Lors qu'un joueur meurt par tir, le compteur est incrémenté
@@ -136,28 +139,40 @@ public class DataCollectorScript : MonoBehaviour
     }
 
     //lors qu'un joueur meurt par fermeture des portails ou condition environnementales, le compteur est incrémenté
-    private void MortParBiome()
+    public void MortParBiome(Vector3 pos)
     {
         mortParBiome++;
+        positionsMort.Add(pos);
     }
 
     //quand un joueur fait un kill, son compteur est incrémenté
     private void KillParJoueur(int idJoueur, Vector3 pos)
     {
-        killParJoueur[idJoueur] += 1;
+        killParJoueur[idJoueur]++;
         positionsKill.Add(pos);
     }
 
     //quand un joueur fait un kill en étant en l'air, son compteur est incrémenté
     private void KillAerienParJoueur(int idJoueur, Vector3 pos)
     {
-        killAerienParJoueur[idJoueur] += 1;
+        killAerienParJoueur[idJoueur]++;
         positionsKill.Add(pos);
     }
 
     //afficher pour test
     public void AfficherDico()
     {
+        List<string> dataToFile;
+        try
+        {
+            string[] dataFromFile = File.ReadAllLines(cheminFichierData);
+            dataToFile = new List<string>(dataFromFile);
+        }
+        catch(Exception e)
+        {
+            dataToFile = new List<string>();
+        }
+
         /*foreach (var data in tirsLaserBasiqueParJoueur)
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois au laser de base");
@@ -187,5 +202,48 @@ public class DataCollectorScript : MonoBehaviour
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a passé " + data.Value + " secondes en l'air");
         }*/
+
+        //nouvelle game, on le précise dans le fichier de data
+        dataToFile.Add("NEWGAME");
+
+        //écriture des positions des tirs basiques
+        foreach (var positionData in positionsTirsBasique)
+        {
+            dataToFile.Add("basic_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
+        }
+       
+        //écriture des positions des tirs d'armes bleues
+        foreach (var positionData in positionsTirsArmeBleue)
+        {
+            dataToFile.Add("bleue_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
+        }
+
+        //écriture des positions des tirs d'armes vertes
+        foreach (var positionData in positionsTirsArmeVerte)
+        {
+            dataToFile.Add("verte_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
+        }
+
+        //écriture des positions des tirs d'armes rouges
+        foreach (var positionData in positionsTirsArmeRouge)
+        {
+            dataToFile.Add("rouge_" + positionData.Key.x + "_" + positionData.Key.y + "_" + positionData.Key.z + "_" + positionData.Value.x + "_" + positionData.Value.y + "_" + positionData.Value.z + "_" + positionData.Value.w);
+        }
+
+
+        //écriture des positions des joueurs au moment où ils font un kill
+        foreach (var positionData in positionsKill)
+        {
+            dataToFile.Add("kill_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        //écriture des positions des joueurs au moment de leur mort
+        foreach (var positionData in positionsMort)
+        {
+            dataToFile.Add("mort_" + positionData.x + "_" + positionData.y + "_" + positionData.z);
+        }
+
+        File.WriteAllLines(@cheminFichierData, dataToFile);
+        dataToFile.Clear();
     }
 }

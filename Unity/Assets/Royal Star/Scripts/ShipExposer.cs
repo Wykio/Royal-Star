@@ -200,7 +200,14 @@ public class ShipExposer : MonoBehaviour
                 
                 if(PhotonNetwork.IsMasterClient)
                 {
-                    dataCollector.MortParTir(ShipTransform.position);
+                    if(damage > 1000)
+                    {
+                        dataCollector.MortParBiome(ShipTransform.position);
+                    }
+                    else
+                    {
+                        dataCollector.MortParTir(ShipTransform.position);
+                    }
                 }
             }
         }

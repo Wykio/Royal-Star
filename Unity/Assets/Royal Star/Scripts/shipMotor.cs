@@ -55,11 +55,11 @@ public class shipMotor : MonoBehaviour
     #endregion
 
     #region Event de Data Collector
-    public event Action<int, Vector3> tirLaserBasique;
-    public event Action<int, Vector3> tirArmeBleue;
-    public event Action<int, Vector3> tirArmeVerte;
-    public event Action<int, Vector3> tirArmeRouge;
-    public event Action mortParBiomeDeLaPartie;
+    public event Action<int, Vector3, Quaternion> tirLaserBasique;
+    public event Action<int, Vector3, Quaternion> tirArmeBleue;
+    public event Action<int, Vector3, Quaternion> tirArmeVerte;
+    public event Action<int, Vector3, Quaternion> tirArmeRouge;
+    public event Action<Vector3> mortParBiomeDeLaPartie;
     #endregion
 
     private float propulsionAvantAppliquee;
@@ -78,8 +78,10 @@ public class shipMotor : MonoBehaviour
     {
         dicoLatence = new Dictionary<int, float>();
 
+        Debug.Log("ENREGISTREMENT DU JOUEUR");
         foreach(var joueur in PlayerNumbering.SortedPlayers)
         {
+            Debug.Log($"ENREGISTREMENT DU JOUEUR {joueur.ActorNumber}");
             dicoLatence.Add(joueur.ActorNumber, 0f);
         }
     }
@@ -94,196 +96,200 @@ public class shipMotor : MonoBehaviour
         }
     }
 
+    void UpdateVaisseauLogic(ShipExposer vaisseau, AIntentReceiver intentReceiver)
+    {
+        //Calcul du poids des armes actuellement sur le vaisseau
+        float weight = 1;
+
+        for (int w = 0; w < vaisseau.ShipWeapons.Length; w++)
+            if (vaisseau.ShipWeapons[w])
+                weight += (float) vaisseau.ShipWeapons[w].GetWeight();
+
+        float spinWeight = Math.Max(weight / 4, 1);
+        
+        //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
+        DetectionDuSolOnLine(vaisseau);
+        
+        if (!intentReceiver.AirBoostActivate && vaisseau.lecteurSon.clip == sonBoost && vaisseau.lecteurSon.isPlaying)
+        {
+            vaisseau.lecteurSon.Stop();
+            vaisseau.sonBoostEnCours = false;
+        }
+
+        //s'il veut changer d'arme
+        if (intentReceiver.ChangerArme != -1)
+            vaisseau.ChangerArme(intentReceiver.ChangerArme);
+        if (vaisseau.currentWeaponIndex != intentReceiver.SelectedWeapon)
+            vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
+        //S'il veut tirer
+        if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex] && !vaisseau.enPause)
+        {
+            photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
+            vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
+            vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(true);
+            if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
+            {
+                intentReceiver.WantToShootFirst = false;
+                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
+            }
+        } else
+            vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
+
+        bool askForBoost = false;
+        //si le vaisseau est en l'air on gère les intents suivants 
+        if(vaisseau.Aerien)
+        {
+            if (!vaisseau.ShipRigidBody.useGravity && !intentReceiver.AirBoostActivate)
+                vaisseau.ShipRigidBody.useGravity = true;
+            //si le vaisseau active le boost on gère ces intents
+            if (intentReceiver.AirBoostActivate
+                && (intentReceiver.WantToGoForward || intentReceiver.WantToGoBackward)
+                && vaisseau.getBoostState())
+            {
+                Vector3 applicatedForce = (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * vaisseau.ShipTransform.forward * (speed * 1.5f) / weight;
+
+                askForBoost = true;
+                vaisseau.SetLastBoostUse(Time.time);
+                if (!vaisseau.sonBoostEnCours)
+                {
+                    vaisseau.lecteurSon.clip = sonBoost;
+                    vaisseau.sonBoostEnCours = true;
+                    vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
+                    vaisseau.lecteurSon.Play();
+                }
+                if (vaisseau.ShipRigidBody.useGravity)
+                    vaisseau.ShipRigidBody.useGravity = false;
+                vaisseau.SetNewFieldOfView(90f, vaisseau.playerID);
+                vaisseau.ShipRigidBody.AddForce(
+                    intentReceiver.WantToGoForward ? applicatedForce : -applicatedForce,
+                    ForceMode.Force
+                );
+                vaisseau.UtilisationBoost(utilisationBoost);
+                //si la jauge de boost tombe à 0, le boost est désactivé le temps de sa recharge
+                if(vaisseau.getBoost() <= 0.0f)
+                    vaisseau.setBoostState(false);
+            }
+            else
+            {
+                vaisseau.SetNewFieldOfView(64f, vaisseau.playerID);
+                //recharge du boost
+                if (Time.time - vaisseau.GetLastBoostUse() >= boostDelay)
+                    vaisseau.RechargeBoost(rechargeBoost);
+                //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
+                if(!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
+                    vaisseau.setBoostState(true);
+            }
+            if (intentReceiver.AirPitch != 0f)
+            {
+                vaisseau.ShipRigidBody.AddRelativeTorque(
+                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.AirPitch * speedRotate,
+                    0,
+                    0
+                );
+                intentReceiver.AirPitch = 0f;
+            }
+            if(intentReceiver.AirRollLeft || intentReceiver.AirRollRight)
+                vaisseau.ShipTransform.Rotate(
+                    0,
+                    0,
+                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * (intentReceiver.AirRollLeft ? speedRotate : -speedRotate) * Time.deltaTime / spinWeight
+                );
+        }
+        else
+        {
+            Vector3 moveIntent = Vector3.zero;
+
+            if (!vaisseau.ShipRigidBody.useGravity)
+                vaisseau.ShipRigidBody.useGravity = true;
+            //et on gère ces intents 
+            vaisseau.SetNewFieldOfView(60f, vaisseau.playerID);
+            //s'il est en contact avec le sol, on applique la fonction de lévitation
+            Hover(vaisseau);
+            //recharge du boost
+            vaisseau.RechargeBoost(rechargeBoost);
+            //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
+            if (!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
+                vaisseau.setBoostState(true);
+            if (intentReceiver.WantToGoForward)
+                moveIntent += vaisseau.ShipTransform.forward;
+            if (intentReceiver.WantToGoBackward)
+                moveIntent += -vaisseau.ShipTransform.forward;
+            if (intentReceiver.WantToStrafeRight)
+                moveIntent += vaisseau.ShipTransform.right;
+            if (intentReceiver.WantToStrafeLeft)
+                moveIntent += -vaisseau.ShipTransform.right;
+            Debug.Log($"PLAYERID JOUEUR: {vaisseau.playerID}");
+            vaisseau.ShipRigidBody.AddForce(
+                (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * moveIntent.normalized * propulsionAvantAppliquee / weight,
+                ForceMode.Force
+            );
+        }
+        if(intentReceiver.WantToTurn != 0f)
+        {
+            vaisseau.ShipRigidBody.AddRelativeTorque(
+                0,
+                (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.WantToTurn * speedRotate / spinWeight,
+                0
+            );
+            intentReceiver.WantToTurn = 0f;
+        }
+        //application de l'effet de damping sur le vaisseau
+        Damping(vaisseau, askForBoost);
+        if(PhotonNetwork.IsMasterClient)
+            foreach(var joueur in PlayerNumbering.SortedPlayers)
+                if(joueur.ActorNumber == vaisseau.playerID)
+                {
+                    //envoie de la position réelle au client
+                    photonView.RPC(
+                        "PredictionRPC",
+                        joueur,
+                        vaisseau.ShipRigidBody.position.x,
+                        vaisseau.ShipRigidBody.position.y,
+                        vaisseau.ShipRigidBody.position.z,
+                        vaisseau.ShipRigidBody.rotation.x,
+                        vaisseau.ShipRigidBody.rotation.y,
+                        vaisseau.ShipRigidBody.rotation.z,
+                        vaisseau.ShipRigidBody.rotation.w,
+                        vaisseau.ShipRigidBody.velocity.x,
+                        vaisseau.ShipRigidBody.velocity.y,
+                        vaisseau.ShipRigidBody.velocity.z,
+                        vaisseau.playerID
+                    );
+                    break;
+                }
+    }
+
     //fonction du masterclient pour update l'ensemble des vaisseaux en fonction des inputs envoyés par leurs clients respectifs
     void UpdateGameState()
     {
+        ShipExposer vaisseau;
+        AIntentReceiver intentReceiver;
         int activatedAvatarsCount = 0;
 
         //boucle pour controller l'ensemble des vaisseaux
         for (var i = 0; i < activatedIntentReceivers.Length; i++)
         {
-            var intentReceiver = activatedIntentReceivers[i];
-            var vaisseau = vaisseaux[i];
+            vaisseau = vaisseaux[i];
+            intentReceiver = activatedIntentReceivers[i];
 
-            //si le vaisseau tombe dans le vide et dépasse la hauteur limite, il meurt
-            if(vaisseau.ShipTransform.position.y < hauteurMort)
+            if (vaisseau.ShipTransform.position.y < hauteurMort)
             {
                 vaisseau.TakeDamage(9999);
-                mortParBiomeDeLaPartie.Invoke();
+                mortParBiomeDeLaPartie.Invoke(vaisseau.transform.position);
             }
-
             //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
             if (!vaisseau.alive && vaisseau.ShipRootGameObject.activeSelf)
             {
                 //affichage de l'écran de défaite par l'interfaceManager via l'event
                 FinDePartiePourUnJoueur(vaisseau.playerID, false);
-
                 //désactivation du vaisseau
                 DesactivationVaisseau(i, vaisseau.playerID);
             }
-
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
-
-            //Calcul du poids des armes actuellement sur le vaisseau
-            float weight = 1;
-
-            for (int w = 0; w < vaisseau.ShipWeapons.Length; w++)
-                if (vaisseau.ShipWeapons[w])
-                    weight += (float) vaisseau.ShipWeapons[w].GetWeight();
-
-            float spinWeight = Math.Max(weight / 4, 1);
-
-            //pour chaque vaisseau connecté, on détecte s'il est au niveau du sol
-            DetectionDuSolOnLine(vaisseau);
-
-            //s'il veut changer d'arme
-            if (intentReceiver.ChangerArme != -1)
-                vaisseau.ChangerArme(intentReceiver.ChangerArme);
-            if (vaisseau.currentWeaponIndex != intentReceiver.SelectedWeapon)
-                vaisseau.ChangeWeapon(intentReceiver.SelectedWeapon);
-            if (!intentReceiver.AirBoostActivate)
-                if (vaisseau.lecteurSon.clip == sonBoost && vaisseau.lecteurSon.isPlaying)
-                {
-                    vaisseau.lecteurSon.Stop();
-                    vaisseau.sonBoostEnCours = false;
-                }
-
-            //S'il veut tirer
-            if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex] && !vaisseau.enPause)
-            {
-                photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(true);
-                if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
-                {
-                    intentReceiver.WantToShootFirst = false;
-                    vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
-                }
-            } else
-                vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
-
-            bool askForBoost = false;
-            //si le vaisseau est en l'air on gère les intents suivants 
-            if(vaisseau.Aerien)
-            {
-                if (!vaisseau.ShipRigidBody.useGravity && !intentReceiver.AirBoostActivate)
-                    vaisseau.ShipRigidBody.useGravity = true;
-                //si le vaisseau active le boost on gère ces intents
-                if (intentReceiver.AirBoostActivate
-                    && (intentReceiver.WantToGoForward || intentReceiver.WantToGoBackward)
-                    && vaisseau.getBoostState())
-                {
-                    Vector3 applicatedForce = (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * vaisseau.ShipTransform.forward * (speed * 1.5f) / weight;
-
-                    askForBoost = true;
-                    vaisseau.SetLastBoostUse(Time.time);
-                    if (!vaisseau.sonBoostEnCours)
-                    {
-                        vaisseau.lecteurSon.clip = sonBoost;
-                        vaisseau.sonBoostEnCours = true;
-                        vaisseau.lecteurSon.volume = gestionSon.GetParametreBruitages();
-                        vaisseau.lecteurSon.Play();
-                    }
-                    if (vaisseau.ShipRigidBody.useGravity)
-                        vaisseau.ShipRigidBody.useGravity = false;
-                    vaisseau.SetNewFieldOfView(90f, vaisseau.playerID);
-                    vaisseau.ShipRigidBody.AddForce(
-                        intentReceiver.WantToGoForward ? applicatedForce : -applicatedForce,
-                        ForceMode.Force
-                    );
-                    vaisseau.UtilisationBoost(utilisationBoost);
-                    //si la jauge de boost tombe à 0, le boost est désactivé le temps de sa recharge
-                    if(vaisseau.getBoost() <= 0.0f)
-                        vaisseau.setBoostState(false);
-                }
-                else
-                {
-                    vaisseau.SetNewFieldOfView(64f, vaisseau.playerID);
-                    //recharge du boost
-                    if (Time.time - vaisseau.GetLastBoostUse() >= boostDelay)
-                        vaisseau.RechargeBoost(rechargeBoost);
-                    //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
-                    if(!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
-                        vaisseau.setBoostState(true);
-                }
-                if (intentReceiver.AirPitch != 0f)
-                {
-                    vaisseau.ShipRigidBody.AddRelativeTorque(
-                        (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.AirPitch * speedRotate,
-                        0,
-                        0
-                    );
-                    intentReceiver.AirPitch = 0f;
-                }
-                if(intentReceiver.AirRollLeft || intentReceiver.AirRollRight)
-                    vaisseau.ShipTransform.Rotate(
-                        0,
-                        0,
-                        (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * (intentReceiver.AirRollLeft ? speedRotate : -speedRotate) * Time.deltaTime / spinWeight
-                    );
-            }
-            else
-            {
-                Vector3 moveIntent = Vector3.zero;
-
-                if (!vaisseau.ShipRigidBody.useGravity)
-                    vaisseau.ShipRigidBody.useGravity = true;
-                //et on gère ces intents 
-                vaisseau.SetNewFieldOfView(60f, vaisseau.playerID);
-                //s'il est en contact avec le sol, on applique la fonction de lévitation
-                Hover(vaisseau);
-                //recharge du boost
-                vaisseau.RechargeBoost(rechargeBoost);
-                //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
-                if (!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
-                    vaisseau.setBoostState(true);
-                if (intentReceiver.WantToGoForward)
-                    moveIntent += vaisseau.ShipTransform.forward;
-                if (intentReceiver.WantToGoBackward)
-                    moveIntent += -vaisseau.ShipTransform.forward;
-                if (intentReceiver.WantToStrafeRight)
-                    moveIntent += vaisseau.ShipTransform.right;
-                if (intentReceiver.WantToStrafeLeft)
-                    moveIntent += -vaisseau.ShipTransform.right;
-                vaisseau.ShipRigidBody.AddForce(
-                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * moveIntent.normalized * propulsionAvantAppliquee / weight,
-                    ForceMode.Force
-                );
-            }
-            if(intentReceiver.WantToTurn != 0f)
-            {
-                vaisseau.ShipRigidBody.AddRelativeTorque(
-                    0,
-                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.WantToTurn * speedRotate / spinWeight,
-                    0
-                );
-                intentReceiver.WantToTurn = 0f;
-            }
-            //application de l'effet de damping sur le vaisseau
-            Damping(vaisseau, askForBoost);
-            if(PhotonNetwork.IsMasterClient)
-                foreach(var joueur in PlayerNumbering.SortedPlayers)
-                    if(joueur.ActorNumber == vaisseau.playerID)
-                    {
-                        //envoie de la position réelle au client
-                        photonView.RPC(
-                            "PredictionRPC",
-                            joueur,
-                            vaisseau.ShipRigidBody.position.x,
-                            vaisseau.ShipRigidBody.position.y,
-                            vaisseau.ShipRigidBody.position.z,
-                            vaisseau.ShipRigidBody.rotation.x,
-                            vaisseau.ShipRigidBody.rotation.y,
-                            vaisseau.ShipRigidBody.rotation.z,
-                            vaisseau.ShipRigidBody.rotation.w,
-                            vaisseau.ShipRigidBody.velocity.x,
-                            vaisseau.ShipRigidBody.velocity.y,
-                            vaisseau.ShipRigidBody.velocity.z,
-                            vaisseau.playerID
-                        );
-                        break;
-                    }
+            Debug.Log($"Vaisseau IS ACTIVE AND ENABLED: {vaisseau.isActiveAndEnabled}");
+            if (vaisseau.isActiveAndEnabled)
+                UpdateVaisseauLogic(vaisseau, intentReceiver);
         }
         //s'il ne reste qu'un joueur en vie, il gagne la partie
         if (activatedAvatarsCount == 1 && gameController.waitForPlayersToPlay)
@@ -316,21 +322,13 @@ public class shipMotor : MonoBehaviour
         }
 
         //si le client n'est pas le masterClient, on ne fait rien
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient && !prediction)
-        {
+        if (!gameStarted ||
+            (PhotonNetwork.IsConnected
+                && !PhotonNetwork.IsMasterClient
+                && !prediction))
             return;
-        }
-
-        if (!gameStarted)
-        {
-            return;
-        }
-
         if (PhotonNetwork.IsMasterClient && dicoLatence == null)
-        {
             SetDictionnaireLatence();
-        }
-
         if (!lumieresLancees && PhotonNetwork.IsMasterClient)
         {
             dataCollector.InitialiserLesDictionnaires();
@@ -586,19 +584,19 @@ public class shipMotor : MonoBehaviour
                         switch (armeActive)
                         {
                             case 0:
-                                tirLaserBasique.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
+                                tirLaserBasique.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
                                 break;
 
                             case 1:
-                                tirArmeBleue.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
+                                tirArmeBleue.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
                                 break;
 
                             case 2:
-                                tirArmeVerte.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
+                                tirArmeVerte.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
                                 break;
 
                             case 3:
-                                tirArmeRouge.Invoke(idTireur, vaisseaux[i].ShipTransform.position);
+                                tirArmeRouge.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
                                 break;
                         }
                     }
