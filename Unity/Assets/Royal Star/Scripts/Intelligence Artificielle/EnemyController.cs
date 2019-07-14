@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header ("Référence")]
+    [SerializeField] private WeaponManagerScript weaponManagerScript;
+    
+    [Header ("Déplacement")]
     private GameObject[] targets;
-
     [SerializeField] private float lookRange = 1000.0f;
     [SerializeField] private float maxSpeed = 5.0f;
     [SerializeField] private float targetDistance;
-    private RaycastHit shot;
     
     private void Start()
     {
@@ -30,6 +32,10 @@ public class EnemyController : MonoBehaviour
             {
                 transform.position = Vector3.MoveTowards(transform.position,
                     targets[idTargetLocked].transform.position, maxSpeed * (targetDistance/lookRange));
+                if (targetDistance <= 200)
+                {
+                    weaponManagerScript.Shoot();
+                }
             }
         }
     }

@@ -773,6 +773,8 @@ MonoBehaviour:
   ShipCamera: {fileID: 3361519573588220657}
   lecteurSon: {fileID: 7298937804535216200}
   ShipHitbox: {fileID: 9006751233132591676}
+  vaisseauActif: 0
+  enPause: 0
   ArmeBleue1: {fileID: 5965650074516303622}
   ArmeBleue1Collider: {fileID: 5508184021299262518}
   ArmeBleue2: {fileID: 3993272693410811459}
@@ -801,6 +803,7 @@ MonoBehaviour:
   facteurDegatsBouclier: 1
   facteurUtilisationBoost: 1
   facteurRechargeBoost: 1
+  dataCollector: {fileID: 0}
   sonBoostEnCours: 0
   ShipWeapons:
   - {fileID: 7500480008265696139}
@@ -827,7 +830,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 2.5679665
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -1904,6 +1907,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2043,6 +2076,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Rouge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2342933976531149084, guid: 6f322e58bef3c6e45af986ad7c148081,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2098,51 +2176,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Rouge
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906988112848761107, guid: 6f322e58bef3c6e45af986ad7c148081,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f322e58bef3c6e45af986ad7c148081, type: 3}
 --- !u!1 &5741970546714917341 stripped
@@ -2170,6 +2203,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2227,78 +2305,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
---- !u!65 &3013413199619888499 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 128641194809601212, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2889284745203202511}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8506701823550854890 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2889284745203202511}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &3993272693410811459 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2889284745203202511}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &5600233091179075722
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 3361519573493428610}
-    m_Modifications:
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
 --- !u!1 &3993272693410811459 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
@@ -2324,6 +2330,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Bleue
+      objectReference: {fileID: 0}
     - target: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2379,51 +2430,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Bleue
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
 --- !u!65 &5508184021299262518 stripped
@@ -2451,20 +2457,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
-    - target: {fileID: 1868917175024140228, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
-        type: 3}
-      propertyPath: bulletPoolManager
-      value: 
-      objectReference: {fileID: 2380105399905091863}
     - target: {fileID: 5956294763354272052, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: m_Name
       value: LaserWeapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 2182517418093152020, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 4.6
       objectReference: {fileID: 0}
     - target: {fileID: 2636033572947181719, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
@@ -2521,6 +2517,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1868917175024140228, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
+        type: 3}
+      propertyPath: bulletPoolManager
+      value: 
+      objectReference: {fileID: 2380105399905091863}
+    - target: {fileID: 2182517418093152020, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2350954242363343248, guid: e7f9b7506c8d2496fb33d3f158d6a05b,
         type: 3}
       propertyPath: pose
@@ -2558,6 +2564,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474322168938574756}
     m_Modifications:
+    - target: {fileID: 5956294763354272052, guid: e0d7b9e6977439143bddd6109e6b89b1,
+        type: 3}
+      propertyPath: m_Name
+      value: BurstWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868917175024140228, guid: e0d7b9e6977439143bddd6109e6b89b1,
+        type: 3}
+      propertyPath: bulletPoolManager
+      value: 
+      objectReference: {fileID: 280573389712650618}
     - target: {fileID: 2636033572947181719, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2613,16 +2629,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1868917175024140228, guid: e0d7b9e6977439143bddd6109e6b89b1,
-        type: 3}
-      propertyPath: bulletPoolManager
-      value: 
-      objectReference: {fileID: 280573389712650618}
-    - target: {fileID: 5956294763354272052, guid: e0d7b9e6977439143bddd6109e6b89b1,
-        type: 3}
-      propertyPath: m_Name
-      value: BurstWeapon
-      objectReference: {fileID: 0}
     - target: {fileID: 2182517418093152020, guid: e0d7b9e6977439143bddd6109e6b89b1,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -2670,6 +2676,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3361519573493428610}
     m_Modifications:
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Verte 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Arme Verte
+      objectReference: {fileID: 0}
+    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2723,51 +2774,6 @@ PrefabInstance:
     - target: {fileID: 8010900120487265417, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Verte 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Arme Verte
-      objectReference: {fileID: 0}
-    - target: {fileID: 2255125672774395065, guid: 222fb97ab5477454689a4ef3d0d1c7cb,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
