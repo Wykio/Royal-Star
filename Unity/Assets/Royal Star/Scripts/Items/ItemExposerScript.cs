@@ -58,10 +58,6 @@ public class ItemExposerScript : MonoBehaviour
     {
         if (ramasse) return;
         
-        Debug.Log(other);
-        Debug.Log(other.attachedRigidbody);
-        Debug.Log(other.attachedRigidbody.gameObject);
-        
         //si le collider est un joueur
         if(other.gameObject.CompareTag("Player")) //other.attachedRigidbody.gameObject.tag == "Player"
         {
