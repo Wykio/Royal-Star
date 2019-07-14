@@ -76,15 +76,13 @@ public class IntentSenderScript : AIntentReceiver
 
     void JoystickMapping()
     {
-        float strafeAxis = Input.GetAxis("JoystickRightHorizontal");
-        float moveAxis = Input.GetAxis("JoystickRightVertical");
-        float turnAxis = Input.GetAxis("JoystickLeftHorizontal");
-        float pitchAxis = -Input.GetAxis("JoystickLeftVertical");
+        float strafeAxis = Input.GetAxis("Joystick HRS");
+        float moveAxis = Input.GetAxis("Joystick VRS");
+        float turnAxis = Input.GetAxis("Horizontal");
+        float pitchAxis = -Input.GetAxis("Vertical");
+        float turbo = Input.GetAxis("Joystick LT");
+        float shoot = Input.GetAxis("Joystick RT");
 
-        // Debug.Log(strafeAxis);
-        // Debug.Log(moveAxis);
-        // Debug.Log(turnAxis);
-        // Debug.Log(pitchAxis);
         if (strafeAxis != 0f) {
             if (strafeAxis > 0f) {
                 photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, true);
@@ -108,7 +106,26 @@ public class IntentSenderScript : AIntentReceiver
         if (pitchAxis != 0f)
             photonView.RPC("AirPitchRPC", RpcTarget.MasterClient, pitchAxis);
         if (turnAxis != 0f)
+        {
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, turnAxis);
+            if (turnAxis > 0f) {
+                photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, true);
+            } else {
+                photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, true);
+            }
+        } else {
+            photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, false);
+            photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, false);
+        }
+        if (shoot != 0f)
+            photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, true);
+        else
+            photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, false);
+        if (turbo != 0f)
+            photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, true);
+        else
+            photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
+        
     }
 
     public void Update()

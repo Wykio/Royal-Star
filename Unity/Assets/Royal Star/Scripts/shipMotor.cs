@@ -78,18 +78,14 @@ public class shipMotor : MonoBehaviour
     {
         dicoLatence = new Dictionary<int, float>();
 
-        Debug.Log("ENREGISTREMENT DU JOUEUR");
-        foreach(var joueur in PlayerNumbering.SortedPlayers)
-        {
-            Debug.Log($"ENREGISTREMENT DU JOUEUR {joueur.ActorNumber}");
+        foreach (var joueur in PlayerNumbering.SortedPlayers)
             dicoLatence.Add(joueur.ActorNumber, 0f);
-        }
     }
 
     //les clients envoient leur latence toutes les 2 secondes au masterclient
     private IEnumerator EnvoyerLatence()
     {
-        while(gameStarted && !PhotonNetwork.IsMasterClient)
+        while (gameStarted && !PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("EnvoyerLatenceRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
             yield return new WaitForSeconds(0.5f);
@@ -137,7 +133,7 @@ public class shipMotor : MonoBehaviour
 
         bool askForBoost = false;
         //si le vaisseau est en l'air on gère les intents suivants 
-        if(vaisseau.Aerien)
+        if (vaisseau.Aerien)
         {
             if (!vaisseau.ShipRigidBody.useGravity && !intentReceiver.AirBoostActivate)
                 vaisseau.ShipRigidBody.useGravity = true;
@@ -166,7 +162,7 @@ public class shipMotor : MonoBehaviour
                 );
                 vaisseau.UtilisationBoost(utilisationBoost);
                 //si la jauge de boost tombe à 0, le boost est désactivé le temps de sa recharge
-                if(vaisseau.getBoost() <= 0.0f)
+                if (vaisseau.getBoost() <= 0.0f)
                     vaisseau.setBoostState(false);
             }
             else
@@ -176,7 +172,7 @@ public class shipMotor : MonoBehaviour
                 if (Time.time - vaisseau.GetLastBoostUse() >= boostDelay)
                     vaisseau.RechargeBoost(rechargeBoost);
                 //si le vaisseau a son boost en rechargement et qu'il est au max, il est de nouveau disponible
-                if(!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
+                if (!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
                     vaisseau.setBoostState(true);
             }
             if (intentReceiver.AirPitch != 0f)
@@ -188,7 +184,7 @@ public class shipMotor : MonoBehaviour
                 );
                 intentReceiver.AirPitch = 0f;
             }
-            if(intentReceiver.AirRollLeft || intentReceiver.AirRollRight)
+            if (intentReceiver.AirRollLeft || intentReceiver.AirRollRight)
                 vaisseau.ShipTransform.Rotate(
                     0,
                     0,
@@ -218,13 +214,12 @@ public class shipMotor : MonoBehaviour
                 moveIntent += vaisseau.ShipTransform.right;
             if (intentReceiver.WantToStrafeLeft)
                 moveIntent += -vaisseau.ShipTransform.right;
-            Debug.Log($"PLAYERID JOUEUR: {vaisseau.playerID}");
             vaisseau.ShipRigidBody.AddForce(
                 (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * moveIntent.normalized * propulsionAvantAppliquee / weight,
                 ForceMode.Force
             );
         }
-        if(intentReceiver.WantToTurn != 0f)
+        if (intentReceiver.WantToTurn != 0f)
         {
             vaisseau.ShipRigidBody.AddRelativeTorque(
                 0,
@@ -235,9 +230,9 @@ public class shipMotor : MonoBehaviour
         }
         //application de l'effet de damping sur le vaisseau
         Damping(vaisseau, askForBoost);
-        if(PhotonNetwork.IsMasterClient)
-            foreach(var joueur in PlayerNumbering.SortedPlayers)
-                if(joueur.ActorNumber == vaisseau.playerID)
+        if (PhotonNetwork.IsMasterClient)
+            foreach (var joueur in PlayerNumbering.SortedPlayers)
+                if (joueur.ActorNumber == vaisseau.playerID)
                 {
                     //envoie de la position réelle au client
                     photonView.RPC(
@@ -287,14 +282,13 @@ public class shipMotor : MonoBehaviour
             }
             //Nombre de joueurs encore en vie
             activatedAvatarsCount += vaisseau.ShipRootGameObject.activeSelf ? 1 : 0;
-            Debug.Log($"Vaisseau IS ACTIVE AND ENABLED: {vaisseau.isActiveAndEnabled}");
             if (vaisseau.isActiveAndEnabled)
                 UpdateVaisseauLogic(vaisseau, intentReceiver);
         }
         //s'il ne reste qu'un joueur en vie, il gagne la partie
         if (activatedAvatarsCount == 1 && gameController.waitForPlayersToPlay)
-            for(int parcours = 0; parcours < vaisseaux.Length; parcours++)
-                if(vaisseaux[parcours].ShipRootGameObject.activeSelf)
+            for (int parcours = 0; parcours < vaisseaux.Length; parcours++)
+                if (vaisseaux[parcours].ShipRootGameObject.activeSelf)
                 {
                     FinDePartiePourUnJoueur(vaisseaux[parcours].playerID, true);
                     DesactivationVaisseau(parcours, vaisseaux[parcours].playerID);
@@ -305,7 +299,7 @@ public class shipMotor : MonoBehaviour
     void FixedUpdate()
     {
         //au niveau du client, si le joueur presse ECHAP, le menu de pause s'active ou se désactive en fonction de son état
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!menuPauseAffiche)
             {
@@ -367,7 +361,7 @@ public class shipMotor : MonoBehaviour
         RaycastHit hit;
 
         //si le vaisseau est en dessous de la hauteur maximale, on applique une force vers le haut relative à la distance entre le sol et le vaisseau
-        if(Physics.Raycast(scan, out hit, hoverHeight))
+        if (Physics.Raycast(scan, out hit, hoverHeight))
         {
             float distance = Vector3.Distance(vaisseau.ShipCentreGravite.position, hit.point);
             
@@ -411,18 +405,18 @@ public class shipMotor : MonoBehaviour
         List<Vector3> listeNormales = new List<Vector3>();
         Vector3 normaleMoyenne = Vector3.zero;
 
-        foreach(Transform hoverPoint in points)
+        foreach (Transform hoverPoint in points)
         {
             Ray scan = new Ray(hoverPoint.position, -hoverPoint.up);
             RaycastHit hit;
 
-            if(Physics.Raycast(scan, out hit, distance))
+            if (Physics.Raycast(scan, out hit, distance))
             {
                 listeNormales.Add(hit.normal);
             }
         }
 
-        foreach(Vector3 normale in listeNormales)
+        foreach (Vector3 normale in listeNormales)
         {
             normaleMoyenne += normale;
         }
@@ -457,7 +451,7 @@ public class shipMotor : MonoBehaviour
 
     public void LancerChronosInterfaces(int dureeBiome)
     {
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("LancerChronosInterfacesRPC", RpcTarget.All, dureeBiome);
         }
@@ -497,7 +491,7 @@ public class shipMotor : MonoBehaviour
 
     public void LancerChronosInterfaces()
     {
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("LancerChronosInterfacesRPC", RpcTarget.All, gestionnaireMap.GetDureeBiome(), gestionnaireMap.GetDureeOuverturePortails());
         }
@@ -511,9 +505,9 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void EtatPauseJoueurRPC(int joueurID, bool etat)
     {
-        foreach(var vaisseau in vaisseaux)
+        foreach (var vaisseau in vaisseaux)
         {
-            if(vaisseau.playerID == joueurID)
+            if (vaisseau.playerID == joueurID)
             {
                 vaisseau.enPause = etat;
                 break;
@@ -524,9 +518,9 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void LancerChronosInterfacesRPC(int dureeBiome, int dureeOuverturePortails)
     {
-        foreach(var vaisseau in vaisseaux)
+        foreach (var vaisseau in vaisseaux)
         {
-            if(vaisseau.playerID == PhotonNetwork.LocalPlayer.ActorNumber && vaisseau.alive)
+            if (vaisseau.playerID == PhotonNetwork.LocalPlayer.ActorNumber && vaisseau.alive)
             {
                 StartCoroutine(vaisseau.GestionChronometre(gestionnaireMap.GetDureeBiome(), gestionnaireMap.GetDureeOuverturePortails()));
                 break;
@@ -572,9 +566,9 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void ShootRPC(int idTireur, int armeActive)
     {
-        for(int i = 0; i < vaisseaux.Length; i++)
+        for (int i = 0; i < vaisseaux.Length; i++)
         {
-            if(vaisseaux[i].playerID == idTireur)
+            if (vaisseaux[i].playerID == idTireur)
             {
                 //le masterclient envoie la donnée du tir au data Collector
                 if (PhotonNetwork.IsMasterClient)
@@ -624,15 +618,15 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void PredictionRPC(float positionX, float positionY, float positionZ, float q1, float q2, float q3, float q4, float velociteX, float velociteY, float velociteZ, int idJoueur)
     {
-        if(PhotonNetwork.LocalPlayer.ActorNumber == idJoueur && !PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.LocalPlayer.ActorNumber == idJoueur && !PhotonNetwork.IsMasterClient)
         {
             var position = new Vector3(positionX, positionY, positionZ);
             var velocite = new Vector3(velociteX, velociteY, velociteZ);
             var rotation = new Quaternion(q1, q2, q3, q4);
 
-            for(int i = 0; i < vaisseaux.Length; i++)
+            for (int i = 0; i < vaisseaux.Length; i++)
             {
-                if(vaisseaux[i].playerID == PhotonNetwork.LocalPlayer.ActorNumber)
+                if (vaisseaux[i].playerID == PhotonNetwork.LocalPlayer.ActorNumber)
                 {
 
                     vaisseaux[i].ShipRigidBody.position = position;
