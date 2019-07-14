@@ -57,7 +57,7 @@ public class shipMotor : MonoBehaviour
     public event Action<int, Vector3, Quaternion> tirArmeBleue;
     public event Action<int, Vector3, Quaternion> tirArmeVerte;
     public event Action<int, Vector3, Quaternion> tirArmeRouge;
-    public event Action mortParBiomeDeLaPartie;
+    public event Action<Vector3> mortParBiomeDeLaPartie;
     #endregion
 
     private float propulsionAvantAppliquee;
@@ -109,7 +109,7 @@ public class shipMotor : MonoBehaviour
                 if (vaisseau.ShipTransform.position.y < hauteurMort && vaisseau.isActiveAndEnabled)
                 {
                     vaisseau.TakeDamage(9999);
-                    mortParBiomeDeLaPartie.Invoke();
+                    mortParBiomeDeLaPartie.Invoke(vaisseau.transform.position);
                 }
 
                 //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
