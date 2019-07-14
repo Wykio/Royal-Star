@@ -80,7 +80,8 @@ public class BulletPoolManagerScript : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, range)
-            && Equals(hit.transform.gameObject.tag, "Player")) {
+            && Equals(hit.transform.gameObject.tag, "Player"))
+        {
             ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
             if (target != null)
