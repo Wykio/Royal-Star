@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         int idTargetLocked = getClosestTargetId(targets);
-        Debug.Log("Id target :" + idTargetLocked);
+        // Debug.Log("Id target :" + idTargetLocked);
         targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
         if (targetDistance <= lookRange)
         {

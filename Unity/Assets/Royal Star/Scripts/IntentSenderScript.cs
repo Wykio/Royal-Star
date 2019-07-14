@@ -10,17 +10,15 @@ public class IntentSenderScript : AIntentReceiver
     [FormerlySerializedAs("PlayerActorId")]
     [SerializeField] private int IndiceJoueur;
     [SerializeField] private bool prediction = true;
-
     [SerializeField] PhotonView photonView;
 
-    KeyCode[] weaponKeys = new KeyCode[] {
+    readonly KeyCode[] weaponKeys = new KeyCode[] {
         KeyCode.Alpha1,
         KeyCode.Alpha2,
         KeyCode.Alpha3,
         KeyCode.Alpha4,
     };
-
-    KeyCode[] actionKeys = new KeyCode[] {
+    readonly KeyCode[] actionKeys = new KeyCode[] {
         KeyCode.Z,
         KeyCode.S,
         KeyCode.Q,
@@ -31,7 +29,7 @@ public class IntentSenderScript : AIntentReceiver
         KeyCode.Mouse0
     };
 
-    string[] rpcNames = new string[] {
+    readonly string[] rpcNames = new string[] {
         "WantToGoForwardRPC",
         "WantToGoBackwardRPC",
         "WantToStrafeLeftRPC",
@@ -42,18 +40,11 @@ public class IntentSenderScript : AIntentReceiver
         "WantToShootFirstRPC"
     };
 
-    public void Update()
+    void KeyboardAndMouseMappings()
     {
         //récupération des axes de souris
-        float sourisVerticale = -Input.GetAxis("Mouse Y");
-        float sourisHorizontale = Input.GetAxis("Mouse X");
-   
-        //si le joueur n'est pas dans la liste des joueurs ou que son numéro ne correspond pas au numéro de son indice
-        if (PlayerNumbering.SortedPlayers.Length <= IndiceJoueur ||
-            PlayerNumbering.SortedPlayers[IndiceJoueur].ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            return;
-        }
+        float horizontalAxis = Input.GetAxis("Mouse X");
+        float verticalAxis = -Input.GetAxis("Mouse Y");
 
         #region Inputs
 
@@ -67,7 +58,7 @@ public class IntentSenderScript : AIntentReceiver
             if (Input.GetKeyUp(actionKeys[i]))
             {
                 photonView.RPC(rpcNames[i], RpcTarget.MasterClient, false);
-                GetType().GetMethod(rpcNames[i])?.Invoke(this, new object[] { true });
+                GetType().GetMethod(rpcNames[i])?.Invoke(this, new object[] { false });
             }
         }
         //choisir l'arme de base
@@ -75,12 +66,61 @@ public class IntentSenderScript : AIntentReceiver
             if (Input.GetKeyDown(weaponKeys[i]))
                 photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, weaponKeys[i] - KeyCode.Alpha0);
 
-        if (sourisHorizontale != 0f)
-            photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, sourisHorizontale);
-        if (sourisVerticale != 0f)
-            photonView.RPC("BoostPitchRPC", RpcTarget.MasterClient, sourisVerticale);
-
+        if (horizontalAxis != 0f)
+            photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, horizontalAxis);
+        if (verticalAxis != 0f)
+            photonView.RPC("AirPitchRPC", RpcTarget.MasterClient, verticalAxis);
+        
         #endregion
+    }
+
+    void JoystickMapping()
+    {
+        float strafeAxis = Input.GetAxis("JoystickRightHorizontal");
+        float moveAxis = Input.GetAxis("JoystickRightVertical");
+        float turnAxis = Input.GetAxis("JoystickLeftHorizontal");
+        float pitchAxis = -Input.GetAxis("JoystickLeftVertical");
+
+        // Debug.Log(strafeAxis);
+        // Debug.Log(moveAxis);
+        // Debug.Log(turnAxis);
+        // Debug.Log(pitchAxis);
+        if (strafeAxis != 0f) {
+            if (strafeAxis > 0f) {
+                photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, true);
+            } else {
+                photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, true);
+            }
+        } else {
+            photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, false);
+            photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, false);
+        }
+        if (moveAxis != 0f) {
+            if (moveAxis > 0f) {
+                photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, true);
+            } else {
+                photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, true);
+            }
+        } else {
+            photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, false);
+            photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, false);
+        }
+        if (pitchAxis != 0f)
+            photonView.RPC("AirPitchRPC", RpcTarget.MasterClient, pitchAxis);
+        if (turnAxis != 0f)
+            photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, turnAxis);
+    }
+
+    public void Update()
+    {   
+        //si le joueur n'est pas dans la liste des joueurs ou que son numéro ne correspond pas au numéro de son indice
+        if (PlayerNumbering.SortedPlayers.Length <= IndiceJoueur ||
+            PlayerNumbering.SortedPlayers[IndiceJoueur].ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            return;
+        }
+        KeyboardAndMouseMappings();
+        //JoystickMapping();
     }
 
     #region [PunRPC]
@@ -176,11 +216,11 @@ public class IntentSenderScript : AIntentReceiver
     }
 
     [PunRPC]
-    void BoostPitchRPC(float intent)
+    void AirPitchRPC(float intent)
     {
         if(PhotonNetwork.IsMasterClient || prediction)
         {
-            BoostPitch = intent;
+            AirPitch = intent;
         }
     }
 

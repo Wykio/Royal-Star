@@ -169,19 +169,12 @@ public class shipMotor : MonoBehaviour
             {
                 if (!vaisseau.ShipRigidBody.useGravity && !intentReceiver.AirBoostActivate)
                     vaisseau.ShipRigidBody.useGravity = true;
-                if (intentReceiver.BoostPitch != 0f)
-                {
-                    vaisseau.ShipRigidBody.AddRelativeTorque(intentReceiver.BoostPitch * speedRotate + (PhotonNetwork.IsMasterClient ?
-                        intentReceiver.BoostPitch * speedRotate * dicoLatence[vaisseau.playerID] * 2 : 0),
-                    0, 0);
-                    intentReceiver.BoostPitch = 0f;
-                }
                 //si le vaisseau active le boost on gère ces intents
-                if (intentReceiver.AirBoostActivate && vaisseau.getBoostState())
+                if (intentReceiver.AirBoostActivate
+                    && (intentReceiver.WantToGoForward || intentReceiver.WantToGoBackward)
+                    && vaisseau.getBoostState())
                 {
-                    Vector3 applicatedForce =  vaisseau.ShipTransform.forward * (speed * 1.5f) / weight + (PhotonNetwork.IsMasterClient ?
-                        vaisseau.ShipTransform.forward * (speed * 1.5f) / weight * (dicoLatence[vaisseau.playerID] * 2)
-                        : Vector3.zero);
+                    Vector3 applicatedForce = (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * vaisseau.ShipTransform.forward * (speed * 1.5f) / weight;
 
                     askForBoost = true;
                     vaisseau.SetLastBoostUse(Time.time);
@@ -214,14 +207,21 @@ public class shipMotor : MonoBehaviour
                     if(!vaisseau.getBoostState() && vaisseau.getBoost() >= 200f)
                         vaisseau.setBoostState(true);
                 }
-                float zAngle = 0;
-
-                if(intentReceiver.AirRollLeft)
-                    zAngle = speedRotate * Time.deltaTime + (PhotonNetwork.IsMasterClient ? speedRotate * Time.deltaTime * dicoLatence[vaisseau.playerID] * 2 : 0);
-                if(intentReceiver.AirRollRight)
-                    zAngle = -speedRotate * Time.deltaTime - speedRotate * Time.deltaTime * dicoLatence[vaisseau.playerID] * 2;
-                if (zAngle > 0.0f)
-                    vaisseau.ShipTransform.Rotate(0, 0, zAngle / spinWeight);
+                if (intentReceiver.AirPitch != 0f)
+                {
+                    vaisseau.ShipRigidBody.AddRelativeTorque(
+                        (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.AirPitch * speedRotate,
+                        0,
+                        0
+                    );
+                    intentReceiver.AirPitch = 0f;
+                }
+                if(intentReceiver.AirRollLeft || intentReceiver.AirRollRight)
+                    vaisseau.ShipTransform.Rotate(
+                        0,
+                        0,
+                        (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * (intentReceiver.AirRollLeft ? speedRotate : -speedRotate) * Time.deltaTime / spinWeight
+                    );
             }
             else
             {
@@ -247,17 +247,17 @@ public class shipMotor : MonoBehaviour
                 if (intentReceiver.WantToStrafeLeft)
                     moveIntent += -vaisseau.ShipTransform.right;
                 vaisseau.ShipRigidBody.AddForce(
-                    moveIntent.normalized * propulsionAvantAppliquee / weight + (PhotonNetwork.IsMasterClient ?
-                        moveIntent.normalized * propulsionAvantAppliquee * dicoLatence[vaisseau.playerID] * 2 / spinWeight
-                        : Vector3.zero),
+                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * moveIntent.normalized * propulsionAvantAppliquee / weight,
                     ForceMode.Force
                 );
             }
             if(intentReceiver.WantToTurn != 0f)
             {
-                vaisseau.ShipRigidBody.AddRelativeTorque(0, intentReceiver.WantToTurn * speedRotate / spinWeight + (PhotonNetwork.IsMasterClient ?
-                    intentReceiver.WantToTurn * speedRotate * dicoLatence[vaisseau.playerID] * 2 / spinWeight : 0),
-                0);
+                vaisseau.ShipRigidBody.AddRelativeTorque(
+                    0,
+                    (1 + (PhotonNetwork.IsMasterClient ? dicoLatence[vaisseau.playerID] * 2 : 0)) * intentReceiver.WantToTurn * speedRotate / spinWeight,
+                    0
+                );
                 intentReceiver.WantToTurn = 0f;
             }
             //application de l'effet de damping sur le vaisseau
@@ -648,7 +648,7 @@ public class shipMotor : MonoBehaviour
     [PunRPC]
     private void EnvoyerLatenceRPC(int idJoueur, PhotonMessageInfo info)
     {
-        Debug.Log("latence client : " + idJoueur + " " + Convert.ToSingle(PhotonNetwork.Time - info.timestamp));
+        // Debug.Log("latence client : " + idJoueur + " " + Convert.ToSingle(PhotonNetwork.Time - info.timestamp));
         dicoLatence[idJoueur] = Convert.ToSingle(PhotonNetwork.Time - info.timestamp);
     }
 
@@ -696,7 +696,7 @@ public class shipMotor : MonoBehaviour
             activatedIntentReceivers[i].AirBoostActivate = false;
             activatedIntentReceivers[i].AirRollRight = false;
             activatedIntentReceivers[i].AirRollLeft = false;
-            activatedIntentReceivers[i].BoostPitch = 0f;
+            activatedIntentReceivers[i].AirPitch = 0f;
             activatedIntentReceivers[i].WantToGoBackward = false;
             activatedIntentReceivers[i].WantToGoForward = false;
             activatedIntentReceivers[i].WantToStrafeLeft = false;

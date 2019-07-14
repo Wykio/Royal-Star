@@ -20,7 +20,7 @@ public class AIntentReceiver : MonoBehaviour
 
     #region commandes Boost activé
     public bool AirBoostActivate { get; set; }
-    public float BoostPitch { get; set; }
+    public float AirPitch { get; set; }
 
     #endregion
 

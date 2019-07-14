@@ -158,7 +158,7 @@ public class DataCollectorScript : MonoBehaviour
     //afficher pour test
     public void AfficherDico()
     {
-        foreach (var data in tirsLaserBasiqueParJoueur)
+        /*foreach (var data in tirsLaserBasiqueParJoueur)
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a tiré " + data.Value + " fois au laser de base");
         }
@@ -186,6 +186,6 @@ public class DataCollectorScript : MonoBehaviour
         foreach (var data in tempsPasseEnLAirParJoueur)
         {
             Debug.Log("DATA COLLECTED : joueur " + data.Key + " a passé " + data.Value + " secondes en l'air");
-        }
+        }*/
     }
 }

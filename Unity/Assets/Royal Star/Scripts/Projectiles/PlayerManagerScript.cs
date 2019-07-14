@@ -26,7 +26,7 @@ public class PlayerManagerScript : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        Debug.Log("Player Manager takeDamage");
+        // Debug.Log("Player Manager takeDamage");
         hp -= damage;
         if (hp <= 0)
         {

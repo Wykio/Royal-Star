@@ -174,7 +174,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
     {
         if(newMasterClient == PhotonNetwork.LocalPlayer)
         {
-            Debug.Log("NOUVEAU MASTERCLIENT : " + newMasterClient.ActorNumber + " Ce joueur est : " + PhotonNetwork.LocalPlayer.ActorNumber);
+            // Debug.Log("NOUVEAU MASTERCLIENT : " + newMasterClient.ActorNumber + " Ce joueur est : " + PhotonNetwork.LocalPlayer.ActorNumber);
             //gameController.ActiverIntentReceivers();
         }
     }
