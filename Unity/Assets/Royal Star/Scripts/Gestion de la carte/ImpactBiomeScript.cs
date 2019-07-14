@@ -35,8 +35,8 @@ public class ImpactBiomeScript : MonoBehaviour
             {
                 StartCoroutine(AppliquerDegatsParSecondeBiomes());
                 routineLancee = true;
-                Debug.Log("IMPACT BIOME LANCEMENT COROUTINE");
-                Debug.Log("TYPES DES BIOMES : " + typesBiomes[0] + " " + typesBiomes[1] + " " + typesBiomes[2] + " " + typesBiomes[3]);
+                // Debug.Log("IMPACT BIOME LANCEMENT COROUTINE");
+                // Debug.Log("TYPES DES BIOMES : " + typesBiomes[0] + " " + typesBiomes[1] + " " + typesBiomes[2] + " " + typesBiomes[3]);
             }
 
             //pour chaque vaisseau, on applique l'effet du biome correspondant à la hauteur à laquelle il est
@@ -60,14 +60,14 @@ public class ImpactBiomeScript : MonoBehaviour
                         {
                             if (!vaisseauxDansBiome2.Contains(vaisseau))
                             {
-                                Debug.Log("CHANGEMENT DE BIOME");
+                                // Debug.Log("CHANGEMENT DE BIOME");
                                 AppliquerEffetBiome(typesBiomes[1], vaisseau);
                                 vaisseauxDansBiome2.Add(vaisseau);
 
                                 //on le retire le la liste du biome 1
                                 if (vaisseauxDansBiome1.Remove(vaisseau))
                                 {
-                                    Debug.Log("RETRAIT LISTE BIOME 1");
+                                    // Debug.Log("RETRAIT LISTE BIOME 1");
                                 }
                             }
                         }
@@ -114,7 +114,7 @@ public class ImpactBiomeScript : MonoBehaviour
             {
                 for(int i = 0; i < vaisseauxDansBiome1.Count; i++)
                 {
-                    Debug.Log("BIOME 1 Effet de feu sur le vaisseau " + vaisseauxDansBiome1[i].playerID);
+                    // Debug.Log("BIOME 1 Effet de feu sur le vaisseau " + vaisseauxDansBiome1[i].playerID);
                     vaisseauxDansBiome1[i].EffetFeu(1);
                 }
             }
@@ -124,7 +124,7 @@ public class ImpactBiomeScript : MonoBehaviour
                 {
                     for (int i = 0; i < vaisseauxDansBiome1.Count; i++)
                     {
-                        Debug.Log("BIOME 1 Effet de radiation sur le vaisseau " + vaisseauxDansBiome1[i].playerID);
+                        // Debug.Log("BIOME 1 Effet de radiation sur le vaisseau " + vaisseauxDansBiome1[i].playerID);
                         vaisseauxDansBiome1[i].EffetRadiation(1);
                     }
                 }
@@ -135,7 +135,7 @@ public class ImpactBiomeScript : MonoBehaviour
             {
                 for (int i = 0; i < vaisseauxDansBiome2.Count; i++)
                 {
-                    Debug.Log("BIOME 2 Effet de feu sur le vaisseau " + vaisseauxDansBiome2[i].playerID);
+                    // Debug.Log("BIOME 2 Effet de feu sur le vaisseau " + vaisseauxDansBiome2[i].playerID);
                     vaisseauxDansBiome2[i].EffetFeu(1);
                 }
             }
@@ -146,7 +146,7 @@ public class ImpactBiomeScript : MonoBehaviour
                 {
                     for (int i = 0; i < vaisseauxDansBiome2.Count; i++)
                     {
-                        Debug.Log("BIOME 2 Effet de radiation sur le vaisseau " + vaisseauxDansBiome2[i].playerID);
+                        // Debug.Log("BIOME 2 Effet de radiation sur le vaisseau " + vaisseauxDansBiome2[i].playerID);
                         vaisseauxDansBiome2[i].EffetRadiation(1);
                     }
                 }
@@ -157,7 +157,7 @@ public class ImpactBiomeScript : MonoBehaviour
             {
                 for (int i = 0; i < vaisseauxDansBiome3.Count; i++)
                 {
-                    Debug.Log("BIOME 3 Effet de feu sur le vaisseau " + vaisseauxDansBiome3[i].playerID);
+                    // Debug.Log("BIOME 3 Effet de feu sur le vaisseau " + vaisseauxDansBiome3[i].playerID);
                     vaisseauxDansBiome3[i].EffetFeu(1);
                 }
             }
@@ -167,7 +167,7 @@ public class ImpactBiomeScript : MonoBehaviour
                 {
                     for (int i = 0; i < vaisseauxDansBiome3.Count; i++)
                     {
-                        Debug.Log("BIOME 3 Effet de radiation sur le vaisseau " + vaisseauxDansBiome3[i].playerID);
+                        // Debug.Log("BIOME 3 Effet de radiation sur le vaisseau " + vaisseauxDansBiome3[i].playerID);
                         vaisseauxDansBiome3[i].EffetRadiation(1);
                     }
                 }
@@ -178,7 +178,7 @@ public class ImpactBiomeScript : MonoBehaviour
             {
                 for (int i = 0; i < vaisseauxDansBiome4.Count; i++)
                 {
-                    Debug.Log("BIOME 4 Effet de feu sur le vaisseau " + vaisseauxDansBiome4[i].playerID);
+                    // Debug.Log("BIOME 4 Effet de feu sur le vaisseau " + vaisseauxDansBiome4[i].playerID);
                     vaisseauxDansBiome4[i].EffetRadiation(1);
                 }
             }
@@ -188,7 +188,7 @@ public class ImpactBiomeScript : MonoBehaviour
                 {
                     for (int i = 0; i < vaisseauxDansBiome4.Count; i++)
                     {
-                        Debug.Log("BIOME 4 Effet de radiation sur le vaisseau " + vaisseauxDansBiome4[i].playerID);
+                        // Debug.Log("BIOME 4 Effet de radiation sur le vaisseau " + vaisseauxDansBiome4[i].playerID);
                         vaisseauxDansBiome4[i].EffetRadiation(1);
                     }
                 }

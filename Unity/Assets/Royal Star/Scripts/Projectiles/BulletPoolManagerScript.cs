@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class BulletPoolManagerScript : MonoBehaviour
 {
-    [SerializeField] private bool raycast;
-    [SerializeField] private float range;
-    [SerializeField] private int damage;
-    //prefab du laser
     [SerializeField] private GameObject bulletPrefab;
 
     //tableau de l'ensemble des laser déjà instantiés
@@ -19,13 +15,10 @@ public class BulletPoolManagerScript : MonoBehaviour
     //liste des lasers tirés
     private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(100);
 
-    private bool firing = false;
 
     //au chargement desjoueurs
     public void Awake()
     {
-        if (raycast) return;
-
         GameObject instanciatedBullet;
 
         //on génère 100 lasers
@@ -43,16 +36,6 @@ public class BulletPoolManagerScript : MonoBehaviour
         {
             availableBullets.Enqueue(bullet);
         }
-    }
-
-    public bool isRaycast()
-    {
-        return raycast;
-    }
-
-    public void SetFiring(bool f)
-    {
-        firing = f;
     }
 
     //fonction pour prendre un laser dans le pooling
@@ -75,34 +58,16 @@ public class BulletPoolManagerScript : MonoBehaviour
         bullet.Disable();
     }
 
-    public void ShootWithRaycast(Transform popPosition)
-    {
-        RaycastHit hit;
-
-        if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, range)
-            && Equals(hit.transform.gameObject.tag, "Player"))
-        {
-            ShipExposer target = hit.transform.GetComponent<ShipExposer>();
-
-            if (target != null)
-                target.TakeDamage(damage);
-        }
-    }
-
     //fonction pour pop un laser à la position indiquée
-    public void Shoot(Transform popPosition)
+    public void Shoot(Transform popPosition, float speed)
     {
-        if (raycast) {
-            ShootWithRaycast(popPosition);
-            return;
-        }
         //on récupère un laser
         BulletExposerScript bullet = GetBullet();
 
         //on lui donne les caractéristiques de la source
         bullet.SetParentReference(
             popPosition.position,
-            popPosition.forward,
+            popPosition.forward * speed,
             popPosition.rotation
         );
 
@@ -112,8 +77,6 @@ public class BulletPoolManagerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (raycast && firing) {}
-
         //pour chaque laser tiré
         for (int i = 0; i < poppedBullets.Count; i++)
         {

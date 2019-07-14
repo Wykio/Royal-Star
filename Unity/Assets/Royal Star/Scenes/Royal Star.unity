@@ -4802,7 +4802,9 @@ MonoBehaviour:
   dampingSpeed: 0.95
   dampingHeight: 4
   utilisationBoost: 0.75
+  gravityBoost: 0.95
   rechargeBoost: 0.5
+  boostDelay: 0.8
   sonBoost: {fileID: 8300000, guid: 9673b9c43a29ea34ca60417a98612368, type: 3}
   gestionSon: {fileID: 124621611}
   photonView: {fileID: 1815358703}
