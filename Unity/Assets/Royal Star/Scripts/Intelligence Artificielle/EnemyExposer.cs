@@ -7,16 +7,21 @@ public class EnemyExposer : MonoBehaviour
     [SerializeField] protected Transform botTransform;
     
     [Header("Stats")]
-    [SerializeField] private int healthPoints = 200;
+    [SerializeField] private int healthPoints = 20;
     public bool alive = true;
 
+    [Header("VFX")] 
+    [SerializeField] private ParticleSystem hitVFX;
     public void TakeDamage(int damage)
     {
         healthPoints -= damage;
+        hitVFX.Play();
+        //Debug.Log("bot life = " + healthPoints);
         if (healthPoints <= 0)
         {
             healthPoints = 0;
             alive = false;
+            DesactivationBot();
         }
     }
     

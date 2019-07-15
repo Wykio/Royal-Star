@@ -14,46 +14,39 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float maxSpeed = 5.0f;
     [SerializeField] private float targetDistance;
     
+    [Header ("Noise")]
+    private Vector3 targetingNoise;
+
+    private float perlinNoiseX = 0.0f;
+    private float perlinNoiseY = 0.0f;
+    private float perlinNoiseZ = 0.0f;
+    private float noiseMultiplier = 100.0f;
+    private float elapsedTime = 0.0f;
+    
     private void Start()
     {
         targets = EnemyManager.instance.AiTargets;
+        targetingNoise = new Vector3(0.0f,0.0f,0.0f);
+        //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
         int idTargetLocked = getClosestTargetId(targets);
-
+        
+        // Debug.Log("Id target :" + idTargetLocked);
         targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
-
+        UpdateNoise();
         if (targetDistance <= lookRange)
         {
-            transform.LookAt(targets[idTargetLocked].transform);
-
-            if (targetDistance >= 70)
+            transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
+            if (targetDistance <= lookRange/2)
             {
-                Vector3 cible = targets[idTargetLocked].transform.position;
-
-                //imprecision du déplacement pour éviter la visée parfaite
-                switch(UnityEngine.Random.Range(0,2))
+                weaponManagerScript.Shoot();
+                if (targetDistance >= 100)
                 {
-                    case 0:
-                        cible.x += UnityEngine.Random.Range(-100, 100);
-                        break;
-                    case 1:
-                        cible.y += UnityEngine.Random.Range(-100, 100);
-                        break;
-                    case 2:
-                        cible.z += UnityEngine.Random.Range(-100, 100);
-                        break;
-                }
-
-                transform.position = Vector3.MoveTowards(transform.position, cible, maxSpeed * (targetDistance/lookRange));
-
-                if (targetDistance <= 200)
-                {
-                    int probaTir = UnityEngine.Random.Range(0, 3);
-
-                    //if(probaTir >= 1) weaponManagerScript.Shoot(0);
+                    transform.position = Vector3.MoveTowards(transform.position,
+                        targets[idTargetLocked].transform.position + targetingNoise, maxSpeed * (targetDistance/lookRange));
                 }
             }
         }
@@ -82,9 +75,34 @@ public class EnemyController : MonoBehaviour
         return idTargetDistanceMin;
     }
 
+    private void UpdateNoise()
+    {
+        elapsedTime = Time.time;
+        perlinNoiseX = Mathf.PerlinNoise(elapsedTime, 0);
+        perlinNoiseY = Mathf.PerlinNoise(elapsedTime + 1, 0);
+        perlinNoiseZ = Mathf.PerlinNoise(elapsedTime + 2, 0);
+        targetingNoise.x = (perlinNoiseX * noiseMultiplier) - (noiseMultiplier/2);
+        targetingNoise.y = (perlinNoiseY * noiseMultiplier) - (noiseMultiplier/2);
+        targetingNoise.z = (perlinNoiseZ * noiseMultiplier) - (noiseMultiplier/2);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, lookRange);
+    }
+
     private float getDistanceBetween(Vector3 a, Vector3 b)
     {
         float res = (float)Math.Sqrt(Math.Pow(b.x - a.x,2)+Math.Pow(b.y - a.y,2)+Math.Pow(b.z - a.z,2));
         return res;
+    }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Hit");   
+        }
     }
 }
