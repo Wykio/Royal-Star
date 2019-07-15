@@ -14,27 +14,39 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float maxSpeed = 5.0f;
     [SerializeField] private float targetDistance;
     
+    [Header ("Noise")]
+    private Vector3 targetingNoise;
+
+    private float perlinNoiseX = 0.0f;
+    private float perlinNoiseY = 0.0f;
+    private float perlinNoiseZ = 0.0f;
+    private float noiseMultiplier = 100.0f;
+    private float elapsedTime = 0.0f;
+    
     private void Start()
     {
         targets = EnemyManager.instance.AiTargets;
+        targetingNoise = new Vector3(0.0f,0.0f,0.0f);
         //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
         int idTargetLocked = getClosestTargetId(targets);
+        
         // Debug.Log("Id target :" + idTargetLocked);
         targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
+        UpdateNoise();
         if (targetDistance <= lookRange)
         {
-            transform.LookAt(targets[idTargetLocked].transform);
-            if (targetDistance >= 30)
+            transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
+            if (targetDistance <= lookRange/2)
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    targets[idTargetLocked].transform.position, maxSpeed * (targetDistance/lookRange));
-                if (targetDistance <= 200)
+                weaponManagerScript.Shoot();
+                if (targetDistance >= 100)
                 {
-                    weaponManagerScript.Shoot();
+                    transform.position = Vector3.MoveTowards(transform.position,
+                        targets[idTargetLocked].transform.position + targetingNoise, maxSpeed * (targetDistance/lookRange));
                 }
             }
         }
@@ -61,6 +73,17 @@ public class EnemyController : MonoBehaviour
             }
         }
         return idTargetDistanceMin;
+    }
+
+    private void UpdateNoise()
+    {
+        elapsedTime = Time.time;
+        perlinNoiseX = Mathf.PerlinNoise(elapsedTime, 0);
+        perlinNoiseY = Mathf.PerlinNoise(elapsedTime + 1, 0);
+        perlinNoiseZ = Mathf.PerlinNoise(elapsedTime + 2, 0);
+        targetingNoise.x = (perlinNoiseX * noiseMultiplier) - (noiseMultiplier/2);
+        targetingNoise.y = (perlinNoiseY * noiseMultiplier) - (noiseMultiplier/2);
+        targetingNoise.z = (perlinNoiseZ * noiseMultiplier) - (noiseMultiplier/2);
     }
 
     private void OnDrawGizmosSelected()
