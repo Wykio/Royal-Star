@@ -484,7 +484,7 @@ public class shipMotor : MonoBehaviour
     
     void HitboxTriggerEnter(Collider other, int id)
     {
-        if (Equals(other.gameObject.tag, "Bullet"))
+        if (Equals(other.gameObject.tag, "Bullet") || Equals(other.gameObject.tag, "Tir"))
         {
             int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
 
