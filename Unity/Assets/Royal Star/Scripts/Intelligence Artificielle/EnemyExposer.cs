@@ -10,9 +10,12 @@ public class EnemyExposer : MonoBehaviour
     [SerializeField] private int healthPoints = 20;
     public bool alive = true;
 
+    [Header("VFX")] 
+    [SerializeField] private ParticleSystem hitVFX;
     public void TakeDamage(int damage)
     {
         healthPoints -= damage;
+        hitVFX.Play();
         //Debug.Log("bot life = " + healthPoints);
         if (healthPoints <= 0)
         {
