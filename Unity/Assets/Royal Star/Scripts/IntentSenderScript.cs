@@ -64,8 +64,12 @@ public class IntentSenderScript : AIntentReceiver
 
         //choisir l'arme de base
         for (int i = 0; i < weaponKeys.Length; i++)
+        {
             if (Input.GetKeyDown(weaponKeys[i]))
+            {
                 photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, i);
+            }
+        }
 
         if (horizontalAxis != 0f)
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, horizontalAxis);

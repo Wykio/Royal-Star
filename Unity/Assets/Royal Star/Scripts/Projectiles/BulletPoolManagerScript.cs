@@ -21,7 +21,7 @@ public class BulletPoolManagerScript : MonoBehaviour
     {
         GameObject instanciatedBullet;
 
-        //on génère 100 lasers
+        //on génère 20 lasers
         alreadyInstanciatedBullets = new BulletExposerScript[20];
 
         for (int i = 0; i < 20; i++)

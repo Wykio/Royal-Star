@@ -76,13 +76,16 @@ MonoBehaviour:
   automatic: 1
   popInterval: 0.1
   bulletPoolManager: {fileID: 0}
-  bulletPopPosition: {fileID: 2182517418093152020}
+  bulletPopPositions:
+  - {fileID: 2182517418093152020}
   speed: 0
   weight: 0.25
   raycast: 1
-  raycastRange: 30
+  raycastRange: 60
   raycastDamage: 2
   raycastMesh: {fileID: 8198059972431212500}
+  armeBleueDamage: 0
+  armeVerteDamage: 0
 --- !u!1 &3975376125904571762
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,7 +99,7 @@ GameObject:
   - component: {fileID: 8198059972431212500}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Tir
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

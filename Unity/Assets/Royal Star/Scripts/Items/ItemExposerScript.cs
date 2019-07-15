@@ -132,7 +132,7 @@ public class ItemExposerScript : MonoBehaviour
         Ray chute = new Ray(transform.position, -transform.up);
         RaycastHit hit;
 
-        if(Physics.Raycast(chute, out hit, 3.5f))
+        if(Physics.Raycast(chute, out hit, 4f))
         {
             SetPose(true);
         }

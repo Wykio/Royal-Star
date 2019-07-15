@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 3350569193149989918}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 2.6, z: 0.9}
+  m_LocalScale: {x: 1.5, y: 4, z: 1.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -92,9 +92,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 2.4065986
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.000000039736427, y: 0.022459269, z: -0.00000007947286}
 --- !u!54 &1612006165030118780
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -137,7 +137,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 18
   lifeTime: 2
-  speed: 1500
   triggerExposer: {fileID: 6730916917441119360}
   targetMeshRenderer: {fileID: 123603032429473281}
   targetRigidBody: {fileID: 1612006165030118780}

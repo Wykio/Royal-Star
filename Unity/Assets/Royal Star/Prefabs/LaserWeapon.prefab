@@ -76,9 +76,14 @@ MonoBehaviour:
   automatic: 1
   popInterval: 0.3
   bulletPoolManager: {fileID: 0}
-  bulletPopPosition: {fileID: 2182517418093152020}
+  bulletPopPositions:
+  - {fileID: 2182517418093152020}
   speed: 1500
   weight: 0.2
+  raycast: 0
+  raycastRange: 0
+  raycastDamage: 0
+  raycastMesh: {fileID: 0}
 --- !u!1 &5956294763354272052
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +113,7 @@ Transform:
   m_Children:
   - {fileID: 986765929605168404}
   - {fileID: 2182517418093152020}
-  - {fileID: 5521855675219532651}
+  - {fileID: 1347912663770821672}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -119,11 +124,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2636033572947181719}
     m_Modifications:
-    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
-        type: 3}
-      propertyPath: m_Name
-      value: Arme Bleue
-      objectReference: {fileID: 0}
     - target: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -179,9 +179,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2265936722477873036, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+        type: 3}
+      propertyPath: m_Name
+      value: Arme Bleue
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf8f47d408a48741b59aee5c18cb3c1, type: 3}
---- !u!4 &5521855675219532651 stripped
+--- !u!4 &1347912663770821672 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6779374387094105893, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
     type: 3}
