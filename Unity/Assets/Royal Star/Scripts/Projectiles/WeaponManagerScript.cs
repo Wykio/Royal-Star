@@ -59,12 +59,19 @@ public class WeaponManagerScript : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(bulletPopPosition.position, bulletPopPosition.forward, out hit, raycastRange)
-            && hit.transform.gameObject.CompareTag("Player")) {
-            ShipExposer target = hit.transform.GetComponent<ShipExposer>();
-
-            if (target != null)
-                target.TakeDamage(raycastDamage);
+        if (Physics.Raycast(bulletPopPosition.position, bulletPopPosition.forward, out hit, raycastRange))
+        {
+            if (hit.transform.gameObject.CompareTag("Player"))
+            {
+                ShipExposer target = hit.transform.GetComponent<ShipExposer>();
+                if (target != null)
+                    target.TakeDamage(raycastDamage);
+            }else if (hit.transform.gameObject.CompareTag("Bot"))
+            {
+                EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();       
+                if (target != null)
+                    target.TakeDamage(raycastDamage);
+            }
         }
     }
 

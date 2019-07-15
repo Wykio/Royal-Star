@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botTransform: {fileID: 4456537392492825803}
-  healthPoints: 200
+  healthPoints: 20
   alive: 1
 --- !u!54 &8909066732379287181
 Rigidbody:
