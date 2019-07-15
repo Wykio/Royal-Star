@@ -98,11 +98,22 @@ public class WeaponManagerScript : MonoBehaviour
 
         foreach(var popPosition in bulletPopPositions)
         {
-            if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, raycastRange) && hit.transform.gameObject.CompareTag("Player"))
+            if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, raycastRange) )
             {
-                ShipExposer target = hit.transform.GetComponent<ShipExposer>();
+                if(hit.transform.gameObject.CompareTag("Player"))
+                {
+                    ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
-                if (target != null && target.playerID != tireurID) target.TakeDamage(raycastDamage);
+                    if (target != null && target.playerID != tireurID) target.TakeDamage(raycastDamage);
+                }
+                else
+                {
+                    if(hit.transform.gameObject.CompareTag("Bot"))
+                    {
+                        EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();
+                        target.TakeDamage(raycastDamage);
+                    }
+                }
             }
         }
     }
@@ -116,11 +127,23 @@ public class WeaponManagerScript : MonoBehaviour
 
         StartCoroutine(CleanTirRaycast());
 
-        if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, raycastRange) && hit.transform.gameObject.tag == "Player")
+        if (Physics.Raycast(popPosition.position, popPosition.forward, out hit, raycastRange))
         {
-            ShipExposer target = hit.transform.GetComponent<ShipExposer>();
+            if(hit.transform.gameObject.tag == "Player")
+            {
+                ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
-            if (target != null && target.playerID != tireurID) target.TakeDamage(BlueRaycastDamage);
+                if (target != null && target.playerID != tireurID) target.TakeDamage(BlueRaycastDamage);
+            }
+            else
+            {
+                if (hit.transform.gameObject.tag == "Bot")
+                {
+                    EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();
+
+                    target.TakeDamage(BlueRaycastDamage);
+                }
+            }
         }
     }
 

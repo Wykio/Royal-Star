@@ -64,6 +64,11 @@ public class BulletPoolManagerScript : MonoBehaviour
         //on récupère un laser
         BulletExposerScript bullet = GetBullet();
 
+        if(bullet.particules != null)
+        {
+            bullet.particules.gameObject.SetActive(true);
+        }
+
         //on lui donne les caractéristiques de la source
         bullet.SetParentReference(
             popPosition.position,

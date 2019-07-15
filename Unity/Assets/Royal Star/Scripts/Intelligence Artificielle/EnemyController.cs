@@ -42,7 +42,7 @@ public class EnemyController : MonoBehaviour
             transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
             if (targetDistance <= lookRange/2)
             {
-                weaponManagerScript.Shoot();
+                weaponManagerScript.Shoot(0);
                 if (targetDistance >= 100)
                 {
                     transform.position = Vector3.MoveTowards(transform.position,
