@@ -121,14 +121,16 @@ public class shipMotor : MonoBehaviour
         if (intentReceiver.WantToShootFirst && vaisseau.ShipWeapons[vaisseau.currentWeaponIndex] && !vaisseau.enPause)
         {
             photonView.RPC("ShootRPC", RpcTarget.All, vaisseau.playerID, vaisseau.currentWeaponIndex);
-            vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot();
+            //vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].Shoot(vaisseau.playerID);
             vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(true);
+
             if (!vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].GetAutomatic())
             {
                 intentReceiver.WantToShootFirst = false;
                 vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
             }
-        } else
+        }
+        else
             vaisseau.ShipWeapons[vaisseau.currentWeaponIndex].SetFiring(false);
 
         bool askForBoost = false;
@@ -596,7 +598,7 @@ public class shipMotor : MonoBehaviour
                     }
                 }
 
-                vaisseaux[i].ShipWeapons[armeActive].Shoot();
+                vaisseaux[i].ShipWeapons[armeActive].Shoot(vaisseaux[i].playerID);
 
                 break;
             }

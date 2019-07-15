@@ -17,24 +17,43 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         targets = EnemyManager.instance.AiTargets;
-        //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
         int idTargetLocked = getClosestTargetId(targets);
-        // Debug.Log("Id target :" + idTargetLocked);
+
         targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
+
         if (targetDistance <= lookRange)
         {
             transform.LookAt(targets[idTargetLocked].transform);
-            if (targetDistance >= 30)
+
+            if (targetDistance >= 70)
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    targets[idTargetLocked].transform.position, maxSpeed * (targetDistance/lookRange));
+                Vector3 cible = targets[idTargetLocked].transform.position;
+
+                //imprecision du déplacement pour éviter la visée parfaite
+                switch(UnityEngine.Random.Range(0,2))
+                {
+                    case 0:
+                        cible.x += UnityEngine.Random.Range(-100, 100);
+                        break;
+                    case 1:
+                        cible.y += UnityEngine.Random.Range(-100, 100);
+                        break;
+                    case 2:
+                        cible.z += UnityEngine.Random.Range(-100, 100);
+                        break;
+                }
+
+                transform.position = Vector3.MoveTowards(transform.position, cible, maxSpeed * (targetDistance/lookRange));
+
                 if (targetDistance <= 200)
                 {
-                    weaponManagerScript.Shoot();
+                    int probaTir = UnityEngine.Random.Range(0, 3);
+
+                    //if(probaTir >= 1) weaponManagerScript.Shoot(0);
                 }
             }
         }
@@ -44,11 +63,11 @@ public class EnemyController : MonoBehaviour
     {
         int i = 0;
         float targetDistance = 0.0f;
-        float targetDistanceMin = 10000.0f;//besoin d'un nombre tres grand
+        float targetDistanceMin = 10000.0f;     //besoin d'un nombre tres grand
         int idTargetDistanceMin = 0;
 
 
-        for (i = 0; i < 20; i++) //20 c'est le nombre de joueur
+        for (i = 0; i < 20; i++)    //20 c'est le nombre de joueur
         {
             if (targets[i].activeSelf == true)
             {
@@ -61,12 +80,6 @@ public class EnemyController : MonoBehaviour
             }
         }
         return idTargetDistanceMin;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lookRange);
     }
 
     private float getDistanceBetween(Vector3 a, Vector3 b)

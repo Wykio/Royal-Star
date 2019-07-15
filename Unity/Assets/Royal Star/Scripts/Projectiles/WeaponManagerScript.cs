@@ -43,28 +43,27 @@ public class WeaponManagerScript : MonoBehaviour
         raycastMesh.enabled = isFiring;
     }
 
-    public void Shoot()
+    public void Shoot(int tireurID)
     {
         if (Time.time > nextPopTime)
         {
-            if (raycast)
-                ShootWithRaycast();
-            else
-                bulletPoolManager.Shoot(bulletPopPosition, speed);
+            if (raycast) ShootWithRaycast(tireurID);
+
+            else bulletPoolManager.Shoot(bulletPopPosition, speed);
+
             SetNextPopTime();
         }
     }
 
-    public void ShootWithRaycast()
+    public void ShootWithRaycast(int tireurID)
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(bulletPopPosition.position, bulletPopPosition.forward, out hit, raycastRange)
-            && hit.transform.gameObject.CompareTag("Player")) {
+        if (Physics.Raycast(bulletPopPosition.position, bulletPopPosition.forward, out hit, raycastRange) && hit.transform.gameObject.CompareTag("Player"))
+        {
             ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
-            if (target != null)
-                target.TakeDamage(raycastDamage);
+            if (target != null && target.playerID != tireurID) target.TakeDamage(raycastDamage);
         }
     }
 

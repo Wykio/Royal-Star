@@ -87,6 +87,11 @@ public class ShipExposer : MonoBehaviour
             if (shieldPoints == 0)
             {
                 healthPoints -= degat;
+                if(healthPoints <= 0)
+                {
+                    healthPoints = 0;
+                    alive = false;
+                }
             }
         }
     }

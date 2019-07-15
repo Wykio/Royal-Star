@@ -61,10 +61,11 @@ public class IntentSenderScript : AIntentReceiver
                 GetType().GetMethod(rpcNames[i])?.Invoke(this, new object[] { false });
             }
         }
+
         //choisir l'arme de base
         for (int i = 0; i < weaponKeys.Length; i++)
             if (Input.GetKeyDown(weaponKeys[i]))
-                photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, weaponKeys[i] - KeyCode.Alpha0);
+                photonView.RPC("ChangerArmeRPC", RpcTarget.MasterClient, i);
 
         if (horizontalAxis != 0f)
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, horizontalAxis);
@@ -83,46 +84,69 @@ public class IntentSenderScript : AIntentReceiver
         float turbo = Input.GetAxis("Joystick LT");
         float shoot = Input.GetAxis("Joystick RT");
 
-        if (strafeAxis != 0f) {
-            if (strafeAxis > 0f) {
+        if (strafeAxis != 0f)
+        {
+            if (strafeAxis > 0f)
+            {
                 photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, true);
-            } else {
+            }
+            else
+            {
                 photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, true);
             }
-        } else {
+        }
+        else
+        {
             photonView.RPC("WantToStrafeLeftRPC", RpcTarget.MasterClient, false);
             photonView.RPC("WantToStrafeRightRPC", RpcTarget.MasterClient, false);
         }
-        if (moveAxis != 0f) {
-            if (moveAxis > 0f) {
+
+        if (moveAxis != 0f)
+        {
+            if (moveAxis > 0f)
+            {
                 photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, true);
-            } else {
+            }
+            else
+            {
                 photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, true);
             }
-        } else {
+        }
+        else
+        {
             photonView.RPC("WantToGoForwardRPC", RpcTarget.MasterClient, false);
             photonView.RPC("WantToGoBackwardRPC", RpcTarget.MasterClient, false);
         }
         if (pitchAxis != 0f)
             photonView.RPC("AirPitchRPC", RpcTarget.MasterClient, pitchAxis);
+
         if (turnAxis != 0f)
         {
             photonView.RPC("WantToTurnRPC", RpcTarget.MasterClient, turnAxis);
-            if (turnAxis > 0f) {
+
+            if (turnAxis > 0f)
+            {
                 photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, true);
-            } else {
+            }
+            else
+            {
                 photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, true);
             }
-        } else {
+        }
+        else
+        {
             photonView.RPC("AirRollLeftRPC", RpcTarget.MasterClient, false);
             photonView.RPC("AirRollRightRPC", RpcTarget.MasterClient, false);
         }
         if (shoot != 0f)
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, true);
+
         else
             photonView.RPC("WantToShootFirstRPC", RpcTarget.MasterClient, false);
+
         if (turbo != 0f)
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, true);
+
         else
             photonView.RPC("AirBoostActivateRPC", RpcTarget.MasterClient, false);
         
