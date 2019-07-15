@@ -13,7 +13,7 @@ public class BonusExposer : ItemExposerScript
         if (ramasse) return;
 
         //si le collider est un joueur
-        if (other.attachedRigidbody.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
 
@@ -47,9 +47,12 @@ public class BonusExposer : ItemExposerScript
         }
         else
         {
-            ramasse = true;
-            SetPose(true);
-            DesactivationItem();
+            if(other.gameObject.tag == "Bullet")
+            {
+                ramasse = true;
+                SetPose(true);
+                DesactivationItem();
+            }
         }
     }
 }

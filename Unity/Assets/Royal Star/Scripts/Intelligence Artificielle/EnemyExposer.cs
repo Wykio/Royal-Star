@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyExposer : MonoBehaviour
 {
     [SerializeField] protected Transform botTransform;
+    [SerializeField] HitboxExposerScript hitbox;
     
     [Header("Stats")]
     [SerializeField] private int healthPoints = 20;
@@ -12,11 +13,17 @@ public class EnemyExposer : MonoBehaviour
 
     [Header("VFX")] 
     [SerializeField] private ParticleSystem hitVFX;
+
+    private void Start()
+    {
+        hitbox.Subscribe(HitboxTriggerEnter);
+    }
+
     public void TakeDamage(int damage)
     {
         healthPoints -= damage;
         hitVFX.Play();
-        //Debug.Log("bot life = " + healthPoints);
+
         if (healthPoints <= 0)
         {
             healthPoints = 0;
@@ -24,7 +31,7 @@ public class EnemyExposer : MonoBehaviour
             DesactivationBot();
         }
     }
-    
+
     public Transform GetBotTransform()
     {
         return botTransform;
@@ -46,5 +53,15 @@ public class EnemyExposer : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         botTransform.position = position;
+    }
+
+    void HitboxTriggerEnter(Collider other)
+    {
+        if (Equals(other.gameObject.tag, "Bullet") || Equals(other.gameObject.tag, "Tir"))
+        {
+            int damage = other.gameObject.GetComponent<BulletExposerScript>().GetDamage();
+
+            TakeDamage(damage);
+        }
     }
 }

@@ -10,10 +10,10 @@ public class BulletPoolManagerScript : MonoBehaviour
     private BulletExposerScript[] alreadyInstanciatedBullets;
 
     //queue des laser disponibles
-    private readonly Queue<BulletExposerScript> availableBullets = new Queue<BulletExposerScript>(100);
+    private readonly Queue<BulletExposerScript> availableBullets = new Queue<BulletExposerScript>(20);
 
     //liste des lasers tirés
-    private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(100);
+    private readonly List<BulletExposerScript> poppedBullets = new List<BulletExposerScript>(20);
 
 
     //au chargement desjoueurs
@@ -21,10 +21,10 @@ public class BulletPoolManagerScript : MonoBehaviour
     {
         GameObject instanciatedBullet;
 
-        //on génère 100 lasers
-        alreadyInstanciatedBullets = new BulletExposerScript[100];
+        //on génère 20 lasers
+        alreadyInstanciatedBullets = new BulletExposerScript[20];
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 20; i++)
         {
             //instanciation du laser et ajout de son exposer au tableau des lasers instanciés
             instanciatedBullet = (GameObject)Instantiate(bulletPrefab);
@@ -63,6 +63,11 @@ public class BulletPoolManagerScript : MonoBehaviour
     {
         //on récupère un laser
         BulletExposerScript bullet = GetBullet();
+
+        if(bullet.particules != null)
+        {
+            bullet.particules.gameObject.SetActive(true);
+        }
 
         //on lui donne les caractéristiques de la source
         bullet.SetParentReference(

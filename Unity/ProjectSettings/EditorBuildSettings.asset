@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MyPhotonProject/Scenes/MainScene.unity
     guid: 049e6ae35edc6f342983a896b8495a7c
-  - enabled: 0
+  - enabled: 1
     path: Assets/Royal Star/Scenes/Royal Star.unity
     guid: 19060a6d8ee5bce47b936ea56964a771
-  - enabled: 1
+  - enabled: 0
     path: Assets/Royal Star/Scenes/VisualiserData.unity
     guid: 87419b0a02c65234787538a81486bea0
   m_configObjects: {}

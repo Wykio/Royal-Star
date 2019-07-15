@@ -27,14 +27,12 @@ public class EnemyController : MonoBehaviour
     {
         targets = EnemyManager.instance.AiTargets;
         targetingNoise = new Vector3(0.0f,0.0f,0.0f);
-        //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
         int idTargetLocked = getClosestTargetId(targets);
         
-        // Debug.Log("Id target :" + idTargetLocked);
         targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
         UpdateNoise();
         if (targetDistance <= lookRange)
@@ -42,8 +40,8 @@ public class EnemyController : MonoBehaviour
             transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
             if (targetDistance <= lookRange/2)
             {
-                weaponManagerScript.Shoot();
-                if (targetDistance >= 100)
+                weaponManagerScript.Shoot(0);
+                if (targetDistance >= 30)
                 {
                     transform.position = Vector3.MoveTowards(transform.position,
                         targets[idTargetLocked].transform.position + targetingNoise, maxSpeed * (targetDistance/lookRange));
@@ -56,11 +54,11 @@ public class EnemyController : MonoBehaviour
     {
         int i = 0;
         float targetDistance = 0.0f;
-        float targetDistanceMin = 10000.0f;//besoin d'un nombre tres grand
+        float targetDistanceMin = 10000.0f;     //besoin d'un nombre tres grand
         int idTargetDistanceMin = 0;
 
 
-        for (i = 0; i < 20; i++) //20 c'est le nombre de joueur
+        for (i = 0; i < 20; i++)    //20 c'est le nombre de joueur
         {
             if (targets[i].activeSelf == true)
             {
@@ -102,7 +100,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hit");   
+            
         }
     }
 }

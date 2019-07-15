@@ -3160,7 +3160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 026191ba8c5746f4e8edb4a77d538e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dureeBiome: 60
+  dureeBiome: 500
   dureeOuverturePortails: 50
   biomeCourant: 0
   tailleBiome: 4000
@@ -4755,7 +4755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1f02b3366477c4faff2b9b0905dff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitForPlayersToPlay: 0
+  waitForPlayersToPlay: 1
   DureeMatchmaking: 15
   mapGenerator: {fileID: 1355495025}
   gameController: {fileID: 1815358701}
@@ -5983,7 +5983,7 @@ PrefabInstance:
     - target: {fileID: 9051522020298985397, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.6999283
+      value: -3.6999207
       objectReference: {fileID: 0}
     - target: {fileID: 7347629147376379064, guid: 49f66b7044930fb43b93c1cef3a98b15,
         type: 3}

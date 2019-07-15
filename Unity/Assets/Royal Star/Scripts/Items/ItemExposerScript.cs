@@ -59,7 +59,7 @@ public class ItemExposerScript : MonoBehaviour
         if (ramasse) return;
         
         //si le collider est un joueur
-        if(other.gameObject.CompareTag("Player")) //other.attachedRigidbody.gameObject.tag == "Player"
+        if(other.gameObject.CompareTag("Player"))
         {
             var vaisseau = other.attachedRigidbody.gameObject.GetComponent<ShipExposer>();
             
@@ -132,7 +132,7 @@ public class ItemExposerScript : MonoBehaviour
         Ray chute = new Ray(transform.position, -transform.up);
         RaycastHit hit;
 
-        if(Physics.Raycast(chute, out hit, 3.5f))
+        if(Physics.Raycast(chute, out hit, 4f))
         {
             SetPose(true);
         }
