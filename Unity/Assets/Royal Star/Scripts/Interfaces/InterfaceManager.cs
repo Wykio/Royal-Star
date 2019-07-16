@@ -133,6 +133,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     {
         i = index;
         playerActorNumber = playerId;
+        titre.gameObject.SetActive(false);
         loginButton.gameObject.SetActive(true);
         loginButton.interactable = true;
         loginField.gameObject.SetActive(true);
