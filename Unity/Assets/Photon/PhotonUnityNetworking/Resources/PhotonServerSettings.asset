@@ -113,4 +113,5 @@ MonoBehaviour:
   - PlacerBotRPC
   - DesactiverFXBouclierRPC
   - DesactivationBotRPC
+  - RedBoostRPC
   DisableAutoOpenWizard: 1
