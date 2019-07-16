@@ -7,63 +7,52 @@ using Photon.Pun;
 public class EnemyGenerator : MonoBehaviour
 {
     [Header ("Référence")]
-    [SerializeField] private GameObject botPrefab;
     [SerializeField] private PhotonView photonView;
     
     [Header("Pooling des bots")]
     [SerializeField] private int nbBots;
-    
-    private EnemyExposer[] botsInstancies;
-    private Queue<EnemyExposer> botsLibres;
-    private List<EnemyExposer> botsPlacees;
+    [SerializeField] public EnemyExposer[] botsExposers;
+
     
     private GameObject bot;
     
-    public void Awake()
+    public void LancementBot(float hauteur, int indiceBiome, int nbBots)
     {
-        //Initialisation des listes et queues 
-        botsLibres = new Queue<EnemyExposer>(nbBots);
-        botsPlacees = new List<EnemyExposer>(nbBots);
-        
-        //instancier tout les bots possible au cours d'une partie
-        botsInstancies = new EnemyExposer[nbBots];
+        int i = 0;
 
-        //génération des armes rouges
-        for(int i = 0; i < nbBots; i++)
+        foreach(var bot in botsExposers)
         {
-            bot = (GameObject)Instantiate(botPrefab);
-            bot.SetActive(false);
-            botsInstancies[i] = bot.GetComponent<EnemyExposer>();
-            botsLibres.Enqueue(botsInstancies[i]); 
+            if (i == nbBots) break;
+
+            Vector3 position = new Vector3(Random.Range(0, (4-indiceBiome) * 1000), hauteur, Random.Range(0, (4 - indiceBiome) * 1000));
+            PlacerBot(position, i);
+            i++;
+        }
+    }
+
+    //désactiver tous les bots
+    public void DesactiverTousLesBots()
+    {
+        foreach(var bot in botsExposers)
+        {
+            bot.DesactivationBot();
         }
     }
     
-    public List<EnemyExposer> getBotsPlacees()
-    {
-        return botsPlacees;
-    }
-    
-    public void GenererBot(Vector3 position)
+    public void PlacerBot(Vector3 position, int indice)
     {
         //seul le masterClient peut donner l'ordre de générer des bots aux clients
         if(PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("GenererBotRPC", RpcTarget.All, position);
-            // Debug.Log("generating bot");
+            photonView.RPC("PlacerBotRPC", RpcTarget.All, position, indice);
         }
     }
 
     [PunRPC]
-    private void GenererBotRPC(Vector3 position)
+    private void PlacerBotRPC(Vector3 position, int indice)
     {
-        //faire spawn un bot
-        var bot = botsLibres.Dequeue();
-
         //activation du bot
-        bot.ActivationBot();
-        bot.SetPosition(position);
-
-        //ajout du bot dans la liste des bots placés
-        botsPlacees.Add(bot);
+        botsExposers[indice].ActivationBot();
+        botsExposers[indice].SetPosition(position);
     }
 }

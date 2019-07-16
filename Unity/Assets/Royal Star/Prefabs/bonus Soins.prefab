@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6746014155696240151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1493.472, y: 5013.2407, z: -67.60658}
-  m_LocalScale: {x: 200, y: 200, z: 200}
+  m_LocalScale: {x: 400, y: 400, z: 400}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
   pose: 1
   ramasse: 0
   sonArmeRamasse: {fileID: 0}
+  gestionSon: {fileID: 0}
   soinOuBouclier: 1
   montantBonus: 30
   sonBonusRamasse: {fileID: 8300000, guid: 697460457121ab244b24bc90d40732eb, type: 3}

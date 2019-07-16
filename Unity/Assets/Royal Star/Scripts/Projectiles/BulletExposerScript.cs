@@ -12,6 +12,7 @@ public class BulletExposerScript : MonoBehaviour
 	[SerializeField] private Rigidbody targetRigidBody;
 	[SerializeField] private Transform targetTransform;
 	[SerializeField] private Collider targetCollider;
+    [SerializeField] public ParticleSystem particules;
 	private bool destroy = false;
 	private float popTime = 0.0f;
 	private Vector3 lastPosition;
@@ -34,7 +35,13 @@ public class BulletExposerScript : MonoBehaviour
         targetMeshRenderer.enabled = true;
 		triggerExposer.Subscribe(MyOnTriggerEnter);
 		lastPosition = transform.position;
-		destroy = false;
+
+        if (particules != null)
+        {
+            //particules.gameObject.SetActive(false);
+        }
+        
+        destroy = false;
 		popTime = Time.time;
 	}
 
@@ -45,6 +52,11 @@ public class BulletExposerScript : MonoBehaviour
         targetMeshRenderer.enabled = false;
 		triggerExposer.UnSubscribe();
 		lastPosition = Vector3.zero;
+        
+        if (particules != null)
+        {
+            particules.gameObject.SetActive(false);
+        }
 		destroy = false;
 	}
 
@@ -76,11 +88,19 @@ public class BulletExposerScript : MonoBehaviour
 	{
 		RaycastHit hit;
 	
-		if (Physics.Raycast(transform.forward, transform.forward, out hit, CalculateDeltaDistance())
-			&& hit.transform.CompareTag("Player")) {
-			destroy = true;
-			hit.transform.gameObject.GetComponent<ShipExposer>()?.TakeDamage(damage);
-		}
+		if (Physics.Raycast(transform.forward, transform.forward, out hit, CalculateDeltaDistance()))
+        {
+            if(hit.transform.CompareTag("Player"))
+            {
+                destroy = true;
+                hit.transform.gameObject.GetComponent<ShipExposer>()?.TakeDamage(damage);
+            }
+            if (hit.transform.CompareTag("Bot"))
+            {
+                destroy = true;
+                hit.transform.gameObject.GetComponent<EnemyExposer>()?.TakeDamage(damage);
+            }
+        }
 	}
 
 	private void SetLastPosition()

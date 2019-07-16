@@ -85,14 +85,17 @@ public class GestionMapScript : MonoBehaviour
         {
             if(!partieEnCours)
             {
+
                 //placer les items du premier biome
                 PlacerItemsSurBiome(nbArmesBleuesBiome1, nbArmesVertesBiome1, nbArmesRougesBiome1, nbBonusSoinsBiome1, nbBonusBouclierBiome1, 250, tailleBiome, tailleBiome);
-                placerBotsSurBiome(nbBotsBiome1, tailleBiome, 250);
                 
                 //lancement des chronos pour le premier biome
                 ShipManager.LancerChronosInterfaces();
 
                 photonView.RPC("PartieEnCoursPourTousRPC", RpcTarget.All);
+
+                //génération des bots
+                enemyGenerator.LancementBot(700, 0, nbBotsBiome1);
             }
 
             for (int i = indicePartieEnCours; i < listesPortailsParBiome.Count; i++)
@@ -108,19 +111,16 @@ public class GestionMapScript : MonoBehaviour
                     //les items du premier biomes sont déjà placés donc on ajoute les items du biome suivant
                     case 0:
                         PlacerItemsSurBiome(nbArmesBleuesBiome2, nbArmesVertesBiome2, nbArmesRougesBiome2, nbBonusSoinsBiome2, nbBonusBouclierBiome2, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
-                        placerBotsSurBiome(nbBotsBiome2, tailleBiome - (i + 1) * 1000, (i + 1) * 5000 + 250);
                         break;
 
                     //placer les items du 3ème biome
                     case 1:
                         PlacerItemsSurBiome(nbArmesBleuesBiome3, nbArmesVertesBiome3, nbArmesRougesBiome3, nbBonusSoinsBiome3, nbBonusBouclierBiome3, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
-                        placerBotsSurBiome(nbBotsBiome3, tailleBiome - (i + 1) * 1000, (i + 1) * 5000 + 250);
                         break;
 
                     //placer les items du dernier biome
                     case 2:
                         PlacerItemsSurBiome(nbArmesBleuesBiome4, nbArmesVertesBiome4, nbArmesRougesBiome4, nbBonusSoinsBiome4, nbBonusBouclierBiome4, (i + 1) * 5000 + 250, tailleBiome - (i + 1) * 1000, tailleBiome - (i + 1) * 1000);
-                        placerBotsSurBiome(nbBotsBiome4, tailleBiome - (i + 1) * 1000, (i + 1) * 5000 + 250);
                         break;
                     default:
                         break;
@@ -129,9 +129,13 @@ public class GestionMapScript : MonoBehaviour
                 yield return new WaitForSeconds(dureeOuverturePortails);
                 DesactiverPortailDuBiome(biomeCourant);
 
+                //désactiver les bots et les réactiver sur le nouveau biome
+                enemyGenerator.DesactiverTousLesBots();
+                enemyGenerator.LancementBot((biomeCourant + 1) * 5000 + 700, biomeCourant+1, 7 - (biomeCourant+1));
+
+
                 //désactiver items du biome courant
                 DesactiverItemsDuBiome(5000 * biomeCourant + 1000);
-                desactiverBotsDuBiome(5000 * biomeCourant + 1000);
 
                 //augmenter la hauteur de mise à mort pour le nouveau biome
                 ShipManager.UpdateHauteurMort();
@@ -167,23 +171,6 @@ public class GestionMapScript : MonoBehaviour
         if(PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("ActiverPortailDuBiomeRPC", RpcTarget.All, numBiome);
-        }
-    }
-    
-    //fonction pour ordonner aux clients de placer les bots dans le biome
-    public void placerBotsSurBiome(int nbBots, int longueur, int hauteurSpawn)
-    {
-        string positionsBotsData = "";
-
-        for (int i = 0; i < nbBots; i++)
-        {
-            positionsBotsData += (Random.Range(0, longueur).ToString() + "/" + hauteurSpawn + "/" + Random.Range(0, longueur).ToString() + "_");
-        }
-        positionsBotsData = positionsBotsData.Substring(0, positionsBotsData.Length - 1);
-        
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("placerBotsSurBiomeRPC", RpcTarget.All, positionsBotsData);
         }
     }
     
@@ -274,21 +261,6 @@ public class GestionMapScript : MonoBehaviour
     }
 
     [PunRPC]
-    private void desactiverbotsDuBiomeRPC(int hauteurLimite)
-    {
-        var botsPlacees = enemyGenerator.getBotsPlacees();
-
-        foreach (var bot in botsPlacees)
-        {
-            //pour chaque arme placées, si sa hauteur est inférieure à celle donnée, on la considère comme ramassée et elle est remise dans le pooling
-            if (bot.GetBotTransform().position.y < hauteurLimite)
-            {
-                bot.DesactivationBot();
-            }
-        }
-    }
-
-    [PunRPC]
     private void DesactiverItemsDuBiomeRPC(int hauteurLimite)
     {
         var armesPlacees = itemGenerator.GetArmesBleuesPlacees();
@@ -345,21 +317,6 @@ public class GestionMapScript : MonoBehaviour
                 bonus.SetRamasse(true);
                 bonus.DesactivationItem();
             }
-        }
-    }
-
-    [PunRPC]
-    private void placerBotsSurBiomeRPC(string positionsBotsData)
-    {
-        var positionsBots = positionsBotsData.Split('_');
-        
-        foreach (var position in positionsBots)
-        {
-            var extract = position.Split('/');
-
-            Vector3 pos = new Vector3(float.Parse(extract[0]), float.Parse(extract[1]), float.Parse(extract[2]));
-
-            enemyGenerator.GenererBot(pos);
         }
     }
         

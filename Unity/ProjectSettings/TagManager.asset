@@ -11,6 +11,7 @@ TagManager:
   - Arme Verte
   - Arme Rouge
   - Bot
+  - Tir
   layers:
   - Default
   - TransparentFX

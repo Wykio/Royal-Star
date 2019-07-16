@@ -45,6 +45,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Text physicalStatus;
     [SerializeField] public Slider boost;
+    [SerializeField] public Image fill;
     [SerializeField] public Text compteurJoueurs;
     [SerializeField] public Text ChronoBiome;
     [SerializeField] public GameObject bouclierFX;
@@ -61,7 +62,12 @@ public class ShipExposer : MonoBehaviour
     [Header("Collecte de données")]
     [SerializeField] public DataCollectorScript dataCollector;
 
-    private float nextFieldOfView; 
+    [Header("Armes")]
+    [SerializeField] public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
+    private float nextFieldOfView;
+
+    [Header("Correctif position des armes")]
+    [SerializeField] private GameObject[] canons;
     
     private bool boostOK;
     private float lastBoostUse = 0f;
@@ -70,13 +76,18 @@ public class ShipExposer : MonoBehaviour
     // 0 pour le laser de base, 1 pour les armes bleues, 2 pour les armes vertes et 3 pour l'arme rouge
     private int armeActive = 0;
 
-    public WeaponManagerScript[] ShipWeapons = new WeaponManagerScript[3];
+    
 
     public int currentWeaponIndex = 0;
 
     void Start()
     {
         nextFieldOfView = ShipCamera.fieldOfView;
+
+        foreach(var canon in canons)
+        {
+            canon.transform.position += new Vector3(0.0f, 0.7f, 0.0f);
+        }
     }
 
     #region effets des biomes
@@ -87,6 +98,11 @@ public class ShipExposer : MonoBehaviour
             if (shieldPoints == 0)
             {
                 healthPoints -= degat;
+                if(healthPoints <= 0)
+                {
+                    healthPoints = 0;
+                    alive = false;
+                }
             }
         }
     }
@@ -172,12 +188,19 @@ public class ShipExposer : MonoBehaviour
         if(shieldPoints > 0)
         {
             if(shieldPoints >= damage)
-                shieldPoints -=  Mathf.CeilToInt(damage * facteurDegatsBouclier);
+            {
+                int trueDamage = Mathf.CeilToInt(damage * facteurDegatsBouclier);
+                shieldPoints -= trueDamage;
+                if(shieldPoints == 0)
+                {
+                    photonView.RPC("DesactiverFXBouclierRPC", RpcTarget.All);
+                }
+            }
             else
             {
                 healthPoints -= Mathf.CeilToInt((damage - shieldPoints) * facteurDegatsPV);
                 shieldPoints = 0;
-                bouclierFX.SetActive(false);
+                photonView.RPC("DesactiverFXBouclierRPC", RpcTarget.All);
             }
         }
         else
@@ -192,6 +215,12 @@ public class ShipExposer : MonoBehaviour
                     dataCollector.MortParTir(playerID, ShipTransform.position);
             }
         }
+    }
+
+    [PunRPC]
+    private void DesactiverFXBouclierRPC()
+    {
+        bouclierFX.SetActive(false);
     }
 
     public int getPV()
@@ -381,20 +410,20 @@ public class ShipExposer : MonoBehaviour
     {
         switch(choix)
         {
+            case 0:
+                if (armeActive != 0) armeActive = 0;
+                break;
+
             case 1:
-                if (armeActive != 1) armeActive = 1;
+                if (armeActive != 1 && (ArmeBleue1.activeSelf || ArmeBleue2.activeSelf)) armeActive = 1;
                 break;
 
             case 2:
-                if (armeActive != 2 && (ArmeBleue1.activeSelf || ArmeBleue2.activeSelf)) armeActive = 2;
+                if (armeActive != 2 && (ArmeVerte1.activeSelf || ArmeVerte2.activeSelf)) armeActive = 2;
                 break;
 
             case 3:
-                if (armeActive != 3 && (ArmeVerte1.activeSelf || ArmeVerte2.activeSelf)) armeActive = 3;
-                break;
-
-            case 4:
-                if (armeActive != 4 && ArmeRouge1.activeSelf) armeActive = 4;
+                if (armeActive != 3 && ArmeRouge1.activeSelf) armeActive = 3;
                 break;
         }
     }
@@ -452,5 +481,29 @@ public class ShipExposer : MonoBehaviour
     private void Update()
     {
         AdaptToCurrentFieldOfView();
+
+        if(PhotonNetwork.IsMasterClient)
+        {
+            foreach(var joueur in PlayerNumbering.SortedPlayers)
+            {
+                if(joueur.ActorNumber == playerID)
+                {
+                    if (boostOK)
+                    {
+                        photonView.RPC("RedBoostRPC", joueur, 208, 0, 255);
+                    }
+                    else
+                    {
+                        photonView.RPC("RedBoostRPC", joueur, 255, 0, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    private void RedBoostRPC(int r, int g, int b)
+    {
+        fill.color = new Color(r, g, b);
     }
 }

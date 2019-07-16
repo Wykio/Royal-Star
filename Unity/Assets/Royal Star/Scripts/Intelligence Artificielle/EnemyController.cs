@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class EnemyController : MonoBehaviour
 {
     [Header ("Référence")]
-    [SerializeField] private WeaponManagerScript weaponManagerScript;
+    [SerializeField] private WeaponManagerScript[] weaponManagerScript;
+    [SerializeField] private EnemyExposer[] botExposers;
+    [SerializeField] private PhotonView photonView;
     
     [Header ("Déplacement")]
     private GameObject[] targets;
@@ -27,44 +30,57 @@ public class EnemyController : MonoBehaviour
     {
         targets = EnemyManager.instance.AiTargets;
         targetingNoise = new Vector3(0.0f,0.0f,0.0f);
-        //Debug.Log("la taille du tableau vaut" + targets.Length);
     }
 
     private void Update()
     {
-        int idTargetLocked = getClosestTargetId(targets);
-        
-        // Debug.Log("Id target :" + idTargetLocked);
-        targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, transform.position);
-        UpdateNoise();
-        if (targetDistance <= lookRange)
+        if(PhotonNetwork.IsMasterClient)
         {
-            transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
-            if (targetDistance <= lookRange/2)
+            int indice = 0;
+
+            foreach(var bot in botExposers)
             {
-                weaponManagerScript.Shoot();
-                if (targetDistance >= 100)
+                if (bot.rootGameObject.activeSelf)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position,
-                        targets[idTargetLocked].transform.position + targetingNoise, maxSpeed * (targetDistance/lookRange));
+                    int idTargetLocked = getClosestTargetId(targets, indice);
+
+                    targetDistance = getDistanceBetween(targets[idTargetLocked].transform.position, botExposers[indice].transform.position);
+
+                    UpdateNoise();
+
+                    if (targetDistance <= lookRange)
+                    {
+                        botExposers[indice].transform.LookAt(targets[idTargetLocked].transform.position + targetingNoise);
+
+                        if (targetDistance <= lookRange / 2)
+                        {
+                            photonView.RPC("BotShootRPC", RpcTarget.All, indice);
+
+                            if (targetDistance >= 50)
+                            {
+                                botExposers[indice].transform.position = Vector3.MoveTowards(botExposers[indice].transform.position, targets[idTargetLocked].transform.position + targetingNoise, maxSpeed * (targetDistance / lookRange));
+                            }
+                        }
+                    }
                 }
+                indice++;
             }
         }
     }
 
-    private int getClosestTargetId(GameObject[] myTargets)
+    private int getClosestTargetId(GameObject[] myTargets, int indice)
     {
         int i = 0;
         float targetDistance = 0.0f;
-        float targetDistanceMin = 10000.0f;//besoin d'un nombre tres grand
+        float targetDistanceMin = 10000.0f;     //besoin d'un nombre tres grand
         int idTargetDistanceMin = 0;
 
 
-        for (i = 0; i < 20; i++) //20 c'est le nombre de joueur
+        for (i = 0; i < myTargets.Length; i++)    //20 c'est le nombre de joueur
         {
             if (targets[i].activeSelf == true)
             {
-                targetDistance = getDistanceBetween(targets[i].transform.position, transform.position);
+                targetDistance = getDistanceBetween(targets[i].transform.position, botExposers[indice].transform.position);
                 if (targetDistance < targetDistanceMin)
                 {
                     targetDistanceMin = targetDistance;
@@ -102,7 +118,13 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hit");   
+            
         }
+    }
+
+    [PunRPC]
+    private void BotShootRPC(int indice)
+    {
+        weaponManagerScript[indice].Shoot(0);
     }
 }
