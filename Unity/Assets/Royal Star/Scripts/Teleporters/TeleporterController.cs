@@ -37,10 +37,7 @@ public class TeleporterController : MonoBehaviour
                 endPosition.y -= 10;
                 other.gameObject.transform.SetPositionAndRotation(endPosition, connectedTeleport.transform.rotation);
 
-                if(PhotonNetwork.IsMasterClient)
-                {
-                    dataCollector.PortailPasse(vaisseau.playerID);
-                }
+                dataCollector.PortailPasse(vaisseau.playerID);
             } 
         }
     }

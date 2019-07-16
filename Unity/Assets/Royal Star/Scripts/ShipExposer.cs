@@ -124,24 +124,17 @@ public class ShipExposer : MonoBehaviour
                 nbMin--;
             }
             else
-            {
                 nbSec--;
-            }
 
             if (nbSec < 10)
-            {
                 ChronoBiome.text = nbMin + ":0" + nbSec;
-            }
             else
-            {
                 ChronoBiome.text = nbMin + ":" + nbSec;
-            }
 
-            if (i < dureeBiome - dureeOuverturePortails) ChronoBiome.color = Color.green;
+            if (i < dureeBiome - dureeOuverturePortails)
+                ChronoBiome.color = Color.green;
             else
-            {
                 ChronoBiome.color = Color.red;
-            }
 
         }
     }
@@ -174,14 +167,12 @@ public class ShipExposer : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (!alive) return;
         //si le vaisseau a du shield, les dégats sont appliqués dessus
         if(shieldPoints > 0)
         {
             if(shieldPoints >= damage)
-            {
-                int trueDamage = Mathf.CeilToInt(damage * facteurDegatsBouclier);
-                shieldPoints -= trueDamage;
-            }
+                shieldPoints -=  Mathf.CeilToInt(damage * facteurDegatsBouclier);
             else
             {
                 healthPoints -= Mathf.CeilToInt((damage - shieldPoints) * facteurDegatsPV);
@@ -197,18 +188,8 @@ public class ShipExposer : MonoBehaviour
             {
                 healthPoints = 0;
                 alive = false;
-                
-                if(PhotonNetwork.IsMasterClient)
-                {
-                    if(damage > 1000)
-                    {
-                        dataCollector.MortParBiome(ShipTransform.position);
-                    }
-                    else
-                    {
-                        dataCollector.MortParTir(ShipTransform.position);
-                    }
-                }
+                if (damage < 1000)
+                    dataCollector.MortParTir(playerID, ShipTransform.position);
             }
         }
     }

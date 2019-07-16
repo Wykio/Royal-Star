@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
-using System;
 using MapGeneration;
 
 public class InterfaceManager : MonoBehaviourPunCallbacks
@@ -12,6 +12,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [Header("éléments de l'interface")]
     [SerializeField] private Text erreur;
     [SerializeField] private Text titre;
+    [SerializeField] private Button loginButton;
     [SerializeField] private Button creerRoomButton;
     [SerializeField] private Button joinRoomButton;
     [SerializeField] private Button quitterJeuButton;
@@ -25,8 +26,10 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button quitterMenuPause;
     [SerializeField] private Button reprendreMenuPause;
     [SerializeField] private Canvas Ui;
+    [SerializeField] private Text login;
     [SerializeField] private Text finDePartie;
     [SerializeField] private Image background;
+    [SerializeField] private InputField loginField;
 
     [Header("Références")]
     [SerializeField] private OptionsSonScript gestionMenuOptions;
@@ -38,6 +41,10 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
     public event Action Deconnecte;
     public event Action MasterclientSwitch;
     public event Action FinDePartie;
+
+    [SerializeField] DataCollectorScript dataCollector;
+    private int i;
+    private int playerActorNumber;
     #endregion
 
     private void Awake()
@@ -63,6 +70,7 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         creerRoomButton.gameObject.SetActive(false);
         joinRoomButton.gameObject.SetActive(false);
         OptionButton.onClick.AddListener(AfficherMenuOptions);
+        loginButton.onClick.AddListener(SetLogin);
 
         //on active le message d'erreur (vide) pour le menu principal
         erreur.gameObject.SetActive(true);
@@ -120,8 +128,46 @@ public class InterfaceManager : MonoBehaviourPunCallbacks
         erreur.gameObject.SetActive(false);
     }
 
+    
+    public void AfficherMenuPrincipal(int index, int playerId)
+    {
+        i = index;
+        playerActorNumber = playerId;
+        loginButton.gameObject.SetActive(true);
+        loginButton.interactable = true;
+        loginField.gameObject.SetActive(true);
+        loginField.interactable = true;
+        login.gameObject.SetActive(true);
+    }
+
+    private void SetLogin()
+    {
+        String loginText = loginField.text;
+        loginButton.gameObject.SetActive(false);
+        loginButton.interactable = false;
+        loginField.gameObject.SetActive(false);
+        loginField.interactable = false;
+        login.gameObject.SetActive(false);
+        dataCollector.login = loginText;
+        if (loginText != null) {
+            LoginRequest(loginField.text);
+            DisplayPrincipalMenu();
+        } else {
+            AfficherMenuPrincipal(i, playerActorNumber);
+        }
+    }
+
+    private void LoginRequest(String login)
+    {
+        UnityWebRequest request = new UnityWebRequest("https://royalstar-api.herokuapp.com/users/login", "POST");
+        request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes($"{{\"login\":\"{login}\"}}"));
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SendWebRequest();
+    }
+
     //afficher les éléments du menu principal, le paramètre i sert à réutiliser l'event qui nécessite un entier. le paramètre playerActorNumber sert à savoir quel joueur doit afficher le menu
-    public void AfficherMenuPrincipal(int i, int playerActorNumber)
+    private void DisplayPrincipalMenu()
     {
         //condition pour que seulement le client qui quitte la room ait l'affichage du menu. dans le cas où playerActorNumber est à 0, c'est que tous les clients doivent afficher le menu
         if (PhotonNetwork.LocalPlayer.ActorNumber != playerActorNumber && playerActorNumber != 0) return;

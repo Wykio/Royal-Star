@@ -40,7 +40,8 @@ public class WeaponManagerScript : MonoBehaviour
     public void SetFiring(bool isFiring)
     {
         firing = isFiring;
-        raycastMesh.enabled = isFiring;
+        if (raycast)
+            raycastMesh.enabled = isFiring;
     }
 
     public void Shoot()
