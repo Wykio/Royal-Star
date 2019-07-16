@@ -59,7 +59,7 @@ public class shipMotor : MonoBehaviour
     public event Action<int, Vector3, Quaternion> tirArmeBleue;
     public event Action<int, Vector3, Quaternion> tirArmeVerte;
     public event Action<int, Vector3, Quaternion> tirArmeRouge;
-    public event Action<Vector3> mortParBiomeDeLaPartie;
+    public event Action<int, Vector3> mortParBiomeDeLaPartie;
     #endregion
 
     private float propulsionAvantAppliquee;
@@ -275,17 +275,21 @@ public class shipMotor : MonoBehaviour
             vaisseau = vaisseaux[i];
             intentReceiver = activatedIntentReceivers[i];
 
-            if (vaisseau.ShipTransform.position.y < hauteurMort)
-            {
-                vaisseau.TakeDamage(9999);
-                mortParBiomeDeLaPartie.Invoke(vaisseau.transform.position);
-            }
             //si le vaisseau à 0 PV et encore actif, afficher l'écran de défaite et désactivation du vaisseau
             if (!vaisseau.alive && vaisseau.ShipRootGameObject.activeSelf)
             {
                 //affichage de l'écran de défaite par l'interfaceManager via l'event
                 FinDePartiePourUnJoueur(vaisseau.playerID, false);
                 //désactivation du vaisseau
+                DesactivationVaisseau(i, vaisseau.playerID);
+            }
+            if (vaisseau.alive
+                && vaisseau.ShipRootGameObject.activeSelf
+                && vaisseau.ShipTransform.position.y < hauteurMort)
+            {
+                mortParBiomeDeLaPartie.Invoke(vaisseau.playerID, vaisseau.transform.position);
+                vaisseau.TakeDamage(9999);
+                FinDePartiePourUnJoueur(vaisseau.playerID, false);
                 DesactivationVaisseau(i, vaisseau.playerID);
             }
             //Nombre de joueurs encore en vie
@@ -549,14 +553,8 @@ public class shipMotor : MonoBehaviour
 
     private void DesactivationVaisseau(int id, int playerActorNumber)
     {
-        if (PhotonNetwork.IsConnected)
-        {
-            photonView.RPC("DesactivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
-        }
-        else
-        {
-            DesactivationVaisseauRPC(id, playerActorNumber);
-        }
+        photonView.RPC("DesactivationVaisseauRPC", RpcTarget.AllBuffered, id, playerActorNumber);
+        DesactivationVaisseauRPC(id, playerActorNumber);
     }
 
     [PunRPC]
@@ -575,40 +573,32 @@ public class shipMotor : MonoBehaviour
     private void ShootRPC(int idTireur, int armeActive)
     {
         for (int i = 0; i < vaisseaux.Length; i++)
-        {
             if (vaisseaux[i].playerID == idTireur)
             {
-                //le masterclient envoie la donnée du tir au data Collector
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    if (Time.time > vaisseaux[i].ShipWeapons[armeActive].GetNextPopTime())
+                // Envoi de la donnée de tir au data Collector
+                if (vaisseaux[i].playerID == PhotonNetwork.LocalPlayer.ActorNumber
+                    && Time.time > vaisseaux[i].ShipWeapons[armeActive].GetNextPopTime())
+                    switch (armeActive)
                     {
-                        switch (armeActive)
-                        {
-                            case 0:
-                                tirLaserBasique.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
-                                break;
+                        case 0:
+                            tirLaserBasique.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
+                            break;
 
-                            case 1:
-                                tirArmeBleue.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
-                                break;
+                        case 1:
+                            tirArmeBleue.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
+                            break;
 
-                            case 2:
-                                tirArmeVerte.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
-                                break;
+                        case 2:
+                            tirArmeVerte.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
+                            break;
 
-                            case 3:
-                                tirArmeRouge.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
-                                break;
-                        }
+                        case 3:
+                            tirArmeRouge.Invoke(idTireur, vaisseaux[i].ShipTransform.position, vaisseaux[i].ShipTransform.rotation);
+                            break;
                     }
-                }
-
                 vaisseaux[i].ShipWeapons[armeActive].Shoot(vaisseaux[i].playerID);
-
                 break;
             }
-        }
     }
 
     [PunRPC]

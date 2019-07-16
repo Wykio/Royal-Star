@@ -2715,6 +2715,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2889284745203202511}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &3013413199619888499 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 128641194809601212, guid: 8bf8f47d408a48741b59aee5c18cb3c1,
+    type: 3}
+  m_PrefabInstance: {fileID: 2889284745203202511}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5600233091179075722
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -106,10 +106,7 @@ public class MenuPrincipalScript : MonoBehaviourPunCallbacks
         photonView.RPC("DeconnexionViaClientRPC", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
 
         //traitement des données du dataCollector
-        if(PhotonNetwork.IsMasterClient)
-        {
-            dataCollector.AfficherDico();
-        }
+        dataCollector.AfficherDico();
 
         //quitter la room
         PhotonNetwork.LeaveRoom();
