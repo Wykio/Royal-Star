@@ -68,6 +68,11 @@ public class DataCollectorScript : MonoBehaviour
         return $"{{\"login\":\"{login}\",\"type\":\"{type}\",\"position\":{Vector3ToString(pos)},\"date\":\"{DateTime.Now.ToString()}\"}}";
     }
 
+    public String CounterData(String type, int counter)
+    {
+        return $"{{\"login\":\"{login}\",\"type\":\"{type}\",\"counter\":{counter}}}";
+    }
+
     public void InitialiserLesDictionnaires()
     {
         //initialisation des dictionnaires
@@ -191,9 +196,13 @@ public class DataCollectorScript : MonoBehaviour
 
         for (int i = 0; i < statsData.Count; i++) {
             rawBody += statsData[i];
-            if (i + 1 < statsData.Count)
-                rawBody += ',';
+            rawBody += ',';
         }
+        rawBody += CounterData("KILLS", killParJoueur[PhotonNetwork.LocalPlayer.ActorNumber]);
+        rawBody += ',';
+        rawBody += CounterData("AERIAL_KILLS", killAerienParJoueur[PhotonNetwork.LocalPlayer.ActorNumber]);
+        rawBody += ',';
+        rawBody += CounterData("PORTALS", portailsPassesParJoueur[PhotonNetwork.LocalPlayer.ActorNumber]);
         rawBody += ']';
         request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(rawBody));
         request.downloadHandler = new DownloadHandlerBuffer();
