@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class WeaponManagerScript : MonoBehaviour
 {
@@ -104,14 +105,14 @@ public class WeaponManagerScript : MonoBehaviour
                 {
                     ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
-                    if (target != null && target.playerID != tireurID) target.TakeDamage(raycastDamage);
+                    if (target != null && target.playerID != tireurID && PhotonNetwork.IsMasterClient) target.TakeDamage(raycastDamage);
                 }
                 else
                 {
                     if(hit.transform.gameObject.CompareTag("Bot"))
                     {
                         EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();
-                        target.TakeDamage(raycastDamage);
+                        if(PhotonNetwork.IsMasterClient) target.TakeDamage(raycastDamage);
                     }
                 }
             }
@@ -133,7 +134,7 @@ public class WeaponManagerScript : MonoBehaviour
             {
                 ShipExposer target = hit.transform.GetComponent<ShipExposer>();
 
-                if (target != null && target.playerID != tireurID) target.TakeDamage(BlueRaycastDamage);
+                if (target != null && target.playerID != tireurID && PhotonNetwork.IsMasterClient) target.TakeDamage(BlueRaycastDamage);
             }
             else
             {
@@ -141,7 +142,7 @@ public class WeaponManagerScript : MonoBehaviour
                 {
                     EnemyExposer target = hit.transform.GetComponent<EnemyExposer>();
 
-                    target.TakeDamage(BlueRaycastDamage);
+                    if(PhotonNetwork.IsMasterClient) target.TakeDamage(BlueRaycastDamage);
                 }
             }
         }

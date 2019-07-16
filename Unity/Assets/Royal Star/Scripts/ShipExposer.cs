@@ -189,6 +189,8 @@ public class ShipExposer : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+
         //si le vaisseau a du shield, les dégats sont appliqués dessus
         if(shieldPoints > 0)
         {
@@ -196,12 +198,16 @@ public class ShipExposer : MonoBehaviour
             {
                 int trueDamage = Mathf.CeilToInt(damage * facteurDegatsBouclier);
                 shieldPoints -= trueDamage;
+                if(shieldPoints == 0)
+                {
+                    photonView.RPC("DesactiverFXBouclierRPC", RpcTarget.All);
+                }
             }
             else
             {
                 healthPoints -= Mathf.CeilToInt((damage - shieldPoints) * facteurDegatsPV);
                 shieldPoints = 0;
-                bouclierFX.SetActive(false);
+                photonView.RPC("DesactiverFXBouclierRPC", RpcTarget.All);
             }
         }
         else
@@ -226,6 +232,12 @@ public class ShipExposer : MonoBehaviour
                 }
             }
         }
+    }
+
+    [PunRPC]
+    private void DesactiverFXBouclierRPC()
+    {
+        bouclierFX.SetActive(false);
     }
 
     public int getPV()

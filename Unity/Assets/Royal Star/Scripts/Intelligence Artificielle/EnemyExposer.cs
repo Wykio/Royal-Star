@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class EnemyExposer : MonoBehaviour
 {
+    [SerializeField] public GameObject rootGameObject; 
     [SerializeField] protected Transform botTransform;
     [SerializeField] HitboxExposerScript hitbox;
+    [SerializeField] private PhotonView photonView;
     
     [Header("Stats")]
-    [SerializeField] private int healthPoints = 20;
+    [SerializeField] private int healthPoints = 200;
     public bool alive = true;
 
     [Header("VFX")] 
@@ -21,14 +24,20 @@ public class EnemyExposer : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        healthPoints -= damage;
-        hitVFX.Play();
-
-        if (healthPoints <= 0)
+        if(PhotonNetwork.IsMasterClient)
         {
-            healthPoints = 0;
-            alive = false;
-            DesactivationBot();
+            healthPoints -= damage;
+            hitVFX.Play();
+
+            Debug.Log("PV : " + healthPoints);
+
+            if (healthPoints <= 0)
+            {
+                healthPoints = 0;
+                alive = false;
+
+                photonView.RPC("DesactivationBotRPC", RpcTarget.All);
+            }
         }
     }
 
@@ -47,6 +56,12 @@ public class EnemyExposer : MonoBehaviour
     public void DesactivationBot()
     {
         botTransform.gameObject.SetActive(false);
+    }
+
+    [PunRPC]
+    private void DesactivationBotRPC()
+    {
+        DesactivationBot();
     }
 
     //définir la position de l'item

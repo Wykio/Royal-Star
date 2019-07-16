@@ -1647,7 +1647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7b32e569cf13684694891e409bdd4da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cheminFichierData: C:\Projet Annuel\Royal-Star\Data_collectees\data.txt
+  cheminFichierData: ..\data.txt
   tirBasique: {fileID: 2100000, guid: e8695d4ab5f04ef4f86ce5711da7ccd4, type: 2}
   tirBleu: {fileID: 2100000, guid: 5c79bd688bdd8734c86c8ded698244de, type: 2}
   tirVert: {fileID: 2100000, guid: fb6964c3858ab254fa88cd76cfe17eb4, type: 2}
