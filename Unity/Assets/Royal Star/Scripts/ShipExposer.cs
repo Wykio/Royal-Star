@@ -45,6 +45,7 @@ public class ShipExposer : MonoBehaviour
     [SerializeField] public Text bouclier;
     [SerializeField] public Text physicalStatus;
     [SerializeField] public Slider boost;
+    [SerializeField] public Image fill;
     [SerializeField] public Text compteurJoueurs;
     [SerializeField] public Text ChronoBiome;
     [SerializeField] public GameObject bouclierFX;
@@ -498,5 +499,29 @@ public class ShipExposer : MonoBehaviour
     private void Update()
     {
         AdaptToCurrentFieldOfView();
+
+        if(PhotonNetwork.IsMasterClient)
+        {
+            foreach(var joueur in PlayerNumbering.SortedPlayers)
+            {
+                if(joueur.ActorNumber == playerID)
+                {
+                    if (boostOK)
+                    {
+                        photonView.RPC("RedBoostRPC", joueur, 208, 0, 255);
+                    }
+                    else
+                    {
+                        photonView.RPC("RedBoostRPC", joueur, 255, 0, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    private void RedBoostRPC(int r, int g, int b)
+    {
+        fill.color = new Color(r, g, b);
     }
 }
